@@ -1,7 +1,7 @@
 :root {
-  --color-text: #b7c2d4;
+  --color-text: black;
   --color-bg: #120d14;
-  --color-primary: #c3b1bd;
-  --color-gray: #686a77;
+  --color-primary: #db0795;
+  --color-gray: #303031;
   --unit: 12px;
 }
