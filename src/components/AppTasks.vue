@@ -167,6 +167,8 @@ export default {
 .task__text {
   margin-right: 12px;
   margin-right: auto;
+  margin-left: 12px;
+  word-break: break-all;
 }
 .task__date,
 .task-subtask__date {

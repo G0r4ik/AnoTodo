@@ -4,17 +4,24 @@ import AppTasks from './components/AppTasks.vue'
 import TaskAdd from './components/TaskAdd.vue'
 import AppSidebar from './components/AppSidebar.vue'
 import TaskEdit from './components/TaskEdit.vue'
-import { toHandlers } from 'vue'
+import TakskStatusListLinks from './components/TakskStatusListLinks.vue'
 
 export default {
-  components: { AppHeader, TaskAdd, AppTasks, AppSidebar, TaskEdit },
+  components: {
+    AppHeader,
+    TaskAdd,
+    AppTasks,
+    AppSidebar,
+    TaskEdit,
+    TakskStatusListLinks,
+  },
 
   data() {
     return {
       searchFilter: '',
       folders: {},
       currentFolder: '',
-      list: 'all',
+      statusList: 'all',
       newId: 0,
       currentEditTask: null,
       isShowFolders: true,
@@ -30,11 +37,11 @@ export default {
 
       if (this.currentFolder) {
         this.folders[this.currentFolder].map(task => {
-          const isActive = this.list === 'ready' && task.isReady
-          const isReady = this.list === 'active' && !task.isReady
+          const isActive = this.statusList === 'ready' && task.isReady
+          const isReady = this.statusList === 'active' && !task.isReady
           if (!task.text.includes(this.searchFilter)) return
 
-          if (this.list === 'all' || isActive || isReady) {
+          if (this.statusList === 'all' || isActive || isReady) {
             if (!result[this.currentFolder]) result[this.currentFolder] = []
             result[this.currentFolder].push(task)
           }
@@ -43,11 +50,11 @@ export default {
       }
       for (let i = 0; i < this.allFolders.length; i++) {
         this.folders[this.allFolders[i]].map(task => {
-          const isActive = this.list === 'ready' && task.isReady
-          const isReady = this.list === 'active' && !task.isReady
+          const isActive = this.statusList === 'ready' && task.isReady
+          const isReady = this.statusList === 'active' && !task.isReady
           if (!task.text.includes(this.searchFilter)) return
 
-          if (this.list === 'all' || isActive || isReady) {
+          if (this.statusList === 'all' || isActive || isReady) {
             if (!result[this.allFolders[i]]) result[this.allFolders[i]] = []
             result[this.allFolders[i]].push(task)
           }
@@ -102,10 +109,7 @@ export default {
           return this.folders[folder].splice(i, 1)
       }
     },
-    updateSearchFilter(value) {
-      this.searchFilter = value
-      this.currentFolder = null
-    },
+
     deleteSubtask(folder, task, subtask) {
       const currentTask = this.folders[folder].find(t => t.id === task.id)
       currentTask.subtasks = currentTask.subtasks.filter(s => s !== subtask)
@@ -125,8 +129,8 @@ export default {
       console.log(folder)
       this.currentFolder = folder
     },
-    changeList(list) {
-      this.list = list
+    changeStatusList(statusList) {
+      this.statusList = statusList
     },
     deleteFolder(folder) {
       console.log(folder)
@@ -141,14 +145,19 @@ export default {
     editTask(folder, task, text) {
       this.folders[folder].find(_task => _task === task).text = text
     },
-    showEditTaskPopup(folder, task) {
-      this.currentEditTask = { folder, task }
-    },
     closeEditTaskPopup() {
       this.currentEditTask = null
     },
+    showEditTaskPopup(folder, task) {
+      this.currentEditTask = { folder, task }
+    },
+
     changeShowFolders() {
       this.isShowFolders = !this.isShowFolders
+    },
+    updateSearchFilter(value) {
+      this.searchFilter = value
+      this.currentFolder = null
     },
   },
 }
@@ -184,35 +193,10 @@ export default {
       <strong class="current-folder">
         {{ !currentFolder ? 'Все папки' : currentFolder }}
       </strong>
-      <div class="task-status__links">
-        <span
-          tabindex="0"
-          class="task-status__link"
-          :class="{ 'task-status__link_active': list === 'all' }"
-          @click="changeList('all')"
-          @keypress.enter="changeList('all')"
-        >
-          Все
-        </span>
-        <span
-          class="task-status__link"
-          tabindex="0"
-          :class="{ 'task-status__link_active': list === 'active' }"
-          @click="changeList('active')"
-          @keypress.enter="changeList('active')"
-        >
-          Активные
-        </span>
-        <span
-          class="task-status__link"
-          tabindex="0"
-          :class="{ 'task-status__link_active': list === 'ready' }"
-          @click="changeList('ready')"
-          @keypress.enter="changeList('ready')"
-        >
-          Выполненные
-        </span>
-      </div>
+      <TakskStatusListLinks
+        :statusList="statusList"
+        @changeStatusList="changeStatusList"
+      />
 
       <TaskAdd
         v-if="currentFolder"
@@ -278,9 +262,7 @@ body {
 .main {
   height: calc(100vh - 55px);
   overflow-y: auto;
-  /* padding: 15px; */
   margin-top: 55px;
-  /* margin-left: 200px; */
   display: flex;
 }
 
@@ -318,9 +300,9 @@ body {
 .current-folder {
   display: inline-block;
   font-size: 40px;
-  /* margin-top: 24px; */
   margin-bottom: 24px;
-  /* margin-top: 60px; */
+  word-break: break-all;
+  max-width: 100%;
 }
 .task-status__links {
   margin-bottom: 24px;
@@ -331,7 +313,7 @@ body {
   cursor: pointer;
 }
 .task-status__link_active {
-  border-bottom: 1px solid orangered;
+  border-bottom: 1px solid orange;
 }
 .task-status__link:not(:last-child) {
   margin-right: 45px;

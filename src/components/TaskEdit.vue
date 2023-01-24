@@ -48,7 +48,6 @@ export default {
 .task-edit {
   position: fixed;
   width: 300px;
-  /* left: calc(50% - 300px); */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
