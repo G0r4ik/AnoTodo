@@ -1,53 +1,29 @@
-<script>
-import IconArrow from './icons/IconArrow.vue'
-import IconCross from './icons/IconCross.vue'
-import IconEdit from './icons/IconEdit.vue'
-
-export default {
-  props: ['tasks', 'folder'],
-  emits: [
-    'changeStatus',
-    'deleteTask',
-    'showEditTaskPopup',
-    'changeStatusSubtask',
-    'deleteSubtask',
-  ],
-  data() {
-    return {
-      isShowSubtasks: false,
-    }
-  },
-  methods: {
-    showSubtasks(task) {
-      task.isShowSubtasks = !task.isShowSubtasks
-    },
-  },
-  components: { IconArrow, IconEdit, IconCross },
-}
-</script>
 <template>
+  <strong
+    v-if="!currentFolder"
+    class="search-result-folder"
+    @click="setCurerentFolder(folder)">
+    {{ folder }}
+  </strong>
   <div
     v-for="task of tasks"
     class="task-wrapper"
     :class="{ task_active: task.isReady }"
-  >
+    :style="{ background: task.taskBackground || 'transparent' }">
     <div class="tasks__item">
       <div
         type="checkbox"
         class="task__status"
         tabindex="0"
-        @click="$emit('changeStatus', folder, task)"
-        @keypress.enter="$emit('changeStatus', folder, task)"
-      />
+        @click="changeStatus(folder, task)"
+        @keypress.enter="changeStatus(folder, task)" />
       <div class="task__text">{{ task.text }}</div>
       <button
         v-if="task.subtasks.length"
         class="task__show-subtasks"
-        @click="showSubtasks(task)"
-      >
+        @click="showSubtasks(task)">
         <IconArrow
-          :style="`transform:rotate(${task.isShowSubtasks ? '180deg' : 0})`"
-        />
+          :style="`transform:rotate(${task.isShowSubtasks ? '180deg' : 0})`" />
       </button>
       <div class="task__date">
         {{ task.timeOfStart }} {{ task.dateOfStart }}
@@ -56,12 +32,11 @@ export default {
         class="task__edit"
         @click="$emit('showEditTaskPopup', folder, task)"
         @keypress.enter="$emit('showEditTaskPopup', folder, task)"
-        tabindex="0"
-      >
+        tabindex="0">
         <IconEdit />
       </div>
 
-      <div class="task__delete" @click="$emit('deleteTask', folder, task)">
+      <div class="task__delete" @click="deleteTask(folder, task)">
         <IconCross />
       </div>
     </div>
@@ -70,28 +45,65 @@ export default {
       <div
         v-for="subtask of task.subtasks"
         class="subtasks__item task-subtask"
-        :class="{ 'task-subtask_active': subtask.isReady }"
-      >
+        :class="{ 'task-subtask_active': subtask.isReady }">
         <div
           type="checkbox"
           class="task-subtask__status"
-          @click="$emit('changeStatusSubtask', folder, task, subtask)"
-          :class="{ subtask__status_active: subtask.isReady }"
-        />
+          @click="changeStatusSubtask(folder, task, subtask)"
+          :class="{ subtask__status_active: subtask.isReady }" />
         <div class="task-subtask__text">{{ subtask.text }}</div>
         <div class="task-subtask__date">
           {{ subtask.dateOfStart }} {{ subtask.timeOfStart }}
         </div>
         <div
           class="task-subtask__delete"
-          @click="$emit('deleteSubtask', folder, task, subtask)"
-        >
+          @click="deleteSubtask(folder, task, subtask)">
           <IconCross />
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<script>
+import { useFolderStore } from '../store/folders'
+
+export default {
+  props: ['tasks', 'folder'],
+  emits: ['showEditTaskPopup', 'changeStatusSubtask', 'deleteSubtask'],
+  data() {
+    return {
+      isShowSubtasks: false,
+    }
+  },
+  computed: {
+    currentFolder() {
+      return useFolderStore().currentFolder
+    },
+  },
+  methods: {
+    showSubtasks(task) {
+      task.isShowSubtasks = !task.isShowSubtasks
+    },
+    deleteTask(folder, task) {
+      useFolderStore().deleteTask(folder, task)
+    },
+    setCurerentFolder(folder) {
+      useFolderStore().setCurrentFolder(folder)
+    },
+    changeStatus(folder, task) {
+      useFolderStore().changeStatus(folder, task)
+    },
+    changeStatusSubtask(folder, task, subtask) {
+      useFolderStore().changeStatusSubtask(folder, task, subtask)
+    },
+    deleteSubtask(folder, task, subtask) {
+      useFolderStore().deleteSubtask(folder, task, subtask)
+    },
+  },
+}
+</script>
+
 <style>
 .task__show-subtasks {
 }
@@ -102,14 +114,12 @@ export default {
   width: 24px;
   height: 24px;
 }
-.tasks {
-}
 .task-wrapper {
   margin-bottom: 12px;
-  box-shadow: rgba(99, 99, 99, 0.5) 0px 2px 8px 0px;
+  /* box-shadow: rgba(99, 99, 99, 0.5) 0px 2px 8px 0px; */
   padding: 12px;
   padding-top: 24px;
-  border-radius: 12px;
+  border-radius: var(--border-radius-normal);
 }
 .tasks__item,
 .subtasks__item {
@@ -117,50 +127,44 @@ export default {
   align-items: center;
   position: relative;
 }
-.tasks__item {
-}
-
 .task_active .tasks__item,
 .task-subtask_active {
   text-decoration: line-through;
-  text-decoration-color: lightskyblue;
+  text-decoration-color: var(--color-danger);
   opacity: 0.95;
 }
-
 .task,
 .task-subtask {
-  border-radius: 12px;
+  border-radius: var(--border-radius-normal);
 }
 .task__status,
 .task-subtask__status {
   cursor: pointer;
   min-width: 20px;
   min-height: 20px;
-  background: cornflowerblue;
-  border: 5px solid transparent;
+  border: var(--border-width-main) solid var(--color-text);
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
-  border-radius: 50%;
+  border-radius: var(--border-radius-circle);
   margin-right: 6px;
 }
 .task_active .task__status,
 .subtask__status_active {
-  background: cornflowerblue;
+  background: var(--color-primary);
 }
 .task_active .task__status,
 .task-subtask_active .task-subtask__status {
-  background: white;
-  border: 5px solid cornflowerblue;
+  background: var(--color-text);
+  border: 5px solid var(--color-primary);
 }
 .task_active .task__status::before,
 .subtask__status_active::before {
   position: absolute;
   width: 10px;
   height: 10px;
-  border-radius: 50%;
+  border-radius: var(--border-radius-circle);
   top: -3px;
 }
 
@@ -174,7 +178,7 @@ export default {
 .task-subtask__date {
   margin-right: 12px;
   margin-left: 6px;
-  font-size: 14px;
+  font-size: var(--font-extra-small);
   text-align: right;
 }
 .task__date {

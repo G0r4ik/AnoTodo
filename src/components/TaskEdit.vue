@@ -1,23 +1,3 @@
-<script>
-import IconCross from './icons/IconCross.vue'
-
-export default {
-  props: ['task', 'folder'],
-  emits: ['editSubtask', 'editTask', 'closePopup'],
-  mounted() {
-    document.addEventListener('keyup', this.closePopup)
-  },
-  beforeUnmount() {
-    document.removeEventListener('keyup', this.closePopup)
-  },
-  methods: {
-    closePopup(event) {
-      if (event.key === 'Escape') this.$emit('closePopup')
-    },
-  },
-  components: { IconCross },
-}
-</script>
 <template>
   <teleport to="body">
     <div class="task-edit">
@@ -29,20 +9,42 @@ export default {
         <input
           class="task-edit__task"
           :value="task.text"
-          @change="$emit('editTask', folder, task, $event.target.value)"
-        />
+          @change="editTask(folder, task, $event.target.value)" />
         <input
           v-for="subtask of task.subtasks"
           class="task-edit__subtask"
           :value="subtask.text"
-          @change="
-            $emit('editSubtask', folder, task, subtask, $event.target.value)
-          "
-        />
+          @change="editSubtask(folder, task, subtask, $event.target.value)" />
       </div>
     </div>
   </teleport>
 </template>
+
+<script>
+import { useFolderStore } from '../store/folders'
+
+export default {
+  props: ['task', 'folder'],
+  emits: ['closePopup'],
+  mounted() {
+    document.addEventListener('keyup', this.closePopup)
+  },
+  beforeUnmount() {
+    document.removeEventListener('keyup', this.closePopup)
+  },
+  methods: {
+    closePopup(event) {
+      if (event.key === 'Escape') this.$emit('closePopup')
+    },
+    editTask(folder, task, text) {
+      useFolderStore().editTask(folder, task, text)
+    },
+    editSubtask(folder, task, subtask, text) {
+      useFolderStore().editSubtask(folder, task, subtask, text)
+    },
+  },
+}
+</script>
 
 <style>
 .task-edit {
@@ -52,11 +54,11 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   background: url('../assets/grain.png');
-  background-color: white;
-  box-shadow: rgba(99, 99, 99, 0.3) 0px 2px 8px 0px;
-  border-radius: 12px;
+  background-color: var(--color-secondary);
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 2px 8px 0px;
+  border-radius: var(--border-radius-normal);
   padding: 12px;
-  z-index: 150;
+  z-index: var(--z-index-modal);
 }
 .task-edit__inner {
   position: relative;
@@ -73,6 +75,7 @@ export default {
 }
 .task-edit__title {
   margin-bottom: 12px;
+  font-size: var(--font-medium);
 }
 .task-edit__task {
   margin-bottom: 6px;

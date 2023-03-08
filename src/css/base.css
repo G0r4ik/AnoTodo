@@ -1,0 +1,24 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-size: var(--font-normal);
+  background-image: url('@/assets/grain.png');
+  font-family: 'Arial', sans-serif;
+}
+button,
+select,
+input {
+  color: var(--color-text);
+  font-size: var(--font-normal);
+  border: var(--border-width-main) solid var(--color-secondary);
+  border-radius: var(--border-radius-small);
+  background: none;
+}
+select option {
+  color: black;
+}

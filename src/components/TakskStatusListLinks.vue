@@ -1,6 +1,6 @@
 <script>
 export default {
-  props: ['statusList'],
+  props: { statusList: String },
   emits: ['changeStatusList'],
 }
 </script>
@@ -11,8 +11,7 @@ export default {
       class="task-status__link"
       :class="{ 'task-status__link_active': statusList === 'all' }"
       @click="$emit('changeStatusList', 'all')"
-      @keypress.enter="$emit('changeStatusList', 'all')"
-    >
+      @keypress.enter="$emit('changeStatusList', 'all')">
       Все
     </span>
     <span
@@ -20,8 +19,7 @@ export default {
       tabindex="0"
       :class="{ 'task-status__link_active': statusList === 'active' }"
       @click="$emit('changeStatusList', 'active')"
-      @keypress.enter="$emit('changeStatusList', 'active')"
-    >
+      @keypress.enter="$emit('changeStatusList', 'active')">
       Активные
     </span>
     <span
@@ -29,8 +27,7 @@ export default {
       tabindex="0"
       :class="{ 'task-status__link_active': statusList === 'ready' }"
       @click="$emit('changeStatusList', 'ready')"
-      @keypress.enter="$emit('changeStatusList', 'ready')"
-    >
+      @keypress.enter="$emit('changeStatusList', 'ready')">
       Выполненные
     </span>
   </div>

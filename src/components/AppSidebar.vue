@@ -1,156 +1,204 @@
-<script>
-import IconCrose from './icons/IconCross.vue'
-
-export default {
-  props: ['folders', 'currentFolder', 'isShowFolders'],
-  emits: ['changeCurrentFolder', 'createNewFolder', 'deleteFolder'],
-  data() {
-    return {
-      newFolder: '',
-    }
-  },
-  mounted() {},
-  methods: {
-    createNewFolder() {
-      this.newFolder = this.newFolder.trim()
-      if (this.newFolder === '') return
-      this.$emit('createNewFolder', this.newFolder)
-      this.newFolder = ''
-    },
-  },
-  components: { IconCrose },
-}
-</script>
 <template>
-  <aside class="sidebar" :class="{ sidebar_hidden: isShowFolders }">
-    <div class="sidebar__title">Папки</div>
-    <div class="sidebar__folders">
-      <!-- v-for="folder of [ 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-      4, 4, 1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, ]" -->
+  <aside class="sidebar" :class="{ sidebar_hidden: !isShowFolders }">
+    <div class="sidebar__top">
+      <div class="sidebar__title">Папки</div>
       <div
-        @click="$emit('changeCurrentFolder', 'all')"
-        @keypress.enter="$emit('changeCurrentFolder', 'all')"
+        class="sidebar__edit"
+        @click="showIsEditFolder"
+        @keypress.enter="showIsEditFolder"
+        tabindex="0">
+        <IconEdit />
+      </div>
+    </div>
+    <div class="sidebar__folders">
+      <div
+        @click="changeCurrentFolder('all')"
+        @keypress.enter="changeCurrentFolder('all')"
         tabindex="0"
         class="sidebar__folder"
-        :class="{ sidebar__folder_active: !currentFolder }"
-      >
+        :class="{ sidebar__folder_active: !currentFolder }">
         Все
       </div>
       <div
-        v-for="folder of folders"
-        @click="$emit('changeCurrentFolder', folder)"
-        @keypress.enter="$emit('changeCurrentFolder', folder)"
+        v-for="folder of allFolders"
+        @click="changeCurrentFolder(folder)"
+        @keypress.enter="changeCurrentFolder(folder)"
         tabindex="0"
         class="sidebar__folder"
-        :class="{ sidebar__folder_active: folder === currentFolder }"
-      >
+        :class="{ sidebar__folder_active: folder === currentFolder }">
         <span class="sidebar__folder-text">{{ folder }} </span>
         <div
           class="sidebar__new-folder-delete"
-          @click.stop="$emit('deleteFolder', folder)"
-        >
-          <IconCrose />
+          @click.stop="deleteFolder(folder)">
+          <IconCross />
         </div>
       </div>
     </div>
     <div class="sidebar__new-folder">
       <input
-        v-model="newFolder"
+        v-model.trim="newFolder"
         class="sidebar__new-folder-input"
         type="text"
         name="new-folder"
         id="new-folder"
         placeholder="Новая папка"
-        @keypress.enter="createNewFolder"
-      />
+        @keypress.enter="createNewFolder" />
       <button class="sidebar__new-folder-button" @click="createNewFolder">
         +
       </button>
     </div>
   </aside>
+  <FolderEdit
+    v-if="isShowEditFolder"
+    @closePopup="closeIsEditFolder"></FolderEdit>
 </template>
+
+<script>
+import { useFolderStore } from '../store/folders.js'
+import FolderEdit from './FolderEdit.vue'
+
+export default {
+  components: { FolderEdit },
+
+  data() {
+    return {
+      newFolder: '',
+      isShowEditFolder: false,
+    }
+  },
+  computed: {
+    isShowFolders() {
+      return useFolderStore().isShowFolders
+    },
+    folders() {
+      return useFolderStore().folders
+    },
+    allFolders() {
+      return Object.keys(this.folders)
+    },
+    currentFolder() {
+      return useFolderStore().currentFolder
+    },
+  },
+  methods: {
+    showIsEditFolder() {
+      this.isShowEditFolder = true
+    },
+    closeIsEditFolder() {
+      this.isShowEditFolder = false
+    },
+    deleteFolder(folder) {
+      useFolderStore().setCurrentFolder(null)
+      useFolderStore().deleteFolder(folder)
+    },
+    createNewFolder() {
+      if (this.newFolder === '' || this.folders[this.newFolder]) return
+      useFolderStore().createNewFolder(this.newFolder)
+      this.folders[this.newFolder] = []
+      this.newFolder = ''
+    },
+    changeCurrentFolder(folder) {
+      useFolderStore().setCurrentFolder(folder)
+      if (folder === 'all') useFolderStore().setCurrentFolder(null)
+    },
+  },
+}
+</script>
 
 <style>
 .sidebar {
-  overflow-y: auto;
-  min-width: 200px;
-  width: 200px;
-  background: url('../assets/grain.png');
-  background-color: white;
-  z-index: 50;
+  position: fixed;
   top: 50px;
-  height: calc(100vh - 50px);
+  left: 0;
+  width: 270px;
+  height: calc(100% - 50px);
+  padding: calc(var(--unit) * 2);
   overflow-y: auto;
-  padding: 0 15px;
-  /* box-shadow: rgba(99, 99, 99, 0.3) 0px 2px 8px 0px; */
-  transition: 0.6s;
-  padding-top: 12px;
-  height: 100%;
-  margin-right: 18px;
+  background-color: var(--color-bg);
+  background: url('../assets/grain.png');
+  border-right: var(--border-width-main) solid var(--color-secondary);
 }
-
-.sidebar__title {
-  margin-bottom: 16px;
+.sidebar__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: calc(var(--unit) * 3);
   padding-bottom: 6px;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid var(--color-secondary);
+}
+.sidebar__title {
+  font-weight: 700;
+}
+.sidebar__edit {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
 }
 .sidebar__folders {
-  margin-bottom: 12px;
+  margin-bottom: calc(var(--unit) * 2);
 }
 .sidebar__folder {
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 6px;
-  padding: 6px;
-  border-radius: 6px;
-  box-shadow: rgba(99, 99, 99, 0.3) 0px 2px 8px 0px;
+  padding: var(--unit) 0;
+  margin-bottom: var(--unit);
+  border-radius: var(--border-radius-small);
+  /* box-shadow: rgba(99, 99, 99, 0.3) 0px 2px 8px 0px; */
+  cursor: pointer;
 }
 .sidebar__folder-text {
-  max-width: calc(100% - 24px);
-  width: auto;
   display: block;
-  word-wrap: break-word;
+  max-width: calc(100% - 24px);
   overflow-wrap: break-word;
-}
-.sidebar__new-folder-delete svg {
-  min-width: 24px;
-  min-height: 24px;
+  word-wrap: break-word;
+  width: auto;
 }
 .sidebar__new-folder-delete {
-  min-width: 24px;
-  min-height: 24px;
+  height: 24px;
+  width: 24px;
 }
 .sidebar__folder_active {
+  color: var(--color-primary);
   font-weight: 700;
-  color: orangered;
 }
 .sidebar__new-folder {
-  display: flex;
   align-items: center;
+  display: flex;
   justify-content: space-between;
+  margin-top: auto;
 }
 .sidebar__new-folder-input {
-  width: 150px;
-  width: 100%;
+  background: rgba(255, 180, 58, 0.2);
+  border: var(--border-width-main) var(--color-primary) solid;
+  border-radius: var(--border-radius-normal);
+  color: var(--color-primary);
   margin-right: 6px;
-  padding: 2px;
+  padding: 5px 10px;
+  width: 100%;
+  max-width: 150px;
+}
+.sidebar__new-folder-input::placeholder {
+  color: var(--color-primary);
 }
 .sidebar__new-folder-button {
-  display: inline-flex;
   align-items: center;
+  background: rgba(255, 180, 58, 0.2);
+  border: var(--border-width-main) solid var(--color-primary);
+  border-radius: var(--border-radius-circle);
+  color: var(--color-primary);
+  display: inline-flex;
+  height: 30px;
   justify-content: center;
-  min-width: 24px;
-  min-height: 24px;
-  border-radius: 50%;
-  border: 1px solid black;
+  margin-left: 6px;
+  min-height: 30px;
+  min-width: 30px;
+  width: 30px;
 }
-
 @media (max-width: 768px) {
   .sidebar {
-    position: fixed;
     left: 0;
+    position: fixed;
   }
   .sidebar_hidden {
     display: none;
