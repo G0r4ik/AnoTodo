@@ -1,43 +1,19 @@
 <template>
-  <AppHeader ref="header" />
+  <AppHeader />
   <AppSidebar />
-  <MainTodo />
+  <AppTasks />
 </template>
 
 <script>
 import AppHeader from '@/components/AppHeader.vue'
-import MainTodo from '@/components/MainTodo.vue'
 import AppSidebar from '@/components/AppSidebar.vue'
-import { useFolderStore } from '@/store/folders'
+import AppTasks from '@/components/AppTasks.vue'
+import { handleKeyDown } from '@/hotkeys.js'
+
 export default {
-  components: {
-    AppHeader,
-    MainTodo,
-    AppSidebar,
-  },
-  computed: {
-    folders() {
-      return useFolderStore().folders
-    },
-  },
+  components: { AppHeader, AppSidebar, AppTasks },
   mounted() {
-    document.body.addEventListener('keydown', this.handleKeydown)
-    useFolderStore().setFolders()
-  },
-  watch: {
-    folders: {
-      handler(newValue) {
-        localStorage.setItem('folders', JSON.stringify(newValue))
-      },
-      deep: true,
-    },
-  },
-  methods: {
-    handleKeydown(event) {
-      if (event.ctrlKey && event.keyCode === 81) {
-        this.$refs.header.$refs.headerSearch.focus()
-      }
-    },
+    document.addEventListener('keydown', handleKeyDown)
   },
 }
 </script>

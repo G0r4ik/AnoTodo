@@ -4,13 +4,11 @@
   --color-primary: #ffb43a;
   --color-secondary: #272833;
   --color-danger: #e94141;
-
   --border-radius-circle: 50%;
   --border-radius-small: 6px;
   --border-radius-normal: 12px;
-
+  --border-width-small: 1px;
   --border-width-main: 3px;
-
   --z-index-hidden: -1;
   --z-index-base: 1;
   --z-index-overlay: 2;
@@ -18,12 +16,16 @@
   --z-index-dropdown: 4;
   --z-index-tooltip: 5;
   --z-index-topmost: 9999;
-
   --font-small: 14px;
   --font-normal: 20px;
   --font-medium: 24px;
   --font-large: 28px;
   --font-extra-large: 30px;
-
   --unit: 5px;
+  --height-header: 50px;
+  --width-sidebar: 270px;
+
+  /* 24 35 */
+
+  /*  300 150 50 30 24 20 10 */
 }

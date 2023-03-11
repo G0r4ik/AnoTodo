@@ -1,22 +1,49 @@
-CSS REFACTORING...
-ПОТОМ
+|- TodoList.vue
+|- TodoListItem.vue
+|- TodoListItemButton.vue
 
-- что нам делать при переполнении folder name
-- нужно ли нам передовать id или сразу 
-- цвет текста на тасках
+|- SearchSidebar.vue
+|- SearchSidebarNavigation.vue
+|- SearchButtonClear.vue
+|- SearchButtonRun.vue
+|- SearchInputQuery.vue
+|- SearchInputExcludeGlob.vue
+
+|- SettingsCheckboxTerms.vue
+|- SettingsCheckboxLaunchOnStartup.vue
+
+## НОВОЕ:
+
+- улучшить отзывчивость (при ошибках, валидациях)
+- избранное
 - фильтры
-- сделать объект вида: {Q: 81, A:82}
-- styleling / eslint
-- Избранное
-- ВСЕ можно делать с помощью клавиатуры
+- всё можно делать с помощью клавиатуры
 - возможнось добавить подзадачу в окне редактора
 - dragndrop
 
-READY
+## ФИКС:
 
-- разным цветом помечать
-- переименовать папку
-- при нажатии на нужную папку скрывать.
+- :key пофиксить
+- CSS REFACTORING...
+- цвет текста на тасках
+- focus \ tabindex
+- transition запихнуть в модальные компоненты
+- default: () => ({}),
+
+## ВОПРОСЫ:
+
+- нужно ли нам передовать id или сразу
+
+## READY
+
+- что нам делать при переполнении folder name
 - возможность создавать неотсортированные
 - более оптимизированный шрифт добавить
+- при нажатии на нужную папку скрывать.
+- Анимации к модальным окнам
 - где расположить создание
+- разным цветом помечать
+- переименовать папку
+- страница с хотекями
+- stylelint
+- eslint

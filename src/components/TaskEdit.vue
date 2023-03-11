@@ -1,87 +1,86 @@
 <template>
-  <teleport to="body">
-    <div class="task-edit">
-      <div class="task-edit__inner">
-        <div class="task-edit__cross" @click="$emit('closePopup')">
-          <IconCross />
-        </div>
-        <h5 class="task-edit__title">Изменить задачу</h5>
-        <input
-          class="task-edit__task"
-          :value="task.text"
-          @change="editTask(folder, task, $event.target.value)" />
-        <input
-          v-for="subtask of task.subtasks"
-          class="task-edit__subtask"
-          :value="subtask.text"
-          @change="editSubtask(folder, task, subtask, $event.target.value)" />
+  <ModalWrapper @close-modal="$emit('closeModal')">
+    <h5 class="task-edit__title">Изменить задачу</h5>
+    <input
+      class="task-edit__task"
+      :value="task.text"
+      @change="editTask(folder, task, $event.target.value)" />
+    <!-- <input
+      v-for="subtask of task.subtasks"
+      :key="subtask.text"
+      :value="subtask.text"
+      class="task-edit__subtask"
+      @change="editSubtask(folder, task, subtask, $event.target.value)" /> -->
+
+    <div v-for="(subtask, i) in task.subtasks" :key="i" class="add-subtask">
+      <input
+        id="search-tasks"
+        :value="task.subtasks[i].text"
+        class="add-subtask__text"
+        type="text"
+        name="search-tasks"
+        placeholder="Текст подзадачи"
+        @keypress.enter="addTask"
+        @keyup.ctrl.enter.prevent="addSubtask" />
+      <div
+        class="add-subtask__delete"
+        tabindex="0"
+        @click="deleteSubtask(subtask)"
+        @keypress.enter="deleteSubtask(subtask)">
+        <IconCross />
       </div>
     </div>
-  </teleport>
+
+    <button @click="addNewSubtask(folder, task, $event.target.value)">
+      Добавить подзадачу
+    </button>
+  </ModalWrapper>
 </template>
 
 <script>
-import { useFolderStore } from '../store/folders'
+import { useFolderStore } from '@/store/folders.js'
+import ModalWrapper from '@/components/ModalWrapper.vue'
 
 export default {
-  props: ['task', 'folder'],
-  emits: ['closePopup'],
-  mounted() {
-    document.addEventListener('keyup', this.closePopup)
-  },
-  beforeUnmount() {
-    document.removeEventListener('keyup', this.closePopup)
-  },
-  methods: {
-    closePopup(event) {
-      if (event.key === 'Escape') this.$emit('closePopup')
+  components: { ModalWrapper },
+  props: {
+    folder: {
+      type: String,
+      default: 'Неотсортированное',
     },
+    task: {
+      type: Object,
+      default: () => {},
+    },
+  },
+  emits: ['closeModal'],
+
+  methods: {
     editTask(folder, task, text) {
       useFolderStore().editTask(folder, task, text)
     },
     editSubtask(folder, task, subtask, text) {
       useFolderStore().editSubtask(folder, task, subtask, text)
     },
+    addNewSubtask() {
+      useFolderStore().addSubtask()
+    },
   },
 }
 </script>
 
 <style>
-.task-edit {
-  position: fixed;
-  width: 300px;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: url('../assets/grain.png');
-  background-color: var(--color-secondary);
-  box-shadow: rgba(0, 0, 0, 0.5) 0px 2px 8px 0px;
-  border-radius: var(--border-radius-normal);
-  padding: 12px;
-  z-index: var(--z-index-modal);
-}
-.task-edit__inner {
-  position: relative;
-}
-.task-edit__cross {
-  position: absolute;
-  right: 0;
-  top: 0;
-  cursor: pointer;
-}
-.task-edit__cross svg {
-  width: 24px;
-  height: 24px;
-}
 .task-edit__title {
-  margin-bottom: 12px;
+  margin-bottom: calc(var(--unit) * 2);
   font-size: var(--font-medium);
 }
+
 .task-edit__task {
-  margin-bottom: 6px;
+  margin-bottom: var(--unit);
 }
+
 .task-edit__subtask {
-  margin-bottom: 6px;
-  margin-left: 12px;
+  margin-bottom: var(--unit);
+  margin-left: calc(var(--unit) * 2);
 }
 </style>
