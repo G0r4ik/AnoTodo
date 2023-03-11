@@ -55,19 +55,19 @@ export default {
 
 <style>
 .main {
+  height: 100%;
+  padding: 0 calc(var(--unit) * 3);
   margin-top: var(--height-header);
   margin-left: var(--width-sidebar);
-  height: 100%;
   overflow-y: auto;
-  padding: 0 calc(var(--unit) * 3);
 }
 
 .main__current-folder {
   display: inline-block;
-  font-size: var(--font-large);
-  margin-bottom: calc(var(--unit) * 5);
-  word-break: break-all;
   max-width: 100%;
+  margin-bottom: calc(var(--unit) * 5);
+  font-size: var(--font-large);
+  word-break: break-all;
 }
 
 @media (max-width: 768px) {

@@ -56,8 +56,8 @@ export default {
 
 <style>
 .sidebar__folders {
-  margin-bottom: 70px;
   height: 100%;
+  margin-bottom: 70px;
   overflow-y: auto;
 }
 
@@ -67,25 +67,25 @@ export default {
   justify-content: space-between;
   padding: var(--unit) 0;
   margin-bottom: var(--unit);
-  border-radius: var(--border-radius-small);
   cursor: pointer;
+  border-radius: var(--border-radius-small);
 }
 
 .sidebar__folder-text {
   display: block;
-  max-width: calc(100% - 24px);
-  overflow-wrap: break-word;
-  word-wrap: break-word;
   width: auto;
+  max-width: calc(100% - 24px);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .sidebar__new-folder-delete {
-  height: 24px;
   width: 24px;
+  height: 24px;
 }
 
 .sidebar__folder_active {
-  color: var(--color-primary);
   font-weight: 700;
+  color: var(--color-primary);
 }
 </style>

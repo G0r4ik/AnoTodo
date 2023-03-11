@@ -51,9 +51,9 @@ export default {
 
 .hotkeys__item {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   gap: calc(var(--unit) * 15);
+  align-items: center;
+  justify-content: space-between;
 }
 
 .hotkeys__item:not(:last-child) {
@@ -68,14 +68,14 @@ export default {
 
 .hotkeys__buttons {
   display: flex;
-  align-items: center;
   gap: calc(var(--unit) * 2);
+  align-items: center;
 }
 
 .hotkeys__modifiers {
   display: flex;
-  align-items: center;
   gap: calc(var(--unit) * 2);
+  align-items: center;
 }
 
 .hotkeys__modifiers-inner {
@@ -85,19 +85,19 @@ export default {
 
 .hotkeys__action {
   display: flex;
-  align-items: center;
   gap: var(--unit);
+  align-items: center;
 }
 
 .hotkeys__button {
-  font-size: var(--font-medium);
-  border: 1px solid var(--color-primary);
-  border-radius: var(--border-width-main);
-  min-width: 35px;
-  padding: var(--unit);
-  height: 35px;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 35px;
+  height: 35px;
+  padding: var(--unit);
+  font-size: var(--font-medium);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--border-width-main);
 }
 </style>

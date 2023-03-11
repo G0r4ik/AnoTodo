@@ -41,12 +41,12 @@ export default {
 }
 
 .edit-folder__content {
-  overflow-y: auto;
   max-height: 300px;
+  overflow-y: auto;
 }
 
 .edit-folder__folder {
-  margin-bottom: var(--unit);
   display: block;
+  margin-bottom: var(--unit);
 }
 </style>

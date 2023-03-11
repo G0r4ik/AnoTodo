@@ -90,10 +90,10 @@ export default {
 
 <style>
 .sidebar {
-  z-index: var(--z-index-overlay);
   position: fixed;
   top: var(--height-header);
   left: 0;
+  z-index: var(--z-index-overlay);
   width: var(--width-sidebar);
   height: calc(100% - var(--height-header));
   padding: calc(var(--unit) * 2);
@@ -111,10 +111,10 @@ export default {
 
 .sidebar__top {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: calc(var(--unit) * 3);
+  justify-content: space-between;
   padding-bottom: var(--unit);
+  margin-bottom: calc(var(--unit) * 3);
   border-bottom: var(--border-width-main) solid var(--color-secondary);
 }
 
@@ -123,35 +123,35 @@ export default {
 }
 
 .sidebar__edit {
-  cursor: pointer;
   width: 20px;
   height: 20px;
+  cursor: pointer;
 }
 
 .sidebar__bottom {
-  background: url('@/assets/grain.png') var(--color-bg);
   position: absolute;
   bottom: 0;
   padding: var(--unit) 0;
+  background: url('@/assets/grain.png') var(--color-bg);
 }
 
 .sidebar__new-folder {
-  align-items: center;
   display: flex;
+  align-items: center;
   justify-content: space-between;
   margin-top: auto;
   margin-bottom: calc(var(--unit) * 2);
 }
 
 .sidebar__new-folder-input {
+  width: 100%;
+  height: 35px;
+  padding: var(--unit) calc(var(--unit) * 2);
+  margin-right: var(--unit);
+  color: var(--color-primary);
   background: rgba(255, 180, 58, 0.2);
   border: var(--border-width-main) var(--color-primary) solid;
   border-radius: var(--border-radius-normal);
-  color: var(--color-primary);
-  margin-right: var(--unit);
-  padding: var(--unit) calc(var(--unit) * 2);
-  height: 35px;
-  width: 100%;
 }
 
 .sidebar__new-folder-input::placeholder {
@@ -159,24 +159,24 @@ export default {
 }
 
 .sidebar__new-folder-button {
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
+  width: 35px;
+  min-width: 35px;
+  height: 35px;
+  min-height: 35px;
+  margin-left: var(--unit);
+  color: var(--color-primary);
   background: rgba(255, 180, 58, 0.2);
   border: var(--border-width-main) solid var(--color-primary);
   border-radius: var(--border-radius-circle);
-  color: var(--color-primary);
-  display: inline-flex;
-  height: 35px;
-  justify-content: center;
-  margin-left: var(--unit);
-  min-height: 35px;
-  min-width: 35px;
-  width: 35px;
 }
 
 .sidebar__shortcuts {
-  cursor: pointer;
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 .sidebar__shortcuts-icon {
@@ -186,7 +186,6 @@ export default {
 }
 
 .sidebar__shortcuts-text {
-  font-size: var(--font-small);
   font-size: 16px;
   line-height: 0;
 }

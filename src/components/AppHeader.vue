@@ -68,22 +68,22 @@ export default {
 .header {
   position: fixed;
   top: 0;
-  width: 100%;
-  height: var(--height-header);
   display: flex;
   align-items: center;
   justify-content: center;
   justify-content: space-between;
+  width: 100%;
+  height: var(--height-header);
   padding: 0 calc(var(--unit) * 3);
-  border-bottom: var(--border-width-main) solid var(--color-secondary);
   background-color: var(--color-bg);
   background-image: url('@/assets/grain.png');
+  border-bottom: var(--border-width-main) solid var(--color-secondary);
 }
 
 .header__burger {
-  cursor: pointer;
-  margin-right: auto;
   display: none;
+  margin-right: auto;
+  cursor: pointer;
 }
 
 .header__burger svg {
@@ -92,9 +92,9 @@ export default {
 }
 
 .header__search-input {
-  transition: 0.3s;
   width: 200px;
   padding: var(--unit);
+  transition: 0.3s;
 }
 
 .header__search-input:focus,
@@ -103,9 +103,9 @@ export default {
 }
 
 .header__create-post {
-  background: rgba(255, 180, 58, 0.2);
   padding: var(--unit) calc(var(--unit) * 2);
   color: var(--color-primary);
+  background: rgba(255, 180, 58, 0.2);
   border: var(--border-width-main) var(--color-primary) solid;
   border-radius: var(--border-radius-normal);
 }

@@ -102,18 +102,18 @@ export default {
 
 <style>
 .task__folder {
-  cursor: pointer;
-  font-weight: 700;
-  margin-bottom: calc(var(--unit) * 2);
   display: inline-block;
+  margin-bottom: calc(var(--unit) * 2);
   font-size: var(--font-medium);
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .main__task {
   padding: calc(var(--unit) * 2);
   padding-top: calc(var(--unit) * 5);
-  border-radius: var(--border-radius-normal);
   margin-bottom: calc(var(--unit) * 2);
+  border-radius: var(--border-radius-normal);
 }
 
 .main__not-folder {
@@ -129,9 +129,9 @@ export default {
 }
 
 .task-status__link {
+  cursor: pointer;
   opacity: 1;
   transition: 0.3s;
-  cursor: pointer;
 }
 
 .task-status__link_active {
@@ -154,37 +154,37 @@ export default {
 }
 
 .task__wrapper {
-  margin-bottom: calc(var(--unit) * 2);
   padding: calc(var(--unit) * 2);
+  margin-bottom: calc(var(--unit) * 2);
   border-radius: var(--border-radius-normal);
 }
 
 .tasks__item {
+  position: relative;
   display: flex;
   align-items: center;
-  position: relative;
   margin-bottom: var(--unit);
 }
 
 .task_active {
+  color: var(--color-danger);
   text-decoration: line-through;
   text-decoration-color: var(--color-danger);
   opacity: 0.95;
-  color: var(--color-danger);
 }
 
 .task__status {
-  cursor: pointer;
-  min-width: 20px;
-  min-height: 20px;
-  border: var(--border-width-main) solid var(--color-text);
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--border-radius-circle);
+  min-width: 20px;
+  min-height: 20px;
   margin-right: var(--unit);
+  cursor: pointer;
   background: transparent;
+  border: var(--border-width-main) solid var(--color-text);
+  border-radius: var(--border-radius-circle);
 }
 
 .task_active > .task__status {
@@ -195,14 +195,14 @@ export default {
 .task__edit,
 .task__delete,
 .task__show-subtasks {
-  cursor: pointer;
   width: 24px;
   height: 24px;
+  cursor: pointer;
 }
 
 .task__text {
-  margin-left: calc(var(--unit) * 2);
   margin-right: auto;
+  margin-left: calc(var(--unit) * 2);
   word-break: break-all;
   mix-blend-mode: difference;
 }

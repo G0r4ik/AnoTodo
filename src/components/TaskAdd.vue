@@ -150,10 +150,10 @@ export default {
 }
 
 .add-task__content {
-  margin-top: calc(var(--unit) * 2);
-  margin-bottom: calc(var(--unit) * 3);
   display: flex;
   flex-direction: column;
+  margin-top: calc(var(--unit) * 2);
+  margin-bottom: calc(var(--unit) * 3);
 }
 
 .add-task__item {
@@ -168,8 +168,8 @@ export default {
 
 .add-subtask__text {
   width: calc(100% - 36px);
-  margin-left: calc(var(--unit) * 5);
   margin-bottom: var(--unit);
+  margin-left: calc(var(--unit) * 5);
 }
 
 .add-task__date-wrapper {
@@ -180,8 +180,8 @@ export default {
 .add-task__date-wrapper svg {
   width: 50px;
   height: 50px;
-  cursor: pointer;
   margin-right: var(--unit);
+  cursor: pointer;
 }
 
 .add-task__date {
@@ -194,9 +194,9 @@ export default {
 }
 
 .add-task__add-button {
-  border: var(--border-width-main) solid var(--color-primary);
   color: var(--color-primary);
   background: rgba(255, 180, 58, 0.2);
+  border: var(--border-width-main) solid var(--color-primary);
 }
 
 .add-subtask {
@@ -205,9 +205,9 @@ export default {
 }
 
 .add-subtask__delete {
-  cursor: pointer;
   width: 24px;
   height: 24px;
+  cursor: pointer;
 }
 
 .add-subtask__delete svg {
@@ -215,14 +215,14 @@ export default {
 }
 
 .add-subtask__button {
-  margin-bottom: var(--unit);
   padding: var(--unit) calc(var(--unit) * 2);
+  margin-bottom: var(--unit);
   margin-left: calc(var(--unit) * 6);
 }
 
 .add-task__add-button:disabled,
 .add-subtask__button:disabled {
-  opacity: 0.5;
   cursor: auto;
+  opacity: 0.5;
 }
 </style>
