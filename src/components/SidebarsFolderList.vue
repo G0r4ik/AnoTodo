@@ -9,6 +9,14 @@
       Все
     </div>
     <div
+      tabindex="0"
+      class="sidebar__folder"
+      :class="{ sidebar__folder_active: currentFolder === 'Неотсортированное' }"
+      @click="changeCurrentFolder('Неотсортированное')"
+      @keypress.enter="changeCurrentFolder('Неотсортированное')">
+      Неотсортированное
+    </div>
+    <div
       v-for="folder of allFolders"
       :key="folder"
       tabindex="0"
@@ -17,9 +25,9 @@
       @click="changeCurrentFolder(folder)"
       @keypress.enter="changeCurrentFolder(folder)">
       <span class="sidebar__folder-text">{{ folder }} </span>
-      <div class="sidebar__new-folder-delete" @click="deleteFolder(folder)">
+      <button class="sidebar__new-folder-delete" @click="deleteFolder(folder)">
         <IconCross />
-      </div>
+      </button>
     </div>
   </div>
 </template>
@@ -32,7 +40,9 @@ export default {
   },
   computed: {
     allFolders() {
-      return Object.keys(this.folders)
+      return Object.keys(this.folders).filter(
+        item => item !== 'Неотсортированное'
+      )
     },
     currentFolder() {
       return useFolderStore().currentFolder
@@ -57,7 +67,7 @@ export default {
 <style>
 .sidebar__folders {
   height: 100%;
-  margin-bottom: 70px;
+  margin-bottom: 80px;
   overflow-y: auto;
 }
 

@@ -19,7 +19,7 @@ module.exports = {
   },
   plugins: ['vue'],
   rules: {
-    'comma-dangle': ['error', 'always-multiline'],
+    'comma-dangle': 'off',
     'space-before-function-paren': ['error', 'never'],
     'vue/no-unused-vars': 'error',
     'vue/max-attributes-per-line': [

@@ -1,17 +1,22 @@
 <template>
-  <ModalWrapper @close-modal="$emit('closeModal')">
-    <h5 class="edit-folder__title">Переименовать</h5>
-    <div class="edit-folder__content">
-      <input
-        v-for="folder of Object.keys(folders)"
-        :key="folder"
-        class="edit-folder__folder"
-        type="text"
-        :readonly="folder === 'Неотсортированное'"
-        :value="folder"
-        @change="renameFolder(folder, $event.target.value)" />
-    </div>
-  </ModalWrapper>
+  <transition name="fade">
+    <ModalWrapper
+      v-if="isShow"
+      tabindex="-1"
+      @close-modal="$emit('closeModal')">
+      <h5 class="edit-folder__title">Переименовать</h5>
+      <div class="edit-folder__content">
+        <input
+          v-for="folder of Object.keys(folders)"
+          :key="folder"
+          class="edit-folder__folder"
+          type="text"
+          :readonly="folder === 'Неотсортированное'"
+          :value="folder"
+          @change="renameFolder(folder, $event.target.value)" />
+      </div>
+    </ModalWrapper>
+  </transition>
 </template>
 
 <script>
@@ -20,6 +25,12 @@ import ModalWrapper from '@/components/ModalWrapper.vue'
 
 export default {
   components: { ModalWrapper },
+  props: {
+    isShow: {
+      type: Boolean,
+      default: false,
+    },
+  },
   emits: ['closeModal'],
   computed: {
     folders() {

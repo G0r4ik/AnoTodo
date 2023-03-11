@@ -1,6 +1,6 @@
 <template>
   <div class="main__tasks">
-    <template v-for="folder of allFolders" :key="folder">
+    <template v-for="folder of Object.keys(filteredTasks)" :key="folder">
       <div v-if="filteredTasks[folder].length" class="main__tasks-item task">
         <strong
           v-if="!currentFolder && filteredTasks[folder].length"

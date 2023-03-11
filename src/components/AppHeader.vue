@@ -19,9 +19,7 @@
     </button>
   </header>
 
-  <transition name="fade">
-    <TaskAdd v-if="isShowCreatePost" @close-modal="closeCreatePostModal" />
-  </transition>
+  <TaskAdd :is-show="isShowCreatePost" @close-modal="closeCreatePostModal" />
 </template>
 
 <script>
@@ -32,6 +30,12 @@ import { useFolderStore } from '@/store/folders.js'
 
 export default {
   components: { TaskAdd },
+  props: {
+    isShow: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       isShowCreatePost: false,

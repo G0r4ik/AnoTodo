@@ -1,38 +1,42 @@
 <template>
-  <ModalWrapper @close-modal="$emit('closeModal')">
-    <h5 class="add-task__title">Создать задачу</h5>
-    <div class="add-task__content">
-      <select id="new-task-folder" v-model="taskFolder" name="new-task-folder">
-        <option
-          v-for="folder of Object.keys(folders)"
-          :key="folder"
-          :value="folder">
-          {{ folder }}
-        </option>
-      </select>
-      <select
-        id="new-task-bg"
-        v-model="newTask.taskBackground"
-        name="new-task-bg">
-        <option
-          v-for="color of colors"
-          :key="color"
-          :value="color"
-          :style="{ 'background-color': color }">
-          {{ color }}
-        </option>
-      </select>
-      <div class="add-task__item">
-        <input
-          id="search-tasks"
-          v-model="newTask.text"
-          class="add-task__text"
-          type="text"
-          name="search-tasks"
-          placeholder="Текст задачи"
-          @keypress.enter="addTask"
-          @keyup.ctrl.enter.prevent="addSubtask" />
-        <!-- <div class="add-task__date-wrapper">
+  <transition name="fade">
+    <ModalWrapper v-if="isShow" @close-modal="$emit('closeModal')">
+      <h5 class="add-task__title">Создать задачу</h5>
+      <div class="add-task__content">
+        <select
+          id="new-task-folder"
+          v-model="taskFolder"
+          name="new-task-folder">
+          <option
+            v-for="folder of Object.keys(folders)"
+            :key="folder"
+            :value="folder">
+            {{ folder }}
+          </option>
+        </select>
+        <select
+          id="new-task-bg"
+          v-model="newTask.taskBackground"
+          name="new-task-bg">
+          <option
+            v-for="color of colors"
+            :key="color"
+            :value="color"
+            :style="{ 'background-color': color }">
+            {{ color }}
+          </option>
+        </select>
+        <div class="add-task__item">
+          <input
+            id="search-tasks"
+            v-model="newTask.text"
+            class="add-task__text"
+            type="text"
+            name="search-tasks"
+            placeholder="Текст задачи"
+            @keypress.enter="addTask"
+            @keyup.ctrl.enter.prevent="addSubtask" />
+          <!-- <div class="add-task__date-wrapper">
           <IconDate @click="showDatePopup" @keypress.enter="showDatePopup" />
           <div @click.stop v-if="isCustomDateActivated">
             <input
@@ -45,34 +49,35 @@
               v-model="newTask.timeOfStart" />
           </div>
         </div> -->
-      </div>
-      <div
-        v-for="(subtask, i) in newTask.subtasks"
-        :key="i"
-        class="add-subtask">
-        <input
-          id="search-tasks"
-          v-model="newTask.subtasks[i].text"
-          class="add-subtask__text"
-          type="text"
-          name="search-tasks"
-          placeholder="Текст подзадачи"
-          @keypress.enter="addTask"
-          @keyup.ctrl.enter.prevent="addSubtask" />
-        <div
-          class="add-subtask__delete"
-          tabindex="0"
-          @click="deleteSubtask(subtask)"
-          @keypress.enter="deleteSubtask(subtask)">
-          <IconCross />
         </div>
+        <div
+          v-for="(subtask, i) in newTask.subtasks"
+          :key="i"
+          class="add-subtask">
+          <input
+            id="search-tasks"
+            v-model="newTask.subtasks[i].text"
+            class="add-subtask__text"
+            type="text"
+            name="search-tasks"
+            placeholder="Текст подзадачи"
+            @keypress.enter="addTask"
+            @keyup.ctrl.enter.prevent="addSubtask" />
+          <div
+            class="add-subtask__delete"
+            tabindex="0"
+            @click="deleteSubtask(subtask)"
+            @keypress.enter="deleteSubtask(subtask)">
+            <IconCross />
+          </div>
+        </div>
+        <button class="add-subtask__button" @click="addSubtask">
+          Добавить подзадачу
+        </button>
+        <button class="add-task__add-button" @click="addTask">Добавить</button>
       </div>
-      <button class="add-subtask__button" @click="addSubtask">
-        Добавить подзадачу
-      </button>
-      <button class="add-task__add-button" @click="addTask">Добавить</button>
-    </div>
-  </ModalWrapper>
+    </ModalWrapper>
+  </transition>
 </template>
 
 <script>
@@ -80,6 +85,12 @@ import { useFolderStore } from '@/store/folders.js'
 import ModalWrapper from '@/components/ModalWrapper.vue'
 export default {
   components: { ModalWrapper },
+  props: {
+    isShow: {
+      type: Boolean,
+      default: false,
+    },
+  },
   emits: ['closeModal'],
   data() {
     return {

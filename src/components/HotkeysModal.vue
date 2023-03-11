@@ -1,31 +1,33 @@
 <template>
-  <ModalWrapper @close-modal="$emit('closeModal')">
-    <div class="hotkeys">
-      <div class="hotkeys__inner">
-        <h2 class="hotkeys__title">Shortcuts</h2>
-        <input
-          id="hotkeys-input"
-          type="text"
-          name="hotkeys-input"
-          class="hotkeys__input" />
-        <div v-for="(hotkey, i) of hotkeys" :key="i" class="hotkeys__item">
-          <div class="hotkeys__action">
-            <IconEdit class="hotkeys__icon-edit" />
-            <span class="hotkeys__action-text">{{ hotkey.description }}</span>
-          </div>
-          <div class="hotkeys__buttons">
-            <div class="hotkeys__modifiers">
-              <template v-for="(modifier, j) of hotkey.modifiers" :key="j">
-                <div class="hotkeys__button">{{ modifier }}</div>
-              </template>
+  <transition name="fade">
+    <ModalWrapper v-if="isShow" @close-modal="$emit('closeModal')">
+      <div class="hotkeys">
+        <div class="hotkeys__inner">
+          <h2 class="hotkeys__title">Shortcuts</h2>
+          <input
+            id="hotkeys-input"
+            type="text"
+            name="hotkeys-input"
+            class="hotkeys__input" />
+          <div v-for="(hotkey, i) of hotkeys" :key="i" class="hotkeys__item">
+            <div class="hotkeys__action">
+              <IconEdit class="hotkeys__icon-edit" />
+              <span class="hotkeys__action-text">{{ hotkey.description }}</span>
             </div>
-            <template v-if="hotkey.modifiers.length > 0">+</template>
-            <div class="hotkeys__button">{{ hotkey.key }}</div>
+            <div class="hotkeys__buttons">
+              <div class="hotkeys__modifiers">
+                <template v-for="(modifier, j) of hotkey.modifiers" :key="j">
+                  <div class="hotkeys__button">{{ modifier }}</div>
+                </template>
+              </div>
+              <template v-if="hotkey.modifiers.length > 0">+</template>
+              <div class="hotkeys__button">{{ hotkey.key }}</div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </ModalWrapper>
+    </ModalWrapper>
+  </transition>
 </template>
 
 <script>
@@ -34,6 +36,12 @@ import { hotkeys } from '@/hotkeys.js'
 export default {
   components: {
     ModalWrapper,
+  },
+  props: {
+    isShow: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: ['closeModal'],
   data() {

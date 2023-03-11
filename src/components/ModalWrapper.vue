@@ -1,5 +1,5 @@
 <template>
-  <div ref="modal-backdrop" class="modal-backdrop">
+  <div ref="modalBackdrop" class="modal-backdrop" @keydown.tab="trapTab">
     <div class="modal-content">
       <div
         ref="modal"
@@ -7,7 +7,10 @@
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-headline">
-        <button class="modal-close-btn" @click="$emit('closeModal')">
+        <button
+          ref="closeBtn"
+          class="modal-close-btn"
+          @click="$emit('closeModal')">
           <IconCross />
         </button>
         <slot>I'm empty inside</slot>
@@ -23,13 +26,32 @@ export default {
   emits: ['closeModal'],
   mounted() {
     hotkeys.closeModal.handler = this.closeModal
+    this.$refs.closeBtn.focus()
   },
   beforeUnmount() {
     hotkeys.closeModal.handler = null
   },
+
   methods: {
     closeModal() {
       this.$emit('closeModal')
+    },
+
+    trapTab(event) {
+      const focusableElements = this.$refs.modalBackdrop.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      )
+      const arrayOfFocusableElements = [...focusableElements]
+      const firstFocusableElement = arrayOfFocusableElements[0]
+      const lastFocusableElement = arrayOfFocusableElements.at(-1)
+      const activeElement = document.activeElement
+      if (event.shiftKey && activeElement === firstFocusableElement) {
+        event.preventDefault()
+        lastFocusableElement.focus()
+      } else if (!event.shiftKey && activeElement === lastFocusableElement) {
+        event.preventDefault()
+        firstFocusableElement.focus()
+      }
     },
   },
 }

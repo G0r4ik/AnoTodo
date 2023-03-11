@@ -32,13 +32,11 @@
     <IconCross />
   </div>
 
-  <transition name="fade">
-    <TaskEdit
-      v-if="currentEditTask"
-      :task="currentEditTask.task"
-      :folder="currentEditTask.folder"
-      @close-modal="closeEditTaskPopup" />
-  </transition>
+  <TaskEdit
+    :is-show="!!currentEditTask"
+    :task="currentEditTask?.task"
+    :folder="currentEditTask?.folder"
+    @close-modal="closeEditTaskPopup" />
 </template>
 
 <script>

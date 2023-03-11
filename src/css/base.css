@@ -3,6 +3,7 @@
   padding: 0;
   box-sizing: border-box;
 }
+
 body {
   background: var(--color-bg);
   color: var(--color-text);
@@ -10,6 +11,7 @@ body {
   background-image: url('@/assets/grain.png');
   font-family: 'Arial', sans-serif;
 }
+
 button,
 select,
 input {
@@ -19,6 +21,11 @@ input {
   border-radius: var(--border-radius-small);
   background: none;
 }
+
+button {
+  border: none;
+}
+
 select option {
   color: black;
 }
