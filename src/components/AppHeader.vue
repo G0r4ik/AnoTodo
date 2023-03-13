@@ -1,61 +1,51 @@
 <template>
   <header class="header">
-    <div class="header__burger" @click="changeShowFolders">
+    <button class="header__burger" @click="changeShowFolders">
       <IconBurger />
-    </div>
-    <div class="header__search">
-      <input
-        id="header-search"
-        :ref="'headerSearch'"
-        class="header__search-input"
-        type="search"
-        name="search"
-        placeholder="Поиск"
-        autocomplete="off"
-        @input="updateSearchFilter($event.target.value)" />
-    </div>
-    <button class="header__create-post" @click="showCreatePostModal">
+    </button>
+    <input
+      id="header-search"
+      ref="headerSearch"
+      name="header-search"
+      type="search"
+      placeholder="Поиск"
+      autocomplete="off"
+      class="header__search-input"
+      @input="updateSearchFilter($event.target.value)" />
+    <button class="header__create-post" @click="toggleCreatePostModal">
       Создать пост
     </button>
   </header>
 
-  <TaskAdd :is-show="isShowCreatePost" @close-modal="closeCreatePostModal" />
+  <TaskAdd :is-show="isShowCreatePost" @close-modal="toggleCreatePostModal" />
 </template>
 
 <script>
 import TaskAdd from '@/components/TaskAdd.vue'
-
 import { hotkeys } from '@/hotkeys.js'
 import { useFolderStore } from '@/store/folders.js'
 
 export default {
   components: { TaskAdd },
-  props: {
-    isShow: {
-      type: Boolean,
-      default: false,
-    },
-  },
   data() {
     return {
       isShowCreatePost: false,
     }
   },
   mounted() {
-    hotkeys.showPopup.handler = this.showCreatePostModal
-    hotkeys.focusSearch.handler = () => this.$refs.headerSearch.focus()
+    hotkeys.showPopup.handler = this.toggleCreatePostModal
+    hotkeys.focusSearch.handler = () => {
+      if (document.activeElement === this.$refs.headerSearch) {
+        this.$refs.headerSearch.blur()
+      } else {
+        this.$refs.headerSearch.focus()
+      }
+    }
     hotkeys.showSidebar.handler = this.changeShowFolders
   },
-  beforeUnmount() {
-    // hotkeys.showPopup.handler = null
-    // hotkeys.showPopup.handler = null
-  },
   methods: {
-    showCreatePostModal() {
-      this.isShowCreatePost = true
-    },
-    closeCreatePostModal() {
-      this.isShowCreatePost = false
+    toggleCreatePostModal() {
+      this.isShowCreatePost = !this.isShowCreatePost
     },
     updateSearchFilter(value) {
       useFolderStore().setSearchFilter(value)
@@ -72,44 +62,45 @@ export default {
 .header {
   position: fixed;
   top: 0;
+  z-index: var(--z-index-overlay);
   display: flex;
   align-items: center;
-  justify-content: center;
   justify-content: space-between;
   width: 100%;
   height: var(--height-header);
-  padding: 0 calc(var(--unit) * 3);
-  background-color: var(--color-bg);
-  background-image: url('@/assets/grain.png');
+  padding: 0 calc(var(--unit) * 2);
+  background: url('@/assets/grain.png') var(--color-bg);
   border-bottom: var(--border-width-main) solid var(--color-secondary);
 }
 
 .header__burger {
   display: none;
-  margin-right: auto;
+  width: var(--height-icon-main);
+  height: var(--height-icon-main);
   cursor: pointer;
 }
 
 .header__burger svg {
-  width: 24px;
-  height: 24px;
+  height: 100%;
 }
 
 .header__search-input {
-  width: 200px;
+  width: var(--width-header);
+  min-width: var(--width-header);
   padding: var(--unit);
-  transition: 0.3s;
+  margin: 0 calc(var(--unit) * 2);
+  transition: var(--transition-fast);
 }
 
 .header__search-input:focus,
 .header__search-input:not(:placeholder-shown) {
-  transition: 0.6s;
+  transition: var(--transition-fast);
 }
 
 .header__create-post {
   padding: var(--unit) calc(var(--unit) * 2);
   color: var(--color-primary);
-  background: rgba(255, 180, 58, 0.2);
+  background: var(--color-bg-primary);
   border: var(--border-width-main) var(--color-primary) solid;
   border-radius: var(--border-radius-normal);
 }
@@ -119,6 +110,10 @@ export default {
 }
 
 @media (max-width: 768px) {
+  .header {
+    justify-content: space-between;
+  }
+
   .header__burger {
     display: block;
   }
@@ -127,20 +122,17 @@ export default {
     display: none;
   }
 
-  .header__search {
-    width: 100%;
-    margin: 0 calc(var(--unit) * 2);
-    text-align: right;
-  }
-
   .header__search-input:focus,
   .header__search-input:not(:placeholder-shown) {
     width: 100%;
-    transition: 0.3s;
+    transition: var(--transition-fast);
   }
 
   .header__create-post {
+    padding: var(--unit);
+    font-size: var(--font-small);
     white-space: nowrap;
+    border-width: 2px;
   }
 }
 </style>

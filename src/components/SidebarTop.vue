@@ -43,8 +43,8 @@ export default {
 }
 
 .sidebar__edit {
-  width: 20px;
-  height: 20px;
+  width: var(--height-icon-main);
+  height: var(--height-icon-main);
   cursor: pointer;
 }
 </style>

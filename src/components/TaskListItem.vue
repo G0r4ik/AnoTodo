@@ -5,16 +5,20 @@
     tabindex="0"
     @click="changeStatus(folder, task, subtask)"
     @keypress.enter="changeStatus(folder, task, subtask)" />
+  <IconStar
+    v-if="type === 'task'"
+    :is-active="task.isFavourite"
+    @click="toggleFavourite(folder, task.id)" />
 
   <div class="task__text">{{ list.text }}</div>
 
-  <div
+  <button
     v-if="type === 'task' && task.subtasks.length"
     class="task__show-subtasks"
     @click="$emit('toggleSubtasksList', task)">
     <IconArrow
       :style="`transform:rotate(${task.isShowSubtasks ? '180deg' : 0})`" />
-  </div>
+  </button>
 
   <div
     v-if="type === 'task'"
@@ -76,6 +80,9 @@ export default {
     }
   },
   methods: {
+    toggleFavourite(folder, taskId) {
+      useFolderStore().toggleFavourite(folder, taskId)
+    },
     showEditTaskModal(folder, task) {
       this.currentEditTask = { folder, task }
     },

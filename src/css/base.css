@@ -1,25 +1,38 @@
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  scrollbar-color: var(--color-secondary) var(--color-bg);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-secondary);
+  border-radius: 10px;
 }
 
 body {
-  background: var(--color-bg);
-  color: var(--color-text);
-  font-size: var(--font-normal);
-  background-image: url('@/assets/grain.png');
   font-family: 'Arial', sans-serif;
+  font-size: var(--font-normal);
+  color: var(--color-text);
+  background: var(--color-bg) url('@/assets/grain.png');
 }
 
 button,
 select,
 input {
-  color: var(--color-text);
   font-size: var(--font-normal);
+  color: var(--color-text);
+  background: none;
   border: var(--border-width-main) solid var(--color-secondary);
   border-radius: var(--border-radius-small);
-  background: none;
 }
 
 button {

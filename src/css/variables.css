@@ -1,14 +1,21 @@
 :root {
+  /* color, background */
   --color-text: #fcfcfc;
   --color-bg: #1c1c27;
   --color-primary: #ffb43a;
+  --color-bg-primary: rgba(255, 180, 58, 0.2);
   --color-secondary: #272833;
   --color-danger: #e94141;
+  --color-modal-backdrop: rgba(0, 0, 0, 0.5);
+
+  /* border */
   --border-radius-circle: 50%;
   --border-radius-small: 6px;
   --border-radius-normal: 12px;
   --border-width-small: 1px;
   --border-width-main: 3px;
+
+  /* z-index */
   --z-index-hidden: -1;
   --z-index-base: 1;
   --z-index-overlay: 2;
@@ -16,17 +23,29 @@
   --z-index-dropdown: 4;
   --z-index-tooltip: 5;
   --z-index-topmost: 9999;
+
+  /* font-size */
   --font-small: 14px;
   --font-normal: 20px;
   --font-medium: 24px;
   --font-large: 28px;
   --font-extra-large: 30px;
+
+  /* margin, padding */
   --unit: 5px;
-  --height-header: 50px;
+
+  /* height, width */
   --width-sidebar: 270px;
+  --width-header: 200px;
+  --height-folder-rename: 300px;
+  --height-sidebar-bottom: 80px;
+  --height-header: 50px;
+  --height-icon-main: 24px;
+  --height-icon-small: 15px;
 
-  /* 24 35 */
-  /* 35 20 16 15 */
+  /* transition-duration; */
+  --transition-fast: 0.25s;
 
-  /*  300 150 50 30 24 20 10 */
+  /* opacity: 0.5 */
+  /* 10px */
 }

@@ -27,6 +27,7 @@
     :is-show="isShowHotkeysModal"
     @close-modal="toggleHotkeysModal" />
 </template>
+
 <script>
 import HotkeysModal from '@/components/HotkeysModal.vue'
 import { hotkeys } from '@/hotkeys.js'
@@ -40,19 +41,17 @@ export default {
       isShowHotkeysModal: false,
     }
   },
-  computed: {
-    folders() {
-      return useFolderStore().folders
-    },
-  },
   mounted() {
     hotkeys.showHotkeys.handler = this.toggleHotkeysModal
   },
   methods: {
     createNewFolder() {
-      if (this.newFolder === '' || this.folders[this.newFolder]) return
-      useFolderStore().createNewFolder(this.newFolder)
-      this.newFolder = ''
+      if (this.newFolder !== '' && !useFolderStore().folders[this.newFolder]) {
+        useFolderStore().createNewFolder(this.newFolder)
+        this.newFolder = ''
+      } else {
+        // return
+      }
     },
     toggleHotkeysModal() {
       this.isShowHotkeysModal = !this.isShowHotkeysModal
@@ -65,6 +64,7 @@ export default {
 .sidebar__bottom {
   position: absolute;
   bottom: 0;
+  height: var(--height-sidebar-bottom);
   padding: calc(var(--unit) * 2) 0;
 }
 
@@ -78,11 +78,10 @@ export default {
 
 .sidebar__new-folder-input {
   width: 100%;
-  height: 35px;
   padding: var(--unit) calc(var(--unit) * 2);
   margin-right: var(--unit);
   color: var(--color-primary);
-  background: rgba(255, 180, 58, 0.2);
+  background: var(--color-bg-primary);
   border: var(--border-width-main) var(--color-primary) solid;
   border-radius: var(--border-radius-normal);
 }
@@ -95,13 +94,13 @@ export default {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 35px;
-  min-width: 35px;
-  height: 35px;
-  min-height: 35px;
+  width: var(--height-icon-main);
+  min-width: var(--height-icon-main);
+  height: var(--height-icon-main);
+  min-height: var(--height-icon-main);
   margin-left: var(--unit);
   color: var(--color-primary);
-  background: rgba(255, 180, 58, 0.2);
+  background: var(--color-bg-primary);
   border: var(--border-width-main) solid var(--color-primary);
   border-radius: var(--border-radius-circle);
 }
@@ -113,13 +112,13 @@ export default {
 }
 
 .sidebar__shortcuts-icon {
-  width: 15px;
-  height: 15px;
+  width: var(--height-icon-small);
+  height: var(--height-icon-small);
   margin-right: var(--unit);
 }
 
 .sidebar__shortcuts-text {
-  font-size: 14px;
+  font-size: var(--font-small);
   color: var(--color-text);
 }
 </style>

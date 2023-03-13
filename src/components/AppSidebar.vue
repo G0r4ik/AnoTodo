@@ -32,8 +32,7 @@ export default {
   z-index: var(--z-index-overlay);
   width: var(--width-sidebar);
   height: calc(100% - var(--height-header));
-  padding-top: var(--unit);
-  padding-left: calc(var(--unit) * 2);
+  padding: calc(var(--unit) * 2);
   background: url('@/assets/grain.png') var(--color-bg);
   border-right: var(--border-width-main) solid var(--color-secondary);
 }

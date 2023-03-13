@@ -1,42 +1,45 @@
 <template>
-  <transition name="fade">
-    <ModalWrapper v-if="isShow" @close-modal="$emit('closeModal')">
-      <div class="hotkeys">
-        <div class="hotkeys__inner">
-          <h2 class="hotkeys__title">Shortcuts</h2>
-          <input
-            id="hotkeys-input"
-            type="text"
-            name="hotkeys-input"
-            class="hotkeys__input" />
-          <div v-for="(hotkey, i) of hotkeys" :key="i" class="hotkeys__item">
-            <div class="hotkeys__action">
-              <IconEdit class="hotkeys__icon-edit" />
-              <span class="hotkeys__action-text">{{ hotkey.description }}</span>
-            </div>
-            <div class="hotkeys__buttons">
-              <div class="hotkeys__modifiers">
-                <template v-for="(modifier, j) of hotkey.modifiers" :key="j">
-                  <div class="hotkeys__button">{{ modifier }}</div>
-                </template>
+  <teleport to="body">
+    <transition name="fade">
+      <ModalWrapper v-if="isShow" @close-modal="$emit('closeModal')">
+        <template #header>Shortcuts</template>
+        <template #content>
+          <div class="hotkeys">
+            <input
+              id="hotkeys-input"
+              type="text"
+              name="hotkeys-input"
+              class="hotkeys__input" />
+            <div v-for="(hotkey, i) of hotkeys" :key="i" class="hotkeys__item">
+              <div class="hotkeys__action">
+                <IconEdit class="hotkeys__icon-edit" />
+                <span class="hotkeys__action-text">
+                  {{ hotkey.description }}
+                </span>
               </div>
-              <template v-if="hotkey.modifiers.length > 0">+</template>
-              <div class="hotkeys__button">{{ hotkey.key }}</div>
+              <div class="hotkeys__buttons">
+                <div class="hotkeys__modifiers">
+                  <template v-for="(modifier, j) of hotkey.modifiers" :key="j">
+                    <div class="hotkeys__button">{{ modifier }}</div>
+                  </template>
+                </div>
+                <template v-if="hotkey.modifiers.length > 0">+</template>
+                <div class="hotkeys__button">{{ hotkey.key }}</div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-    </ModalWrapper>
-  </transition>
+        </template>
+      </ModalWrapper>
+    </transition>
+  </teleport>
 </template>
 
 <script>
 import ModalWrapper from '@/components/ModalWrapper.vue'
 import { hotkeys } from '@/hotkeys.js'
+
 export default {
-  components: {
-    ModalWrapper,
-  },
+  components: { ModalWrapper },
   props: {
     isShow: {
       type: Boolean,
@@ -57,6 +60,10 @@ export default {
   width: 100%;
 }
 
+.hotkeys__input {
+  margin-bottom: calc(var(--unit) * 2);
+}
+
 .hotkeys__item {
   display: flex;
   gap: calc(var(--unit) * 15);
@@ -69,8 +76,10 @@ export default {
 }
 
 .hotkeys__icon-edit {
-  width: 25px;
-  height: 25px;
+  width: var(--height-icon-main);
+  min-width: var(--height-icon-main);
+  height: var(--height-icon-main);
+  min-height: var(--height-icon-main);
   cursor: pointer;
 }
 
@@ -101,11 +110,30 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 35px;
-  height: 35px;
+  min-width: var(--height-icon-main);
+  height: var(--height-icon-main);
   padding: var(--unit);
-  font-size: var(--font-medium);
-  border: 1px solid var(--color-primary);
+  border: var(--border-width-small) solid var(--color-primary);
   border-radius: var(--border-width-main);
+}
+
+@media (max-width: 768px) {
+  .hotkeys__item {
+    gap: calc(var(--unit) * 5);
+    font-size: var(--font-small);
+  }
+
+  .hotkeys__icon-edit {
+    width: var(--height-icon-small);
+    min-width: var(--height-icon-small);
+    height: var(--height-icon-small);
+    min-height: var(--height-icon-small);
+  }
+
+  .hotkeys__button {
+    min-width: var(--height-icon-main);
+    height: var(--height-icon-main);
+    font-size: var(--font-small);
+  }
 }
 </style>

@@ -2,7 +2,6 @@
   <div ref="modalBackdrop" class="modal-backdrop" @keydown.tab="trapTab">
     <div class="modal-content">
       <div
-        ref="modal"
         class="modal-inner-content"
         role="dialog"
         aria-modal="true"
@@ -13,7 +12,10 @@
           @click="$emit('closeModal')">
           <IconCross />
         </button>
-        <slot>I'm empty inside</slot>
+        <h5 class="modal-title">
+          <slot name="header">I'm empty inside</slot>
+        </h5>
+        <slot name="content">I'm empty inside</slot>
       </div>
     </div>
   </div>
@@ -31,12 +33,10 @@ export default {
   beforeUnmount() {
     hotkeys.closeModal.handler = null
   },
-
   methods: {
     closeModal() {
       this.$emit('closeModal')
     },
-
     trapTab(event) {
       const focusableElements = this.$refs.modalBackdrop.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -75,7 +75,12 @@ export default {
   height: 100%;
   overflow: hidden;
   overflow-y: auto;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--color-modal-backdrop);
+}
+
+.modal-title {
+  margin-bottom: calc(var(--unit) * 6);
+  font-size: var(--font-medium);
 }
 
 .modal-content {
@@ -95,8 +100,7 @@ export default {
   max-height: 100vh;
   padding: calc(var(--unit) * 3);
   overflow-y: auto;
-  background: url('@/assets/grain.png');
-  background-color: var(--color-secondary);
+  background: url('@/assets/grain.png') var(--color-bg);
   border-radius: var(--border-radius-normal);
   box-shadow: rgba(0, 0, 0, 0.5) 0 2px 8px 0;
 }
@@ -109,32 +113,32 @@ export default {
 }
 
 .modal-close-btn svg {
-  width: 24px;
-  height: 24px;
+  width: var(--height-icon-main);
+  height: var(--height-icon-main);
 }
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s ease;
+  transition: opacity var(--transition-fast) ease;
 }
 
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity var(--transition-fast) ease;
 }
 
 .fade-enter-active .modal-content,
 .fade-leave-active .modal-content {
   opacity: 1;
-  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0s;
+  transition: all var(--transition-fast) cubic-bezier(0.23, 1, 0.32, 1) 0s;
   transform: translateY(0);
 }
 
 .fade-enter-from .modal-content,
 .fade-leave-to .modal-content {
   opacity: 0;
-  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1) 0s;
+  transition: all var(--transition-fast) cubic-bezier(0.23, 1, 0.32, 1) 0s;
   transform: translateY(-100px);
 }
 </style>

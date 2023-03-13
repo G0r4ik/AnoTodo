@@ -1,27 +1,27 @@
 <template>
-  <transition name="fade">
-    <ModalWrapper
-      v-if="isShow"
-      tabindex="-1"
-      @close-modal="$emit('closeModal')">
-      <h5 class="edit-folder__title">Переименовать</h5>
-      <div class="edit-folder__content">
-        <input
-          v-for="folder of Object.keys(folders)"
-          :key="folder"
-          class="edit-folder__folder"
-          type="text"
-          :readonly="folder === 'Неотсортированное'"
-          :value="folder"
-          @change="renameFolder(folder, $event.target.value)" />
-      </div>
-    </ModalWrapper>
-  </transition>
+  <teleport to="body">
+    <transition name="fade">
+      <ModalWrapper v-if="isShow" @close-modal="$emit('closeModal')">
+        <template #header>Переименовать</template>
+        <template #content>
+          <div class="edit-folder">
+            <input
+              v-for="folder of allUserFolders"
+              :key="folder"
+              class="edit-folder__folder"
+              type="text"
+              :value="folder"
+              @change="renameFolder(folder, $event.target.value)" />
+          </div>
+        </template>
+      </ModalWrapper>
+    </transition>
+  </teleport>
 </template>
 
 <script>
-import { useFolderStore } from '@/store/folders.js'
 import ModalWrapper from '@/components/ModalWrapper.vue'
+import { useFolderStore } from '@/store/folders.js'
 
 export default {
   components: { ModalWrapper },
@@ -33,8 +33,8 @@ export default {
   },
   emits: ['closeModal'],
   computed: {
-    folders() {
-      return useFolderStore().folders
+    allUserFolders() {
+      return useFolderStore().allUserFolders()
     },
   },
   methods: {
@@ -46,18 +46,14 @@ export default {
 </script>
 
 <style>
-.edit-folder__title {
-  margin-bottom: calc(var(--unit) * 2);
-  font-size: var(--font-medium);
-}
-
-.edit-folder__content {
-  max-height: 300px;
+.edit-folder {
+  max-height: var(--height-folder-rename);
   overflow-y: auto;
 }
 
 .edit-folder__folder {
   display: block;
+  padding: var(--unit);
   margin-bottom: var(--unit);
 }
 </style>

@@ -5,9 +5,33 @@ export const useFolderStore = defineStore('folder', {
     isShowFolders: false,
     searchFilter: '',
     currentFolder: null,
-    folders: { Неотсортированное: [] },
+    folders: {},
+    defaultFolders: ['Неотсортированное'],
+    notIndexedFolders: ['Избранное'],
   }),
   actions: {
+    allFolders() {
+      return [...this.allIndexedFolders(), ...this.notIndexedFolders]
+    },
+
+    allIndexedFolders() {
+      return [...this.defaultFolders, ...this.allUserFolders()]
+    },
+
+    allStaticFolders() {
+      return [...this.defaultFolders, ...this.notIndexedFolders]
+    },
+
+    allUserFolders() {
+      return [
+        ...Object.keys(this.folders).filter(
+          f =>
+            !this.defaultFolders.includes(f) &&
+            !this.notIndexedFolders.includes(f)
+        ),
+      ]
+    },
+
     setCurrentFolder(folder) {
       this.currentFolder = folder
       this.isShowFolders = false
@@ -32,28 +56,49 @@ export const useFolderStore = defineStore('folder', {
       }
     },
     deleteFolder(folder) {
-      if (folder === 'Неотсортированное') return
       delete this.folders[folder]
-      if (this.currentFolder === folder) {
-        this.currentFolder = null
-      }
+      if (this.currentFolder === folder) this.currentFolder = null
     },
     setFolders() {
       try {
-        this.folders = JSON.parse(localStorage.getItem('folders')) || {
-          Неотсортированное: [],
+        const dateInLocalStorage = JSON.parse(localStorage.getItem('folders'))
+        if (dateInLocalStorage) {
+          this.folders = dateInLocalStorage
+        } else {
+          // this.folders = this.allStaticFolders()
+          console.log(this.allStaticFolders().length)
+          for (const folder of this.allStaticFolders()) {
+            console.log(folder)
+            this.folders[folder] = []
+          }
         }
+        // ['Неотсортированное', 'Избранное'] => {'Неотсортированное': [], 'Избранное': []}
       } catch (error) {
         console.log(error)
         localStorage.clear()
-        this.folders = { Неотсортированное: [] }
+        console.log('123')
+        for (const folder of this.allStaticFolders().length) {
+          this.folders[folder] = []
+        }
       }
     },
     changeStatus(folder, task) {
+      console.log(folder, task)
       const currentTask = this.folders[folder].find(item => item.id === task.id)
       currentTask.isReady = !currentTask.isReady
       if (currentTask.isReady) {
         currentTask.subtasks.map(subtask => (subtask.isReady = true))
+      }
+    },
+    toggleFavourite(folder, taskId) {
+      const currentTask = this.folders[folder].find(item => item.id === taskId)
+      currentTask.isFavourite = !currentTask.isFavourite
+      if (currentTask.isFavourite) {
+        this.folders['Избранное'].push(currentTask)
+        console.log('lala')
+      } else {
+        //
+        console.log('olol')
       }
     },
     addTask(task, folder) {

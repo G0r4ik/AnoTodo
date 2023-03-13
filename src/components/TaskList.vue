@@ -1,7 +1,7 @@
 <template>
   <div class="main__tasks">
-    <template v-for="folder of Object.keys(filteredTasks)" :key="folder">
-      <div v-if="filteredTasks[folder].length" class="main__tasks-item task">
+    <template v-for="folder of Object.keys(filteredTasks)" :key="folder.id">
+      <div v-if="filteredTasks[folder]?.length" class="main__tasks-item task">
         <strong
           v-if="!currentFolder && filteredTasks[folder].length"
           class="task__folder"
@@ -11,7 +11,7 @@
 
         <div
           v-for="task of filteredTasks[folder]"
-          :key="task"
+          :key="task.id"
           class="task__wrapper"
           :style="{ background: task.taskBackground || 'transparent' }">
           <div class="tasks__item" :class="{ task_active: task.isReady }">
@@ -25,7 +25,7 @@
 
           <div
             v-for="subtask of task.subtasks"
-            :key="subtask"
+            :key="subtask.id"
             class="tasks__item subtask__item"
             :class="{ task_active: subtask.isReady }">
             <TaskListItem
@@ -60,24 +60,30 @@ export default {
       return useFolderStore().searchFilter
     },
     isEmptyTasks() {
-      return Object.values(this.filteredTasks).every(item => item.length === 0)
+      return Object.values(this.filteredTasks).every(item => item?.length === 0)
     },
     currentFolder() {
       return useFolderStore().currentFolder
     },
     allFolders() {
-      return Object.keys(this.folders)
+      console.log('1', useFolderStore().allIndexedFolders())
+      console.log('2', Object.keys(this.folders))
+      return useFolderStore().allIndexedFolders()
+      // return Object.keys(this.folders)
+    },
+    allFolders2() {
+      return useFolderStore().allFolders()
     },
     folders() {
       return useFolderStore().folders
     },
     filteredTasks() {
       const result = {}
-      for (let i = 0; i < this.allFolders.length; i++) {
-        if (this.currentFolder && this.currentFolder !== this.allFolders[i]) {
+      for (let i = 0; i < this.allFolders2.length; i++) {
+        if (this.currentFolder && this.currentFolder !== this.allFolders2[i]) {
           continue
         }
-        result[this.allFolders[i]] = this.folders[this.allFolders[i]].filter(
+        result[this.allFolders2[i]] = this.folders[this.allFolders2[i]]?.filter(
           task => {
             if (!task.text.includes(this.searchFilter)) return false
             if (this.statusList === 'ready' && !task.isReady) return false
@@ -116,14 +122,6 @@ export default {
   border-radius: var(--border-radius-normal);
 }
 
-.main__not-folder {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: calc(100vh - 85px);
-}
-
 .task-status__links {
   margin-bottom: calc(var(--unit) * 5);
 }
@@ -131,7 +129,7 @@ export default {
 .task-status__link {
   cursor: pointer;
   opacity: 1;
-  transition: 0.3s;
+  transition: var(--transition-fast);
 }
 
 .task-status__link_active {
@@ -144,13 +142,13 @@ export default {
 
 .task-status__link:hover {
   opacity: 0.5;
-  transition: 0.3s;
+  transition: var(--transition-fast);
 }
 
 .main__task-not-found {
   font-size: var(--font-large);
   text-align: center;
-  opacity: 0.3;
+  opacity: 0.5;
 }
 
 .task__wrapper {
@@ -170,7 +168,7 @@ export default {
   color: var(--color-danger);
   text-decoration: line-through;
   text-decoration-color: var(--color-danger);
-  opacity: 0.95;
+  opacity: 0.5;
 }
 
 .task__status {
@@ -178,8 +176,8 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 20px;
-  min-height: 20px;
+  min-width: var(--height-icon-main);
+  min-height: var(--height-icon-main);
   margin-right: var(--unit);
   cursor: pointer;
   background: transparent;
@@ -195,8 +193,8 @@ export default {
 .task__edit,
 .task__delete,
 .task__show-subtasks {
-  width: 24px;
-  height: 24px;
+  width: var(--height-icon-main);
+  height: var(--height-icon-main);
   cursor: pointer;
 }
 
