@@ -1,17 +1,3 @@
-|- TodoList.vue
-|- TodoListItem.vue
-|- TodoListItemButton.vue
-
-|- SearchSidebar.vue
-|- SearchSidebarNavigation.vue
-|- SearchButtonClear.vue
-|- SearchButtonRun.vue
-|- SearchInputQuery.vue
-|- SearchInputExcludeGlob.vue
-
-|- SettingsCheckboxTerms.vue
-|- SettingsCheckboxLaunchOnStartup.vue
-
 ## НОВОЕ:
 
 - запретить скролл старницы когда есть модальное окно
@@ -37,8 +23,8 @@
 
 - focus \ tabindex \ всё можно делать с помощью клавиатуры
 - если открыты два модальных окна то не закрываются.=(
+- подумать над цветом status
 - удалить прослушиватели
-- цвет текста на тасках
 - CSS REFACTORING...
 - task-list
 - избранное
@@ -46,8 +32,8 @@
 
 ## ВОПРОСЫ:
 
-- нужно ли нам передовать id или сразу
 - что делать если мы работаем с localStorage и кардинально меняем данные, то единтсвенное что попомгает это clear(), но на стороне клиента это делать плохо.
+- нужно ли нам передовать id или сразу
 - modal vs popup vs ...
 - default: () => ({})?
 
@@ -62,6 +48,7 @@
 - Анимации к модальным окнам
 - где расположить создание
 - разным цветом помечать
+- цвет текста на тасках
 - Object.keys(folders)
 - переименовать папку
 - страница с хотекями

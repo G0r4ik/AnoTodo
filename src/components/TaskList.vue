@@ -13,7 +13,7 @@
           v-for="task of filteredTasks[folder]"
           :key="task.id"
           class="task__wrapper"
-          :style="{ background: task.taskBackground || 'transparent' }">
+          :style="{ background: task.taskBackground, color: task.color }">
           <div class="tasks__item" :class="{ task_active: task.isReady }">
             <TaskListItem
               :task="task"
@@ -177,42 +177,12 @@ export default {
   opacity: 0.5;
 }
 
-.task__status {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: var(--height-icon-main);
-  min-height: var(--height-icon-main);
-  margin-right: var(--unit);
-  cursor: pointer;
-  background: transparent;
-  border: var(--border-width-main) solid var(--color-text);
-  border-radius: var(--border-radius-circle);
-}
-
-.task_active > .task__status {
-  background: var(--color-text);
-  border: 5px solid var(--color-primary);
-}
-
 .task__edit,
 .task__delete,
 .task__show-subtasks {
   width: var(--height-icon-main);
   height: var(--height-icon-main);
   cursor: pointer;
-}
-
-.task__text {
-  margin-right: auto;
-  margin-left: calc(var(--unit) * 2);
-  word-break: break-all;
-  mix-blend-mode: difference;
-}
-
-.subtask__item {
-  margin-left: calc(var(--unit) * 4);
 }
 </style>
 <!-- 180 -->

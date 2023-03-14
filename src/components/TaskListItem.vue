@@ -3,12 +3,15 @@
     type="checkbox"
     class="task__status"
     tabindex="0"
+    :style="`border-color:${task.color}`"
     @click="changeTaskStatus(task, subtask)"
     @keypress.enter="changeTaskStatus(task, subtask)" />
   <IconStar
     v-if="type === 'task'"
+    tabindex="0"
     :is-active="task.isFavourite"
-    @click="toggleTaskFavourite(task)" />
+    @click="toggleTaskFavourite(task)"
+    @keydown.enter="toggleTaskFavourite(task)" />
 
   <div class="task__text">{{ list.text }}</div>
 
@@ -26,7 +29,7 @@
     tabindex="0"
     @click="showEditTaskModal(task)"
     @keypress.enter="showEditTaskModal(task)">
-    <IconEdit />
+    <IconEdit :color="task.color" />
   </div>
 
   <div class="task__delete" tabindex="0" @click="deleteTask(task, subtask)">
@@ -86,3 +89,35 @@ export default {
   },
 }
 </script>
+
+<style>
+.task__status {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--height-icon-main);
+  min-height: var(--height-icon-main);
+  margin-right: var(--unit);
+  cursor: pointer;
+  background: transparent;
+  border-style: solid;
+  border-width: var(--border-width-main);
+  border-radius: var(--border-radius-circle);
+}
+
+.task_active > .task__status {
+  background: var(--color-text);
+  border: 5px solid var(--color-danger);
+}
+
+.task__text {
+  margin-right: auto;
+  margin-left: calc(var(--unit) * 2);
+  word-break: break-all;
+}
+
+.subtask__item {
+  margin-left: calc(var(--unit) * 4);
+}
+</style>
