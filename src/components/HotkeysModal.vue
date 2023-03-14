@@ -7,10 +7,19 @@
           <div class="hotkeys">
             <input
               id="hotkeys-input"
+              v-model="hotkeysInput"
               type="text"
               name="hotkeys-input"
+              placeholder="Действие..."
+              autocomplete="off"
               class="hotkeys__input" />
-            <div v-for="(hotkey, i) of hotkeys" :key="i" class="hotkeys__item">
+            <div
+              v-for="(hotkey, i) of filteredHotkeys"
+              :key="i"
+              tabindex="0"
+              class="hotkeys__item"
+              @click="doAction(hotkey)"
+              @keydown.enter="doAction(hotkey)">
               <div class="hotkeys__action">
                 <IconEdit class="hotkeys__icon-edit" />
                 <span class="hotkeys__action-text">
@@ -41,16 +50,35 @@ import { hotkeys } from '@/hotkeys.js'
 export default {
   components: { ModalWrapper },
   props: {
-    isShow: {
-      type: Boolean,
-      default: false,
-    },
+    isShow: { type: Boolean, default: false },
   },
   emits: ['closeModal'],
   data() {
     return {
-      hotkeys,
+      hotkeysV: hotkeys,
+      hotkeysInput: '',
     }
+  },
+  computed: {
+    filteredHotkeys() {
+      const res = {}
+      Object.keys(this.hotkeysV).forEach(hotkey => {
+        const low = this.hotkeysV[hotkey].description.toLowerCase()
+        if (low.includes(this.hotkeysInput.toLowerCase())) {
+          res[hotkey] = this.hotkeysV[hotkey]
+        }
+      })
+      return res
+    },
+  },
+  methods: {
+    doAction(hotkey) {
+      const arr = ['Закрыть модальное окно', 'Открыть сочетания клавиш']
+      if (!arr.includes(hotkey.description)) {
+        this.$emit('closeModal')
+      }
+      hotkey.handler()
+    },
   },
 }
 </script>
@@ -61,6 +89,7 @@ export default {
 }
 
 .hotkeys__input {
+  width: 100%;
   margin-bottom: calc(var(--unit) * 2);
 }
 

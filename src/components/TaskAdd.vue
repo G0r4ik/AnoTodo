@@ -17,6 +17,7 @@
             id="new-task-bg"
             v-model="newTask.taskBackground"
             name="new-task-bg">
+            <option value="none" selected>none</option>
             <option
               v-for="color of colors"
               :key="color"
@@ -60,7 +61,24 @@
           <button class="add-subtask__button" @click="addSubtask">
             Добавить подзадачу
           </button>
-          <button class="add-task__add-button" @click="addTask">
+          <AppError
+            v-if="error"
+            :error="error"
+            class="add-task-error"
+            @close-error="closeError" />
+          <button
+            class="add-task__add-button"
+            :style="`background:${
+              newTask.taskBackground === 'none'
+                ? 'var(--color-bg-primary)'
+                : newTask.taskBackground
+            };
+             border-color:${
+               newTask.taskBackground === 'none'
+                 ? 'var(--color-primary)'
+                 : newTask.taskBackground
+             }`"
+            @click="addTask">
             Добавить
           </button>
         </div>
@@ -76,10 +94,7 @@ import ModalWrapper from '@/components/ModalWrapper.vue'
 export default {
   components: { ModalWrapper },
   props: {
-    isShow: {
-      type: Boolean,
-      default: false,
-    },
+    isShow: { type: Boolean, default: false },
   },
   emits: ['closeModal'],
   data() {
@@ -87,10 +102,11 @@ export default {
       newTask: {
         text: '',
         isReady: false,
-        taskBackground: null,
+        taskBackground: 'none',
         isFavourite: false,
         subtasks: [],
       },
+      error: null,
       colors: [
         'tomato',
         'lightblue',
@@ -108,14 +124,21 @@ export default {
   },
   computed: {
     allFolders() {
-      return useFolderStore().allFolders()
+      return useFolderStore().allIndexedFolders()
     },
     taskFolder() {
       return useFolderStore().currentFolder || 'Неотсортированное'
     },
   },
   methods: {
+    closeError() {
+      this.error = null
+    },
     addTask() {
+      if (this.newTask.text.length < 2) {
+        this.error = 'Текст задачи не может быть меньше двух символов'
+        return
+      }
       this.newTask.id = Date.now().toString(36) + Math.random().toString(36)
       this.newTask.subtasks = this.newTask.subtasks.filter(s => s.text !== '')
       useFolderStore().addTask({ ...this.newTask }, this.taskFolder)
@@ -141,8 +164,13 @@ export default {
 .add-task {
   display: flex;
   flex-direction: column;
+  width: 300px;
   margin-top: calc(var(--unit) * 2);
   margin-bottom: calc(var(--unit) * 3);
+}
+
+.add-task-error {
+  margin-bottom: var(--unit);
 }
 
 .add-task__folder {
@@ -156,11 +184,13 @@ export default {
 
 .add-task__text {
   flex: 1 1 auto;
+  padding: var(--unit);
   margin: var(--unit) 0;
 }
 
 .add-subtask__text {
   width: 100%;
+  padding: calc(var(--unit) / 2);
   margin-bottom: var(--unit);
   margin-left: calc(var(--unit) * 5);
 }
@@ -175,9 +205,8 @@ export default {
 }
 
 .add-task__add-button {
-  color: var(--color-primary);
-  background: var(--color-bg-primary);
-  border: var(--border-width-main) solid var(--color-primary);
+  border-style: solid;
+  border-width: var(--border-width-main);
 }
 
 .add-subtask {
@@ -199,6 +228,7 @@ export default {
   padding: var(--unit) calc(var(--unit) * 2);
   margin-bottom: var(--unit);
   margin-left: calc(var(--unit) * 6);
+  font-size: var(--font-small);
 }
 
 .add-task__add-button:disabled,

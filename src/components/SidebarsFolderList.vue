@@ -23,7 +23,10 @@
       :key="folder"
       tabindex="0"
       class="sidebar__folder"
-      :class="{ sidebar__folder_active: folder === currentFolder }"
+      :class="{
+        sidebar__folder_active: folder === currentFolder,
+        sidebar__folder_dublicate: isDuplicate(folder),
+      }"
       @click="changeCurrentFolder(folder)"
       @keypress.enter="changeCurrentFolder(folder)">
       <span class="sidebar__folder-text">{{ folder }}</span>
@@ -52,6 +55,9 @@ export default {
     },
   },
   methods: {
+    isDuplicate(folderName) {
+      return useFolderStore().isDuplicate(folderName)
+    },
     changeCurrentFolder(folder) {
       useFolderStore().setCurrentFolder(folder === 'all' ? null : folder)
     },
@@ -92,4 +98,30 @@ export default {
 .sidebar__folder_active {
   color: var(--color-primary);
 }
+
+.sidebar__folder_dublicate {
+  color: var(--color-danger);
+  transform: rotate(0);
+  animation: shake 0.75s ease-in-out infinite;
+}
+
+@keyframes shake {
+  0% {
+    transform: rotate(0);
+  }
+
+  25% {
+    transform: rotate(2deg);
+  }
+
+  50% {
+    transform: rotate(-2deg);
+  }
+
+  100% {
+    transform: rotate(0);
+  }
+}
+
+/* Добавляем класс .shake к элементу при клике на кнопку */
 </style>

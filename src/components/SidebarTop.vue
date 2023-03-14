@@ -1,7 +1,10 @@
 <template>
   <div class="sidebar__top">
     <span class="sidebar__title">Папки</span>
-    <button class="sidebar__edit" @click="toggleEditFolderModal">
+    <button
+      v-if="hasUserFolder"
+      class="sidebar__edit"
+      @click="toggleEditFolderModal">
       <IconEdit />
     </button>
   </div>
@@ -13,6 +16,7 @@
 
 <script>
 import FoldersRenameModal from '@/components/FoldersRenameModal.vue'
+import { useFolderStore } from '../store/folders'
 
 export default {
   components: { FoldersRenameModal },
@@ -20,6 +24,11 @@ export default {
     return {
       isShowEditFolder: false,
     }
+  },
+  computed: {
+    hasUserFolder() {
+      return useFolderStore().allUserFolders().length
+    },
   },
   methods: {
     toggleEditFolderModal() {

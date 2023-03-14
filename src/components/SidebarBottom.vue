@@ -1,26 +1,34 @@
 <template>
   <div class="sidebar__bottom">
-    <div class="sidebar__new-folder">
-      <input
-        id="new-folder"
-        v-model.trim="newFolder"
-        class="sidebar__new-folder-input"
-        type="text"
-        name="new-folder"
-        placeholder="Новая папка"
-        @keypress.enter="createNewFolder" />
-      <button class="sidebar__new-folder-button" @click="createNewFolder">
-        +
-      </button>
+    <div class="sidebar__bottom-inner">
+      <AppError
+        v-if="error"
+        :error="error"
+        class="sidebar__new-folder-error"
+        @close-error="closeError" />
+      <div class="sidebar__new-folder">
+        <input
+          id="new-folder"
+          ref="new-folder"
+          v-model.trim="newFolder"
+          class="sidebar__new-folder-input"
+          type="text"
+          name="new-folder"
+          placeholder="Новая папка"
+          @keypress.enter="createNewFolder" />
+        <button class="sidebar__new-folder-button" @click="createNewFolder">
+          +
+        </button>
+      </div>
+      <a
+        href="#"
+        role="button"
+        class="sidebar__shortcuts"
+        @click="toggleHotkeysModal">
+        <IconShortcuts class="sidebar__shortcuts-icon" />
+        <span class="sidebar__shortcuts-text">показать сочетания клавиш</span>
+      </a>
     </div>
-    <a
-      href="#"
-      role="button"
-      class="sidebar__shortcuts"
-      @click="toggleHotkeysModal">
-      <IconShortcuts class="sidebar__shortcuts-icon" />
-      <span class="sidebar__shortcuts-text">показать сочетания клавиш</span>
-    </a>
   </div>
 
   <HotkeysModal
@@ -39,18 +47,43 @@ export default {
     return {
       newFolder: '',
       isShowHotkeysModal: false,
+      timerOne: null,
+      timerTwo: null,
+      error: null,
     }
+  },
+  computed: {
+    folders() {
+      return useFolderStore().folders
+    },
+    duplicateFolder() {
+      return useFolderStore().duplicateFolder
+    },
   },
   mounted() {
     hotkeys.showHotkeys.handler = this.toggleHotkeysModal
+    hotkeys.closeModal.handler = this.toggleHotkeysModal
   },
   methods: {
+    closeError() {
+      this.error = null
+    },
     createNewFolder() {
-      if (this.newFolder !== '' && !useFolderStore().folders[this.newFolder]) {
-        useFolderStore().createNewFolder(this.newFolder)
-        this.newFolder = ''
+      const store = useFolderStore()
+      if (store.folders[this.newFolder]) {
+        store.duplicateFolder = this.newFolder
+        this.error = 'Уже существует такая папка'
+        clearTimeout(this.timerOne)
+        clearTimeout(this.timerTwo)
+        this.timerOne = setTimeout(() => (store.duplicateFolder = null), 750)
+        this.timerTwo = setTimeout(() => (this.error = null), 3000)
       } else {
-        // return
+        clearTimeout(this.timerOne)
+        clearTimeout(this.timerTwo)
+        store.createNewFolder(this.newFolder)
+        store.duplicateFolder = null
+        this.error = null
+        this.newFolder = ''
       }
     },
     toggleHotkeysModal() {
@@ -68,6 +101,10 @@ export default {
   padding: calc(var(--unit) * 2) 0;
 }
 
+.sidebar__bottom-inner {
+  position: relative;
+}
+
 .sidebar__new-folder {
   display: flex;
   align-items: center;
@@ -76,10 +113,15 @@ export default {
   margin-bottom: calc(var(--unit) * 2);
 }
 
+.sidebar__new-folder-error {
+  position: absolute;
+  bottom: var(--height-sidebar-bottom);
+  width: 100%;
+}
+
 .sidebar__new-folder-input {
   width: 100%;
   padding: var(--unit) calc(var(--unit) * 2);
-  margin-right: var(--unit);
   color: var(--color-primary);
   background: var(--color-bg-primary);
   border: var(--border-width-main) var(--color-primary) solid;
@@ -98,7 +140,7 @@ export default {
   min-width: var(--height-icon-main);
   height: var(--height-icon-main);
   min-height: var(--height-icon-main);
-  margin-left: var(--unit);
+  margin-left: calc(var(--unit) * 2);
   color: var(--color-primary);
   background: var(--color-bg-primary);
   border: var(--border-width-main) solid var(--color-primary);

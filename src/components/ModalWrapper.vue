@@ -79,7 +79,7 @@ export default {
 }
 
 .modal-title {
-  margin-bottom: calc(var(--unit) * 6);
+  margin-bottom: calc(var(--unit) * 3);
   font-size: var(--font-medium);
 }
 
