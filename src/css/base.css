@@ -35,6 +35,10 @@ input {
   border-radius: var(--border-radius-small);
 }
 
+input {
+  padding: var(--unit);
+}
+
 button {
   border: none;
 }

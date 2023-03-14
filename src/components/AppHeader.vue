@@ -133,6 +133,7 @@ export default {
     font-size: var(--font-small);
     white-space: nowrap;
     border-width: 2px;
+    border-radius: var(--border-radius-small);
   }
 }
 </style>
