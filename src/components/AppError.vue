@@ -10,14 +10,8 @@
 <script>
 export default {
   props: {
-    error: {
-      type: String,
-      default: 'Ошибка',
-    },
-    timeToClose: {
-      type: Number,
-      default: 3000,
-    },
+    error: { type: String, default: 'Ошибка' },
+    timeToClose: { type: Number, default: 3000 },
   },
   emits: ['closeError'],
   mounted() {

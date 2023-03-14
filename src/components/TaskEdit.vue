@@ -7,7 +7,7 @@
           <input
             class="task-edit__task"
             :value="task.text"
-            @change="editTask(folder, task, $event.target.value)" />
+            @change="editTask(task, $event.target.value)" />
           <!-- <input
       v-for="subtask of task.subtasks"
       :key="subtask.text"
@@ -37,7 +37,7 @@
           </div>
         </template>
 
-        <button @click="addNewSubtask(folder, task, $event.target.value)">
+        <button @click="addNewSubtask(task, $event.target.value)">
           Добавить подзадачу
         </button>
       </ModalWrapper>
@@ -52,26 +52,18 @@ import ModalWrapper from '@/components/ModalWrapper.vue'
 export default {
   components: { ModalWrapper },
   props: {
-    isShow: {
-      type: Boolean,
-    },
-    folder: {
-      type: String,
-      default: 'Неотсортированное',
-    },
-    task: {
-      type: Object,
-      default: () => ({}),
-    },
+    isShow: { type: Boolean, default: false },
+    folder: { type: String, default: 'Неотсортированное' },
+    task: { type: Object, default: () => ({}) },
   },
   emits: ['closeModal'],
 
   methods: {
-    editTask(folder, task, text) {
-      useFolderStore().editTask(folder, task, text)
+    editTask(task, text) {
+      useFolderStore().editTask(task, text)
     },
-    editSubtask(folder, task, subtask, text) {
-      useFolderStore().editSubtask(folder, task, subtask, text)
+    editSubtask(task, subtask, text) {
+      useFolderStore().editSubtask(task, subtask, text)
     },
     addNewSubtask() {
       useFolderStore().addSubtask()

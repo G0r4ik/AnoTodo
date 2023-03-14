@@ -3,12 +3,12 @@
     type="checkbox"
     class="task__status"
     tabindex="0"
-    @click="changeStatus(folder, task, subtask)"
-    @keypress.enter="changeStatus(folder, task, subtask)" />
+    @click="changeTaskStatus(task, subtask)"
+    @keypress.enter="changeTaskStatus(task, subtask)" />
   <IconStar
     v-if="type === 'task'"
     :is-active="task.isFavourite"
-    @click="toggleFavourite(folder, task.id)" />
+    @click="toggleTaskFavourite(task)" />
 
   <div class="task__text">{{ list.text }}</div>
 
@@ -24,22 +24,18 @@
     v-if="type === 'task'"
     class="task__edit"
     tabindex="0"
-    @click="showEditTaskModal(folder, task)"
-    @keypress.enter="showEditTaskModal(folder, task)">
+    @click="showEditTaskModal(task)"
+    @keypress.enter="showEditTaskModal(task)">
     <IconEdit />
   </div>
 
-  <div
-    class="task__delete"
-    tabindex="0"
-    @click="deleteTask(folder, task, subtask)">
+  <div class="task__delete" tabindex="0" @click="deleteTask(task, subtask)">
     <IconCross />
   </div>
 
   <TaskEdit
     :is-show="!!currentEditTask"
     :task="currentEditTask?.task"
-    :folder="currentEditTask?.folder"
     @close-modal="closeEditTaskPopup" />
 </template>
 
@@ -52,26 +48,10 @@ export default {
     TaskEdit,
   },
   props: {
-    folder: {
-      type: String,
-      default: 'Неотсортированное',
-    },
-    task: {
-      type: Object,
-      default: () => ({}),
-    },
-    subtask: {
-      type: Object,
-      default: () => ({}),
-    },
-    list: {
-      type: Object,
-      default: () => ({}),
-    },
-    type: {
-      type: String,
-      default: 'task',
-    },
+    task: { type: Object, default: () => ({}) },
+    subtask: { type: Object, default: () => ({}) },
+    list: { type: Object, default: () => ({}) },
+    type: { type: String, default: 'task' },
   },
   emits: ['toggleSubtasksList'],
   data() {
@@ -80,27 +60,27 @@ export default {
     }
   },
   methods: {
-    toggleFavourite(folder, taskId) {
-      useFolderStore().toggleFavourite(folder, taskId)
+    toggleTaskFavourite(task) {
+      useFolderStore().toggleTaskFavourite(task)
     },
-    showEditTaskModal(folder, task) {
-      this.currentEditTask = { folder, task }
+    showEditTaskModal(task) {
+      this.currentEditTask = { task }
     },
     closeEditTaskPopup() {
       this.currentEditTask = null
     },
-    deleteTask(folder, task, subtask) {
+    deleteTask(task, subtask) {
       if (this.type === 'subtask') {
-        useFolderStore().deleteSubtask(folder, task, subtask)
+        useFolderStore().deleteSubtask(task, subtask)
       } else {
-        useFolderStore().deleteTask(folder, task)
+        useFolderStore().deleteTask(task)
       }
     },
-    changeStatus(folder, task, subtask) {
+    changeTaskStatus(task, subtask) {
       if (this.type === 'subtask') {
-        useFolderStore().changeStatusSubtask(folder, task, subtask)
+        useFolderStore().changeTaskStatusSubtask(subtask)
       } else {
-        useFolderStore().changeStatus(folder, task)
+        useFolderStore().changeTaskStatus(task)
       }
     },
   },

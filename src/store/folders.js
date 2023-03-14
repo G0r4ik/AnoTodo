@@ -2,132 +2,112 @@ import { defineStore } from 'pinia'
 
 export const useFolderStore = defineStore('folder', {
   state: () => ({
-    isShowFolders: false,
-    searchFilter: '',
-    currentFolder: null,
-    folders: {},
-    defaultFolders: ['Неотсортированное'],
+    isFoldersVisible: false,
+    searchQuery: '',
+    folders: {}, // new Set?
+    staticFolders: ['Неотсортированное'],
     notIndexedFolders: ['Избранное'],
+    currentFolder: null,
+    duplicateFolder: null,
   }),
+
+  getters: {
+    allFolders: ({ folders }) => Object.keys(folders),
+    allIndexedFolders: ({ staticFolders, allUserFolders }) => [
+      ...staticFolders,
+      ...allUserFolders,
+    ],
+    allStaticFolders: ({ staticFolders, notIndexedFolders }) => [
+      ...staticFolders,
+      ...notIndexedFolders,
+    ],
+    allUserFolders: ({ folders, staticFolders, notIndexedFolders }) => {
+      return Object.keys(folders).filter(
+        folder =>
+          !staticFolders.includes(folder) && !notIndexedFolders.includes(folder)
+      )
+    },
+    allTasks: ({ folders }) => Object.values(folders).flat(),
+    allFavouritesTasks: ({ allTasks }) => allTasks.filter(t => t.isFavourite),
+  },
+
   actions: {
-    allFolders() {
-      return [...this.allIndexedFolders(), ...this.notIndexedFolders]
-    },
-
-    allIndexedFolders() {
-      return [...this.defaultFolders, ...this.allUserFolders()]
-    },
-
-    allStaticFolders() {
-      return [...this.defaultFolders, ...this.notIndexedFolders]
-    },
-
-    allUserFolders() {
-      return [
-        ...Object.keys(this.folders).filter(
-          f =>
-            !this.defaultFolders.includes(f) &&
-            !this.notIndexedFolders.includes(f)
-        ),
-      ]
-    },
-
-    setCurrentFolder(folder) {
-      this.currentFolder = folder
-      this.isShowFolders = false
-    },
-
-    changeIsShowFolders() {
-      this.isShowFolders = !this.isShowFolders
-    },
-
-    setSearchFilter(searchText) {
-      this.searchFilter = searchText
-    },
-
-    renameFolder(oldFolderName, newFolderName) {
-      if (this.folders[newFolderName]) return
-      this.folders[newFolderName] = this.folders[oldFolderName]
-      delete this.folders[oldFolderName]
-    },
-    createNewFolder(folder) {
-      if (!this.folders[folder]) {
-        this.folders[folder] = []
-      }
-    },
-    deleteFolder(folder) {
-      delete this.folders[folder]
-      if (this.currentFolder === folder) this.currentFolder = null
-    },
+    // Folder management
     setFolders() {
       try {
         const dateInLocalStorage = JSON.parse(localStorage.getItem('folders'))
         if (dateInLocalStorage) {
           this.folders = dateInLocalStorage
         } else {
-          // this.folders = this.allStaticFolders()
-          console.log(this.allStaticFolders().length)
           for (const folder of this.allStaticFolders()) {
-            console.log(folder)
-            this.folders[folder] = []
+            this.addFolder(folder)
           }
         }
-        // ['Неотсортированное', 'Избранное'] => {'Неотсортированное': [], 'Избранное': []}
       } catch (error) {
         console.log(error)
         localStorage.clear()
-        console.log('123')
-        for (const folder of this.allStaticFolders().length) {
-          this.folders[folder] = []
+        for (const folder of this.allStaticFolders()) {
+          this.addFolder(folder)
         }
       }
     },
-    changeStatus(folder, task) {
-      console.log(folder, task)
-      const currentTask = this.folders[folder].find(item => item.id === task.id)
-      currentTask.isReady = !currentTask.isReady
-      if (currentTask.isReady) {
-        currentTask.subtasks.map(subtask => (subtask.isReady = true))
-      }
+    addFolder(folder) {
+      this.folders[folder] = []
     },
-    toggleFavourite(folder, taskId) {
-      const currentTask = this.folders[folder].find(item => item.id === taskId)
-      currentTask.isFavourite = !currentTask.isFavourite
-      if (currentTask.isFavourite) {
-        this.folders['Избранное'].push(currentTask)
-        console.log('lala')
-      } else {
-        //
-        console.log('olol')
-      }
+    renameFolder(oldFolderName, newFolderName) {
+      this.folders[newFolderName] = this.folders[oldFolderName]
+      this.deleteFolder(oldFolderName)
     },
-    addTask(task, folder) {
-      const currentFolder = this.folders[folder]
-      currentFolder.push(task)
+    deleteFolder(folder) {
+      delete this.folders[folder]
+      if (this.currentFolder === folder) this.currentFolder = null
     },
-    deleteTask(folder, task) {
-      const currentFolder = this.folders[folder]
-      const index = currentFolder.findIndex(item => item.id === task.id)
-      if (index >= 0) currentFolder.splice(index, 1)
+    isFolderDuplicate(folderName) {
+      return this.duplicateFolder === folderName
     },
-    editTask(folder, task, text) {
-      this.folders[folder].find(_task => _task === task).text = text
+    setCurrentFolder(folder) {
+      this.currentFolder = folder
+      this.isFoldersVisible = false
     },
-    changeStatusSubtask(folder, task, subtask) {
-      const currentTask = this.folders[folder].find(item => item.id === task.id)
-      const currentSubtask = currentTask.subtasks.find(item => item === subtask)
-      currentSubtask.isReady = !currentSubtask.isReady
+    toggleIsShowFolders() {
+      this.isFoldersVisible = !this.isFoldersVisible
     },
-    editSubtask(folder, task, subtask, text) {
-      const currentTask = this.folders[folder].find(_task => _task === task)
-      currentTask.subtasks.find(_subtask => subtask === _subtask).text = text
+
+    // Search
+    setSearchQuery(query) {
+      this.searchQuery = query
     },
-    deleteSubtask(folder, task, subtask) {
-      const currentTask = this.folders[folder].find(t => t.id === task.id)
-      currentTask.subtasks = currentTask.subtasks.filter(s => s !== subtask)
+
+    //  Tasks
+    addTask(task) {
+      this.folders[task.folder].push(task)
     },
-    addSubtask(folder, task, subtask) {
-      this.folders[folder].find(_task => _task === task).subtasks.push(subtask)
+    editTask(task, text) {
+      task.text = text
+    },
+    deleteTask(task) {
+      const folder = task.folder
+      this.folders[folder] = this.folders[folder].filter(t => t !== task)
+    },
+    toggleTaskFavourite(task) {
+      task.isFavourite = !task.isFavourite
+    },
+    changeTaskStatus(task) {
+      task.isReady = !task.isReady
+    },
+
+    //  Subtask
+    addSubtask(task, subtask) {
+      task.subtasks.push(subtask)
+    },
+    editSubtask(task, subtask, text) {
+      task.subtasks.find(_subtask => subtask === _subtask).text = text
+    },
+    deleteSubtask(task, subtask) {
+      task.subtasks = task.subtasks.filter(s => s !== subtask)
+    },
+    changeTaskStatusSubtask(subtask) {
+      subtask.isReady = !subtask.isReady
     },
   },
 })

@@ -48,11 +48,11 @@ export default {
       this.isShowCreatePost = !this.isShowCreatePost
     },
     updateSearchFilter(value) {
-      useFolderStore().setSearchFilter(value)
+      useFolderStore().setSearchQuery(value)
       useFolderStore().setCurrentFolder(null)
     },
     changeShowFolders() {
-      useFolderStore().changeIsShowFolders()
+      useFolderStore().toggleIsShowFolders()
     },
   },
 }

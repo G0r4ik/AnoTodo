@@ -25,7 +25,7 @@
       class="sidebar__folder"
       :class="{
         sidebar__folder_active: folder === currentFolder,
-        sidebar__folder_dublicate: isDuplicate(folder),
+        sidebar__folder_dublicate: isFolderDuplicate(folder),
       }"
       @click="changeCurrentFolder(folder)"
       @keypress.enter="changeCurrentFolder(folder)">
@@ -45,18 +45,18 @@ import { useFolderStore } from '@/store/folders.js'
 export default {
   computed: {
     allUserFolders() {
-      return useFolderStore().allUserFolders()
+      return useFolderStore().allUserFolders
     },
     allStaticFolder() {
-      return useFolderStore().allStaticFolders()
+      return useFolderStore().allStaticFolders
     },
     currentFolder() {
       return useFolderStore().currentFolder
     },
   },
   methods: {
-    isDuplicate(folderName) {
-      return useFolderStore().isDuplicate(folderName)
+    isFolderDuplicate(folderName) {
+      return useFolderStore().isFolderDuplicate(folderName)
     },
     changeCurrentFolder(folder) {
       useFolderStore().setCurrentFolder(folder === 'all' ? null : folder)

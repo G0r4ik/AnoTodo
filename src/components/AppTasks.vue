@@ -5,7 +5,7 @@
     </strong>
     <TaskListSelect
       :status-list="statusList"
-      @change-status-list="changeStatusList" />
+      @change-status-list="changeTaskStatusList" />
     <TaskList :status-list="statusList" />
   </main>
 </template>
@@ -46,7 +46,7 @@ export default {
     useFolderStore().setFolders()
   },
   methods: {
-    changeStatusList(statusList) {
+    changeTaskStatusList(statusList) {
       this.statusList = statusList
     },
   },

@@ -16,7 +16,6 @@
           :style="{ background: task.taskBackground || 'transparent' }">
           <div class="tasks__item" :class="{ task_active: task.isReady }">
             <TaskListItem
-              :folder="folder"
               :task="task"
               :list="task"
               :type="'task'"
@@ -30,7 +29,6 @@
             :class="{ task_active: subtask.isReady }">
             <TaskListItem
               v-if="task.isShowSubtasks"
-              :folder="folder"
               :type="'subtask'"
               :task="task"
               :subtask="subtask"
@@ -56,8 +54,8 @@ export default {
     statusList: { type: String, default: 'all' },
   },
   computed: {
-    searchFilter() {
-      return useFolderStore().searchFilter
+    searchQuery() {
+      return useFolderStore().searchQuery
     },
     isEmptyTasks() {
       return Object.values(this.filteredTasks).every(item => item?.length === 0)
@@ -65,37 +63,45 @@ export default {
     currentFolder() {
       return useFolderStore().currentFolder
     },
-    allFolders() {
-      console.log('1', useFolderStore().allIndexedFolders())
-      console.log('2', Object.keys(this.folders))
-      return useFolderStore().allIndexedFolders()
-      // return Object.keys(this.folders)
+    allIndexedFolders() {
+      return useFolderStore().allIndexedFolders
     },
-    allFolders2() {
-      return useFolderStore().allFolders()
+    allFolders() {
+      return useFolderStore().allFolders
+    },
+    allFavouritesTasks() {
+      return useFolderStore().allFavouritesTasks
     },
     folders() {
       return useFolderStore().folders
     },
     filteredTasks() {
       const result = {}
-      for (let i = 0; i < this.allFolders2.length; i++) {
-        if (this.currentFolder && this.currentFolder !== this.allFolders2[i]) {
+      if (this.currentFolder === 'Избранное') {
+        return { Избранное: this.allFavouritesTasks.filter(this.func) }
+      }
+      for (let i = 0; i < this.allIndexedFolders.length; i++) {
+        if (
+          this.currentFolder &&
+          this.currentFolder !== this.allIndexedFolders[i]
+        ) {
           continue
         }
-        result[this.allFolders2[i]] = this.folders[this.allFolders2[i]]?.filter(
-          task => {
-            if (!task.text.includes(this.searchFilter)) return false
-            if (this.statusList === 'ready' && !task.isReady) return false
-            if (this.statusList === 'active' && task.isReady) return false
-            return true
-          }
-        )
+
+        result[this.allIndexedFolders[i]] = this.folders[
+          this.allIndexedFolders[i]
+        ]?.filter(this.func)
       }
       return result
     },
   },
   methods: {
+    func(task) {
+      if (!task.text.includes(this.searchQuery)) return false
+      if (this.statusList === 'ready' && !task.isReady) return false
+      if (this.statusList === 'active' && task.isReady) return false
+      return true
+    },
     toggleSubtasksList(task) {
       task.isShowSubtasks = !task.isShowSubtasks
     },

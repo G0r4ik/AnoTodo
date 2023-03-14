@@ -1,5 +1,5 @@
 <template>
-  <aside class="sidebar" :class="{ sidebar_hidden: !isShowFolders }">
+  <aside class="sidebar" :class="{ sidebar_hidden: !isFoldersVisible }">
     <div class="sidebar__inner">
       <SidebarTop />
       <SidebarsFolderList />
@@ -17,8 +17,8 @@ import { useFolderStore } from '@/store/folders.js'
 export default {
   components: { SidebarsFolderList, SidebarBottom, SidebarTop },
   computed: {
-    isShowFolders() {
-      return useFolderStore().isShowFolders
+    isFoldersVisible() {
+      return useFolderStore().isFoldersVisible
     },
   },
 }

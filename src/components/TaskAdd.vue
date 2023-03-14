@@ -102,6 +102,7 @@ export default {
       newTask: {
         text: '',
         isReady: false,
+        folder: 'Неотсортированное',
         taskBackground: 'none',
         isFavourite: false,
         subtasks: [],
@@ -124,7 +125,7 @@ export default {
   },
   computed: {
     allFolders() {
-      return useFolderStore().allIndexedFolders()
+      return useFolderStore().allIndexedFolders
     },
     taskFolder() {
       return useFolderStore().currentFolder || 'Неотсортированное'
@@ -141,7 +142,8 @@ export default {
       }
       this.newTask.id = Date.now().toString(36) + Math.random().toString(36)
       this.newTask.subtasks = this.newTask.subtasks.filter(s => s.text !== '')
-      useFolderStore().addTask({ ...this.newTask }, this.taskFolder)
+      this.newTask.folder = this.taskFolder
+      useFolderStore().addTask({ ...this.newTask })
       this.newTask.text = ''
       this.newTask.subtasks = []
     },

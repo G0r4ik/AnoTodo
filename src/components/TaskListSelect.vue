@@ -4,24 +4,24 @@
       tabindex="0"
       class="task-status__link"
       :class="{ 'task-status__link_active': statusList === 'all' }"
-      @click="$emit('changeStatusList', 'all')"
-      @keypress.enter="$emit('changeStatusList', 'all')">
+      @click="$emit('changeTaskStatusList', 'all')"
+      @keypress.enter="$emit('changeTaskStatusList', 'all')">
       Все
     </span>
     <span
       class="task-status__link"
       tabindex="0"
       :class="{ 'task-status__link_active': statusList === 'active' }"
-      @click="$emit('changeStatusList', 'active')"
-      @keypress.enter="$emit('changeStatusList', 'active')">
+      @click="$emit('changeTaskStatusList', 'active')"
+      @keypress.enter="$emit('changeTaskStatusList', 'active')">
       Активные
     </span>
     <span
       class="task-status__link"
       tabindex="0"
       :class="{ 'task-status__link_active': statusList === 'ready' }"
-      @click="$emit('changeStatusList', 'ready')"
-      @keypress.enter="$emit('changeStatusList', 'ready')">
+      @click="$emit('changeTaskStatusList', 'ready')"
+      @keypress.enter="$emit('changeTaskStatusList', 'ready')">
       Выполненные
     </span>
   </div>
@@ -32,21 +32,18 @@ import { hotkeys } from '@/hotkeys'
 
 export default {
   props: {
-    statusList: {
-      type: String,
-      default: 'all',
-    },
+    statusList: { type: String, default: 'all' },
   },
-  emits: ['changeStatusList'],
+  emits: ['changeTaskStatusList'],
   mounted() {
     hotkeys.changeListAll.handler = () => {
-      this.$emit('changeStatusList', 'all')
+      this.$emit('changeTaskStatusList', 'all')
     }
     hotkeys.changeListReady.handler = () => {
-      this.$emit('changeStatusList', 'ready')
+      this.$emit('changeTaskStatusList', 'ready')
     }
     hotkeys.changeListNotReady.handler = () => {
-      this.$emit('changeStatusList', 'active')
+      this.$emit('changeTaskStatusList', 'active')
     }
   },
 }

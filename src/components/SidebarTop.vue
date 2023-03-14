@@ -27,7 +27,7 @@ export default {
   },
   computed: {
     hasUserFolder() {
-      return useFolderStore().allUserFolders().length
+      return useFolderStore().allUserFolders.length
     },
   },
   methods: {

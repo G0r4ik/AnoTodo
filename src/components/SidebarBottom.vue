@@ -15,10 +15,8 @@
           type="text"
           name="new-folder"
           placeholder="Новая папка"
-          @keypress.enter="createNewFolder" />
-        <button class="sidebar__new-folder-button" @click="createNewFolder">
-          +
-        </button>
+          @keypress.enter="addFolder" />
+        <button class="sidebar__new-folder-button" @click="addFolder">+</button>
       </div>
       <a
         href="#"
@@ -68,7 +66,7 @@ export default {
     closeError() {
       this.error = null
     },
-    createNewFolder() {
+    addFolder() {
       const store = useFolderStore()
       if (store.folders[this.newFolder]) {
         store.duplicateFolder = this.newFolder
@@ -80,7 +78,7 @@ export default {
       } else {
         clearTimeout(this.timerOne)
         clearTimeout(this.timerTwo)
-        store.createNewFolder(this.newFolder)
+        store.addFolder(this.newFolder)
         store.duplicateFolder = null
         this.error = null
         this.newFolder = ''

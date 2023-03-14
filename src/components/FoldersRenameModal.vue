@@ -33,10 +33,7 @@ import { useFolderStore } from '@/store/folders.js'
 export default {
   components: { ModalWrapper },
   props: {
-    isShow: {
-      type: Boolean,
-      default: false,
-    },
+    isShow: { type: Boolean, default: false },
   },
   emits: ['closeModal'],
   data() {
@@ -46,7 +43,7 @@ export default {
   },
   computed: {
     allUserFolders() {
-      return useFolderStore().allUserFolders()
+      return useFolderStore().allUserFolders
     },
   },
   methods: {
