@@ -26,12 +26,24 @@ import { hotkeys } from '@/hotkeys.js'
 
 export default {
   emits: ['closeModal'],
+
+  data() {
+    return {
+      bodyWidth: null,
+    }
+  },
   mounted() {
+    this.bodyWidth = document.body.clientWidth
+    document.body.style.maxWidth = `${this.bodyWidth}px`
+    console.log(document.body.style.width, this.bodyWidth)
     hotkeys.closeModal.handler = this.closeModal
     this.$refs.closeBtn.focus()
+    document.body.classList.add('no-scroll')
   },
   beforeUnmount() {
     hotkeys.closeModal.handler = null
+    document.body.style.maxWidth = ''
+    document.body.classList.remove('no-scroll')
   },
   methods: {
     closeModal() {

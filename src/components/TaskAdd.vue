@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
-    <KeepAlive>
-      <ModalWrapper v-if="isShow" @close-modal="$emit('closeModal')">
+    <KeepAlive v-if="isShow">
+      <ModalWrapper @close-modal="$emit('closeModal')">
         <template #header>Создать задачу</template>
         <template #content>
           <div class="add-task">

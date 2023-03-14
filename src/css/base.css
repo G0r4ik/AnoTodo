@@ -25,6 +25,10 @@ body {
   background: var(--color-bg) url('@/assets/grain.png');
 }
 
+.no-scroll {
+  overflow: hidden;
+}
+
 button,
 select,
 input {

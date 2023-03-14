@@ -62,11 +62,12 @@ export default {
 .header {
   position: fixed;
   top: 0;
+  left: 0;
   z-index: var(--z-index-overlay);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  width: 100vw;
   height: var(--height-header);
   padding: 0 calc(var(--unit) * 2);
   background: url('@/assets/grain.png') var(--color-bg);
