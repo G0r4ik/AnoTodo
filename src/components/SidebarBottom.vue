@@ -76,9 +76,7 @@ export default {
       clearTimeout(this.timerTwo)
       if (this.newFolder.length < 2) {
         this.error = 'Длина папки не может быть меньше 2'
-        console.log('er1')
       } else if (store.folders[this.newFolder]) {
-        console.log('er2')
         store.duplicateFolder = this.newFolder
         this.error = 'Уже существует такая папка'
         this.timerTwo = setTimeout(() => (this.error = null), 3000)

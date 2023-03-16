@@ -6,24 +6,31 @@
         <select
           id="new-task-folder"
           v-model="taskFolder"
-          class="add-task__folder"
+          class="add-task__select-folder"
           name="new-task-folder">
           <option v-for="folder of allFolders" :key="folder" :value="folder">
             {{ folder }}
           </option>
         </select>
-        <!-- @input="selectColor($event.target.value)" -->
-        <select v-model="currentColor" id="new-task-bg" name="new-task-bg">
-          <option value="none" selected>none</option>
-          <option value="Random">Random</option>
-          <option
-            v-for="color of allColors"
-            :key="color"
-            :value="color"
-            :style="{ 'background-color': colors[color].bg }">
-            {{ color }}
-          </option>
-        </select>
+        <div class="add-task__color">
+          <select
+            id="new-task-bg"
+            v-model="currentBG"
+            name="new-task-bg"
+            class="add-task__color-select">
+            <option value="none" selected>none</option>
+            <option
+              v-for="color of allColors"
+              :key="color"
+              :value="color"
+              :style="{ 'background-color': colors[color].bg }">
+              {{ color }}
+            </option>
+          </select>
+          <button class="add-task__color-random" @click="randomColor">
+            <IconShuffle />
+          </button>
+        </div>
         <div class="add-task__item">
           <input
             id="search-tasks"
@@ -98,6 +105,8 @@ export default {
   data() {
     return {
       currentColor: 'none',
+      currentBG: 'none',
+      error: null,
       newTask: {
         text: '',
         isReady: false,
@@ -107,7 +116,6 @@ export default {
         isFavourite: false,
         subtasks: [],
       },
-      error: null,
       colors: {
         tomato: { bg: 'tomato', color: 'black' },
         lightblue: { bg: 'lightblue', color: 'black' },
@@ -135,34 +143,28 @@ export default {
     },
   },
   watch: {
-    currentColor(value) {
-      if (value === 'Random') {
-        this.newTask.taskBackground = this.colors[this.allColors[this.r]].bg
-        this.newTask.color = this.colors[this.allColors[this.r]].color
-      } else {
-        this.newTask.color = this.colors[value].color
-        this.newTask.taskBackground = this.colors[value].bg
-      }
+    currentBG() {
+      const c = this.colors[this.currentBG]
+      this.newTask.color = c.color
+      this.newTask.taskBackground = c.bg
     },
   },
-  mounted() {
-    console.log('taskAdd')
-    this.r = Math.floor(Math.random() * (this.allColors.length - 0 + 1)) + 0
-    // this.newTask.taskBackground = 'none'
-    // this.newTask.color = null
+  activated() {
+    if (this.currentColor === 'random') {
+      this.setRandomColor()
+    }
   },
   methods: {
-    selectColor(color) {
-      const color2 = color.split(',')
-      if (color2[0] === 'Random') {
-        const r = Math.floor(Math.random() * (this.colors.length - 0 + 1)) + 0
-        this.newTask.taskBackground = this.colors[r].bg
-        this.newTask.color = this.colors[r].color
-        console.log(this.newTask)
-      } else {
-        this.newTask.taskBackground = color2[0]
-        this.newTask.color = color2[1]
-      }
+    randomColor() {
+      this.currentColor = 'random'
+      this.setRandomColor()
+    },
+    setRandomColor() {
+      const r = Math.floor(Math.random() * this.allColors.length)
+      const key = Object.keys(this.colors)[r]
+      this.newTask.taskBackground = this.colors[key].bg
+      this.newTask.color = this.colors[key].color
+      this.currentBG = this.colors[key].bg
     },
     closeError() {
       this.error = null
@@ -207,10 +209,26 @@ export default {
   margin-bottom: var(--unit);
 }
 
-.add-task__folder {
+.add-task__select-folder {
+  width: 100%;
   margin-bottom: var(--unit);
 }
 
+.add-task__color {
+  display: flex;
+  width: 100%;
+}
+
+.add-task__color-select {
+  width: 100%;
+}
+.add-task__color-random {
+  width: var(--height-icon-main);
+  height: var(--height-icon-main);
+  margin-left: var(--unit);
+}
+.add-task__color-icon {
+}
 .add-task__item {
   display: flex;
   align-items: center;

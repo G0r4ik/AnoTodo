@@ -42,9 +42,6 @@ export default {
       return useFolderStore().allUserFolders
     },
   },
-  mounted() {
-    console.log('mountedFoldersRename')
-  },
   methods: {
     closeError() {
       this.error = null

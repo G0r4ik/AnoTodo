@@ -16,12 +16,14 @@
       Создать пост
     </button>
   </header>
+
   <teleport to="body">
     <transition name="fade">
-      <TaskAdd v-if="isShowCreatePost" @close-modal="toggleCreatePostModal" />
+      <KeepAlive>
+        <TaskAdd v-if="isShowCreatePost" @close-modal="toggleCreatePostModal" />
+      </KeepAlive>
     </transition>
   </teleport>
-  <!-- </KeepAlive> -->
 </template>
 
 <script>

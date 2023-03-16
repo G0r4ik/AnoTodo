@@ -47,7 +47,6 @@ export default {
   },
   methods: {
     changeTaskStatusList(statusList) {
-      console.log('lala')
       this.statusList = statusList
     },
   },

@@ -67,9 +67,6 @@ export default {
       return res
     },
   },
-  mounted() {
-    console.log('hotkey')
-  },
   methods: {
     doAction(hotkey) {
       const arr = ['Закрыть модальное окно', 'Открыть сочетания клавиш']
