@@ -1,48 +1,44 @@
 <template>
-  <teleport to="body">
-    <transition name="fade">
-      <ModalWrapper v-if="isShow" @close-modal="$emit('closeModal')">
-        <template #header>Изменить задачу</template>
-        <template #content>
-          <input
-            class="task-edit__task"
-            :value="task.text"
-            @change="editTask(task, $event.target.value)" />
-          <!-- <input
+  <ModalWrapper @close-modal="$emit('closeModal')">
+    <template #header>Изменить задачу</template>
+    <template #content>
+      <input
+        class="task-edit__task"
+        :value="task.text"
+        @change="editTask(task, $event.target.value)" />
+      <!-- <input
       v-for="subtask of task.subtasks"
       :key="subtask.text"
       :value="subtask.text"
       class="task-edit__subtask"
       @change="editSubtask(folder, task, subtask, $event.target.value)" /> -->
-          <div
-            v-for="(subtask, i) of task.subtasks"
-            :key="subtask.id"
-            class="add-subtask">
-            <input
-              id="search-tasks"
-              :value="task.subtasks[i].text"
-              class="add-subtask__text"
-              type="text"
-              name="search-tasks"
-              placeholder="Текст подзадачи"
-              @keypress.enter="addTask"
-              @keyup.ctrl.enter.prevent="addSubtask" />
-            <div
-              class="add-subtask__delete"
-              tabindex="0"
-              @click="deleteSubtask(subtask)"
-              @keypress.enter="deleteSubtask(subtask)">
-              <IconCross />
-            </div>
-          </div>
-        </template>
+      <div
+        v-for="(subtask, i) of task.subtasks"
+        :key="subtask.id"
+        class="add-subtask">
+        <input
+          id="search-tasks"
+          :value="task.subtasks[i].text"
+          class="add-subtask__text"
+          type="text"
+          name="search-tasks"
+          placeholder="Текст подзадачи"
+          @keypress.enter="addTask"
+          @keyup.ctrl.enter.prevent="addSubtask" />
+        <div
+          class="add-subtask__delete"
+          tabindex="0"
+          @click="deleteSubtask(subtask)"
+          @keypress.enter="deleteSubtask(subtask)">
+          <IconCross />
+        </div>
+      </div>
+    </template>
 
-        <button @click="addNewSubtask(task, $event.target.value)">
-          Добавить подзадачу
-        </button>
-      </ModalWrapper>
-    </transition>
-  </teleport>
+    <button @click="addNewSubtask(task, $event.target.value)">
+      Добавить подзадачу
+    </button>
+  </ModalWrapper>
 </template>
 
 <script>

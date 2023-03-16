@@ -16,8 +16,12 @@
       Создать пост
     </button>
   </header>
-
-  <TaskAdd :is-show="isShowCreatePost" @close-modal="toggleCreatePostModal" />
+  <teleport to="body">
+    <transition name="fade">
+      <TaskAdd v-if="isShowCreatePost" @close-modal="toggleCreatePostModal" />
+    </transition>
+  </teleport>
+  <!-- </KeepAlive> -->
 </template>
 
 <script>

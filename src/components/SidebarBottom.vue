@@ -29,9 +29,13 @@
     </div>
   </div>
 
-  <HotkeysModal
-    :is-show="isShowHotkeysModal"
-    @close-modal="toggleHotkeysModal" />
+  <teleport to="body">
+    <transition name="fade">
+      <HotkeysModal
+        v-if="isShowHotkeysModal"
+        @close-modal="toggleHotkeysModal" />
+    </transition>
+  </teleport>
 </template>
 
 <script>
@@ -68,16 +72,18 @@ export default {
     },
     addFolder() {
       const store = useFolderStore()
-      if (store.folders[this.newFolder]) {
+      clearTimeout(this.timerOne)
+      clearTimeout(this.timerTwo)
+      if (this.newFolder.length < 2) {
+        this.error = 'Длина папки не может быть меньше 2'
+        console.log('er1')
+      } else if (store.folders[this.newFolder]) {
+        console.log('er2')
         store.duplicateFolder = this.newFolder
         this.error = 'Уже существует такая папка'
-        clearTimeout(this.timerOne)
-        clearTimeout(this.timerTwo)
-        this.timerOne = setTimeout(() => (store.duplicateFolder = null), 750)
         this.timerTwo = setTimeout(() => (this.error = null), 3000)
+        this.timerOne = setTimeout(() => (store.duplicateFolder = null), 750)
       } else {
-        clearTimeout(this.timerOne)
-        clearTimeout(this.timerTwo)
         store.addFolder(this.newFolder)
         store.duplicateFolder = null
         this.error = null

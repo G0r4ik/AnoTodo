@@ -8,10 +8,15 @@
       <IconEdit />
     </button>
   </div>
-
-  <FoldersRenameModal
-    :is-show="isShowEditFolder"
-    @close-modal="toggleEditFolderModal" />
+  <!-- <KeepAlive> -->
+  <teleport to="body">
+    <transition name="fade">
+      <FoldersRenameModal
+        v-if="isShowEditFolder"
+        @close-modal="toggleEditFolderModal" />
+    </transition>
+  </teleport>
+  <!-- </KeepAlive> -->
 </template>
 
 <script>

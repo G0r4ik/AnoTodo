@@ -5,7 +5,7 @@
     </strong>
     <TaskListSelect
       :status-list="statusList"
-      @change-status-list="changeTaskStatusList" />
+      @change-task-status-list="changeTaskStatusList" />
     <TaskList :status-list="statusList" />
   </main>
 </template>
@@ -47,6 +47,7 @@ export default {
   },
   methods: {
     changeTaskStatusList(statusList) {
+      console.log('lala')
       this.statusList = statusList
     },
   },

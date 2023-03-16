@@ -1,46 +1,42 @@
 <template>
-  <teleport to="body">
-    <transition name="fade">
-      <ModalWrapper v-if="isShow" @close-modal="$emit('closeModal')">
-        <template #header>Shortcuts</template>
-        <template #content>
-          <div class="hotkeys">
-            <input
-              id="hotkeys-input"
-              v-model="hotkeysInput"
-              type="text"
-              name="hotkeys-input"
-              placeholder="Действие..."
-              autocomplete="off"
-              class="hotkeys__input" />
-            <div
-              v-for="(hotkey, i) of filteredHotkeys"
-              :key="i"
-              tabindex="0"
-              class="hotkeys__item"
-              @click="doAction(hotkey)"
-              @keydown.enter="doAction(hotkey)">
-              <div class="hotkeys__action">
-                <IconEdit class="hotkeys__icon-edit" />
-                <span class="hotkeys__action-text">
-                  {{ hotkey.description }}
-                </span>
-              </div>
-              <div class="hotkeys__buttons">
-                <div class="hotkeys__modifiers">
-                  <template v-for="(modifier, j) of hotkey.modifiers" :key="j">
-                    <div class="hotkeys__button">{{ modifier }}</div>
-                  </template>
-                </div>
-                <template v-if="hotkey.modifiers.length > 0">+</template>
-                <div class="hotkeys__button">{{ hotkey.key }}</div>
-              </div>
-            </div>
+  <ModalWrapper @close-modal="$emit('closeModal')">
+    <template #header>Shortcuts</template>
+    <template #content>
+      <div class="hotkeys">
+        <input
+          id="hotkeys-input"
+          v-model="hotkeysInput"
+          type="text"
+          name="hotkeys-input"
+          placeholder="Действие..."
+          autocomplete="off"
+          class="hotkeys__input" />
+        <div
+          v-for="(hotkey, i) of filteredHotkeys"
+          :key="i"
+          tabindex="0"
+          class="hotkeys__item"
+          @click="doAction(hotkey)"
+          @keydown.enter="doAction(hotkey)">
+          <div class="hotkeys__action">
+            <IconEdit class="hotkeys__icon-edit" />
+            <span class="hotkeys__action-text">
+              {{ hotkey.description }}
+            </span>
           </div>
-        </template>
-      </ModalWrapper>
-    </transition>
-  </teleport>
+          <div class="hotkeys__buttons">
+            <div class="hotkeys__modifiers">
+              <template v-for="(modifier, j) of hotkey.modifiers" :key="j">
+                <div class="hotkeys__button">{{ modifier }}</div>
+              </template>
+            </div>
+            <template v-if="hotkey.modifiers.length > 0">+</template>
+            <div class="hotkeys__button">{{ hotkey.key }}</div>
+          </div>
+        </div>
+      </div>
+    </template>
+  </ModalWrapper>
 </template>
 
 <script>
@@ -63,13 +59,16 @@ export default {
     filteredHotkeys() {
       const res = {}
       Object.keys(this.hotkeysV).forEach(hotkey => {
-        const low = this.hotkeysV[hotkey].description.toLowerCase()
+        const low = this.hotkeysV[hotkey].descriptdion.toLowerCase()
         if (low.includes(this.hotkeysInput.toLowerCase())) {
           res[hotkey] = this.hotkeysV[hotkey]
         }
       })
       return res
     },
+  },
+  mounted() {
+    console.log('hotkey')
   },
   methods: {
     doAction(hotkey) {

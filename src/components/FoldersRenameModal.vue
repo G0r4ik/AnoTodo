@@ -1,29 +1,25 @@
 <template>
-  <teleport to="body">
-    <transition name="fade">
-      <ModalWrapper v-if="isShow" @close-modal="$emit('closeModal')">
-        <template #header>Переименовать</template>
-        <template #content>
-          <div class="edit-folder">
-            <AppError
-              v-if="error"
-              :error="error"
-              class="edit-folder__error"
-              @close-error="closeError" />
-            <div class="edit-folder__folders">
-              <input
-                v-for="folder of allUserFolders"
-                :key="folder"
-                class="edit-folder__folder-input"
-                type="text"
-                :value="folder"
-                @change="renameFolder(folder, $event.target.value)" />
-            </div>
-          </div>
-        </template>
-      </ModalWrapper>
-    </transition>
-  </teleport>
+  <ModalWrapper @close-modal="$emit('closeModal')">
+    <template #header>Переименовать</template>
+    <template #content>
+      <div class="edit-folder">
+        <AppError
+          v-if="error"
+          :error="error"
+          class="edit-folder__error"
+          @close-error="closeError" />
+        <div class="edit-folder__folders">
+          <input
+            v-for="folder of allUserFolders"
+            :key="folder"
+            class="edit-folder__folder-input"
+            type="text"
+            :value="folder"
+            @change="renameFolder(folder, $event.target.value)" />
+        </div>
+      </div>
+    </template>
+  </ModalWrapper>
 </template>
 
 <script>
@@ -45,6 +41,9 @@ export default {
     allUserFolders() {
       return useFolderStore().allUserFolders
     },
+  },
+  mounted() {
+    console.log('mountedFoldersRename')
   },
   methods: {
     closeError() {

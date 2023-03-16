@@ -35,11 +35,14 @@
   <div class="task__delete" tabindex="0" @click="deleteTask(task, subtask)">
     <IconCross />
   </div>
-
-  <TaskEdit
-    :is-show="!!currentEditTask"
-    :task="currentEditTask?.task"
-    @close-modal="closeEditTaskPopup" />
+  <teleport to="body">
+    <transition name="fade">
+      <TaskEdit
+        v-if="currentEditTask"
+        :task="currentEditTask?.task"
+        @close-modal="closeEditTaskPopup" />
+    </transition>
+  </teleport>
 </template>
 
 <script>

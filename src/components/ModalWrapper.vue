@@ -25,6 +25,9 @@
 import { hotkeys } from '@/hotkeys.js'
 
 export default {
+  props: {
+    isShow: { type: Boolean, default: false },
+  },
   emits: ['closeModal'],
 
   data() {
@@ -35,7 +38,6 @@ export default {
   mounted() {
     this.bodyWidth = document.body.clientWidth
     document.body.style.maxWidth = `${this.bodyWidth}px`
-    console.log(document.body.style.width, this.bodyWidth)
     hotkeys.closeModal.handler = this.closeModal
     this.$refs.closeBtn.focus()
     document.body.classList.add('no-scroll')
