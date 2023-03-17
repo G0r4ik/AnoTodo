@@ -59,7 +59,7 @@ export default {
     filteredHotkeys() {
       const res = {}
       Object.keys(this.hotkeysV).forEach(hotkey => {
-        const low = this.hotkeysV[hotkey].descriptdion.toLowerCase()
+        const low = this.hotkeysV[hotkey].description.toLowerCase()
         if (low.includes(this.hotkeysInput.toLowerCase())) {
           res[hotkey] = this.hotkeysV[hotkey]
         }

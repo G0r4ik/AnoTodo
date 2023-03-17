@@ -37,7 +37,7 @@ export default {
   watch: {
     folders: {
       handler(newValue) {
-        localStorage.setItem('folders', JSON.stringify(newValue))
+        localStorage.setItem('folders', JSON.stringify([...newValue]))
       },
       deep: true,
     },

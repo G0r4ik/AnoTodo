@@ -20,14 +20,13 @@ module.exports = {
   plugins: ['vue'],
   rules: {
     'comma-dangle': 'off',
-    'space-before-function-paren': ['error', 'never'],
-    'vue/no-unused-vars': 'error',
-    'vue/max-attributes-per-line': [
-      'error',
-      { singleline: { max: 3 }, multiline: { max: 3 } },
-    ],
+    'vue/max-attributes-per-line': 'off',
     'arrow-body-style': 'off',
     'prefer-arrow-callback': 'off',
+    'vue/singleline-html-element-content-newline': 'off',
+    'vue/multiline-html-element-content-newline': 'off',
+    'space-before-function-paren': 'off',
+    'vue/no-unused-vars': 'error',
     'vue/html-closing-bracket-newline': [
       'error',
       { singleline: 'never', multiline: 'never' },
@@ -36,12 +35,7 @@ module.exports = {
       'error',
       {
         html: { void: 'always', normal: 'always', component: 'always' },
-        svg: 'always',
       },
     ],
-    'vue/singleline-html-element-content-newline': 'off',
-    'vue/multiline-html-element-content-newline': 'off',
-
-    // multiline: 'never',
   },
 }

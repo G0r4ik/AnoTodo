@@ -1,7 +1,10 @@
 <template>
   <div class="main__tasks">
     <template v-for="folder of Object.keys(filteredTasks)" :key="folder.id">
-      <div v-if="filteredTasks[folder]?.length" class="main__tasks-item task">
+      <div
+        v-if="filteredTasks[folder]?.length"
+        ref="tasks"
+        class="main__tasks-item task">
         <strong
           v-if="!currentFolder && filteredTasks[folder].length"
           class="task__folder"
@@ -12,6 +15,7 @@
         <div
           v-for="task of filteredTasks[folder]"
           :key="task.id"
+          draggable="true"
           class="task__wrapper"
           :style="{ background: task.taskBackground, color: task.color }">
           <div class="tasks__item" :class="{ task_active: task.isReady }">
@@ -47,6 +51,7 @@
 <script>
 import { useFolderStore } from '@/store/folders.js'
 import TaskListItem from '@/components/TaskListItem.vue'
+import Sortable from 'sortablejs'
 
 export default {
   components: { TaskListItem },
@@ -88,13 +93,59 @@ export default {
           continue
         }
 
-        result[this.allIndexedFolders[i]] = this.folders[
-          this.allIndexedFolders[i]
-        ]?.filter(this.func)
+        result[this.allIndexedFolders[i]] = this.folders
+          .get(this.allIndexedFolders[i])
+          ?.filter(this.func)
       }
       return result
     },
   },
+  updated() {
+    const elements = this.$refs.tasks
+    const folders = this.folders
+    if (!elements) return
+    for (const element of elements) {
+      Sortable.create(element, {
+        draggable: '.task__wrapper',
+        group: {
+          name: 'folders',
+          pull: true,
+          put: true,
+        },
+        onEnd: event => {
+          let currentFolder = null
+          let targetFolder = null
+          let oldIndex = null
+          let newIndex = null
+          if (!this.currentFolder) {
+            currentFolder = event.target.firstChild.textContent
+            targetFolder = event.to.firstChild.textContent
+            oldIndex = event.oldIndex - 1
+            newIndex = event.newIndex - 1
+          } else {
+            currentFolder = this.currentFolder
+            targetFolder = this.currentFolder
+            oldIndex = event.oldIndex
+            newIndex = event.newIndex
+          }
+          console.log(oldIndex, newIndex, this.folders.get(currentFolder))
+          const currentTask = this.folders.get(currentFolder)[oldIndex]
+          const currentTasks = this.folders.get(currentFolder)
+          const targetTasks = this.folders.get(targetFolder)
+          currentTasks.splice(oldIndex, 1)
+          if (currentFolder === targetFolder) {
+            currentTasks.splice(newIndex, 0, currentTask)
+          } else {
+            targetTasks.splice(newIndex, 0, currentTask)
+          }
+        },
+      })
+    }
+
+    const dropzone = [...document.querySelectorAll('.sidebar__folder-text')]
+    dropzone.forEach(el => el.addEventListener('dragenter', e => {}))
+  },
+
   methods: {
     func(task) {
       if (!task.text.includes(this.searchQuery)) return false

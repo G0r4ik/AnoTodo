@@ -104,6 +104,7 @@ export default {
   emits: ['closeModal'],
   data() {
     return {
+      taskFolder: useFolderStore().currentFolder || 'Неотсортированное',
       currentColor: 'none',
       currentBG: 'none',
       error: null,
@@ -137,9 +138,6 @@ export default {
     },
     allFolders() {
       return useFolderStore().allIndexedFolders
-    },
-    taskFolder() {
-      return useFolderStore().currentFolder || 'Неотсортированное'
     },
   },
   watch: {

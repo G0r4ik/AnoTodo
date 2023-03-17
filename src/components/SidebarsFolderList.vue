@@ -18,31 +18,40 @@
       @keypress.enter="changeCurrentFolder(folder)">
       {{ folder }}
     </div>
-    <div
-      v-for="folder of allUserFolders"
-      :key="folder"
-      tabindex="0"
-      class="sidebar__folder"
-      :class="{
-        sidebar__folder_active: folder === currentFolder,
-        sidebar__folder_dublicate: isFolderDuplicate(folder),
-      }"
-      @click="changeCurrentFolder(folder)"
-      @keypress.enter="changeCurrentFolder(folder)">
-      <span class="sidebar__folder-text">{{ folder }}</span>
-      <button
-        class="sidebar__new-folder-delete"
-        @click.stop="deleteFolder(folder)">
-        <IconCross />
-      </button>
+    <div class="sidebar__folders-users">
+      <div
+        v-for="folder of allUserFolders"
+        :id="folder"
+        :key="folder"
+        tabindex="0"
+        class="sidebar__folder sidebar__folder_user"
+        :class="{
+          sidebar__folder_active: folder === currentFolder,
+          sidebar__folder_dublicate: isFolderDuplicate(folder),
+        }"
+        @click="changeCurrentFolder(folder)"
+        @keypress.enter="changeCurrentFolder(folder)">
+        <span class="sidebar__folder-text">{{ folder }}</span>
+        <button
+          class="sidebar__new-folder-delete"
+          @click.stop="deleteFolder(folder)">
+          <IconCross />
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import Sortable from 'sortablejs'
 import { useFolderStore } from '@/store/folders.js'
 
 export default {
+  data() {
+    return {
+      sortedList: null,
+    }
+  },
   computed: {
     allUserFolders() {
       return useFolderStore().allUserFolders
@@ -53,6 +62,34 @@ export default {
     currentFolder() {
       return useFolderStore().currentFolder
     },
+    folders() {
+      return useFolderStore().folders
+    },
+  },
+  mounted() {
+    const el = document.querySelector('.sidebar__folders-users')
+    Sortable.create(el, {
+      onEnd: event => {
+        const itemEl = event.item
+        const newIndex = event.newIndex
+        const folderName = itemEl.textContent
+        const folders = useFolderStore().allUserFolders
+        const oldIndex = folders.indexOf(folderName)
+        // console.log('old:', oldIndex, 'new:', newIndex, 'folder:', folderName)
+        folders.splice(oldIndex, 1)
+        folders.splice(newIndex, 0, folderName)
+        const obj = new Map()
+        for (const folder of folders) {
+          obj.set(folder, this.folders.get(folder))
+        }
+        for (const folder of this.folders.keys()) {
+          if (!obj.has(folder)) {
+            obj.set(folder, this.folders.get(folder))
+          }
+        }
+        useFolderStore().folders = obj
+      },
+    })
   },
   methods: {
     isFolderDuplicate(folderName) {

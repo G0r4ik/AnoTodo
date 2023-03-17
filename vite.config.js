@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 export default defineConfig({
   resolve: {
@@ -7,5 +8,5 @@ export default defineConfig({
       '@': '/src',
     },
   },
-  plugins: [vue()],
+  plugins: [vue(), visualizer()],
 })

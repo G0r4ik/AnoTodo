@@ -4,7 +4,7 @@ export const useFolderStore = defineStore('folder', {
   state: () => ({
     isFoldersVisible: false,
     searchQuery: '',
-    folders: {}, // new Set?
+    folders: new Map(),
     staticFolders: ['Неотсортированное'],
     notIndexedFolders: ['Избранное'],
     currentFolder: null,
@@ -12,7 +12,7 @@ export const useFolderStore = defineStore('folder', {
   }),
 
   getters: {
-    allFolders: ({ folders }) => Object.keys(folders),
+    allFolders: ({ folders }) => [...folders.keys()],
     allIndexedFolders: ({ staticFolders, allUserFolders }) => [
       ...staticFolders,
       ...allUserFolders,
@@ -22,12 +22,12 @@ export const useFolderStore = defineStore('folder', {
       ...notIndexedFolders,
     ],
     allUserFolders: ({ folders, staticFolders, notIndexedFolders }) => {
-      return Object.keys(folders).filter(
+      return [...folders.keys()].filter(
         folder =>
           !staticFolders.includes(folder) && !notIndexedFolders.includes(folder)
       )
     },
-    allTasks: ({ folders }) => Object.values(folders).flat(),
+    allTasks: ({ folders }) => [...folders.values()].flat(),
     allFavouritesTasks: ({ allTasks }) => allTasks.filter(t => t.isFavourite),
   },
 
@@ -35,31 +35,32 @@ export const useFolderStore = defineStore('folder', {
     // Folder management
     setFolders() {
       try {
-        const dateInLocalStorage = JSON.parse(localStorage.getItem('folders'))
-        if (dateInLocalStorage) {
-          this.folders = dateInLocalStorage
+        const folders = localStorage.getItem('folders')
+        if (folders) {
+          const dataInLocalStorage = new Map(JSON.parse(folders))
+          this.folders = new Map(dataInLocalStorage)
         } else {
-          for (const folder of this.allStaticFolders()) {
+          for (const folder of this.allStaticFolders) {
             this.addFolder(folder)
           }
         }
       } catch (error) {
         console.log(error)
         localStorage.clear()
-        for (const folder of this.allStaticFolders()) {
+        for (const folder of this.allStaticFolders) {
           this.addFolder(folder)
         }
       }
     },
     addFolder(folder) {
-      this.folders[folder] = []
+      this.folders.set(folder, [])
     },
     renameFolder(oldFolderName, newFolderName) {
-      this.folders[newFolderName] = this.folders[oldFolderName]
-      this.deleteFolder(oldFolderName)
+      this.folders.set(newFolderName, this.folders.get(oldFolderName))
+      this.folders.delete(oldFolderName)
     },
     deleteFolder(folder) {
-      delete this.folders[folder]
+      this.folders.delete(folder)
       if (this.currentFolder === folder) this.currentFolder = null
     },
     isFolderDuplicate(folderName) {
@@ -80,14 +81,17 @@ export const useFolderStore = defineStore('folder', {
 
     //  Tasks
     addTask(task) {
-      this.folders[task.folder].push(task)
+      this.folders.get(task.folder).push(task)
     },
     editTask(task, text) {
       task.text = text
     },
     deleteTask(task) {
       const folder = task.folder
-      this.folders[folder] = this.folders[folder].filter(t => t !== task)
+      this.folders.set(
+        folder,
+        this.folders.get(folder).filter(t => t !== task)
+      )
     },
     toggleTaskFavourite(task) {
       task.isFavourite = !task.isFavourite
