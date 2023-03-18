@@ -17,7 +17,7 @@
             :data-task-id="task.id"
             :data-task-folder="folder"
             class="task__wrapper-item"
-            :style="{ background: task.taskBackground, color: task.color }">
+            :style="{ background: task.style.bg, color: task.style.color }">
             <div class="tasks__item" :class="{ task_active: task.isReady }">
               <TaskListItem
                 :task="task"
@@ -116,6 +116,7 @@ export default {
         draggable: '.task__wrapper-item',
         group: { name: 'folders', pull: true, put: true },
         onEnd: event => {
+          if (!event.target) return
           const currentFolder =
             useFolderStore().currentFolder ||
             event.target.getAttribute('data-folder')
@@ -150,9 +151,7 @@ export default {
     const c = this.currentTask
 
     const dropzone = [...document.querySelectorAll('.sidebar__folder')]
-    console.log(dropzone)
     const func = this.func2
-    console.log(func === this.func2)
     dropzone.forEach(el => {
       el.removeEventListener('drop', func)
       el.addEventListener('drop', func)
@@ -161,19 +160,17 @@ export default {
 
   methods: {
     func2(e) {
-      console.log('drop')
       const folders = this.folders
       const c = this.currentTask
+      if (!c.taskId) return
       e.preventDefault()
       const target = e.target.closest('.sidebar__folder')
       const folder = target.getAttribute('data-folder')
-      console.log(folder)
       const currentFolder = folders.get(c.folder)
-      // console.log(currentFolder)
-      // console.log(c.folder)
+      console.log(c.folder)
+      // debugger
       const idx = currentFolder.findIndex(item => item.id === c.taskId)
       const currentTask = currentFolder.splice(idx, 1)[0]
-      console.log(currentTask)
       currentTask.folder = c.folder
       folders.get(folder).push(currentTask)
       c.folder = null

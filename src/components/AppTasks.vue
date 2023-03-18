@@ -57,6 +57,7 @@ export default {
 .main {
   height: 100%;
   padding: 0 calc(var(--unit) * 3);
+  padding-top: calc(var(--unit) * 2);
   margin-top: var(--height-header);
   margin-left: var(--width-sidebar);
   overflow-y: auto;

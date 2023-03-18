@@ -3,69 +3,19 @@
     <template #header>Создать задачу</template>
     <template #content>
       <div class="add-task">
-        <select
-          id="new-task-folder"
-          v-model="taskFolder"
-          class="add-task__select-folder"
-          name="new-task-folder">
-          <option v-for="folder of allFolders" :key="folder" :value="folder">
-            {{ folder }}
-          </option>
-        </select>
-        <div class="add-task__color">
-          <select
-            id="new-task-bg"
-            v-model="currentBG"
-            name="new-task-bg"
-            class="add-task__color-select">
-            <option value="none" selected>none</option>
-            <option
-              v-for="color of allColors"
-              :key="color"
-              :value="color"
-              :style="{ 'background-color': colors[color].bg }">
-              {{ color }}
-            </option>
-          </select>
-          <button class="add-task__color-random" @click="randomColor">
-            <IconShuffle />
-          </button>
-        </div>
-        <div class="add-task__item">
-          <input
-            id="search-tasks"
-            v-model="newTask.text"
-            class="add-task__text"
-            type="text"
-            name="search-tasks"
-            placeholder="Текст задачи"
-            @keypress.enter="addTask"
-            @keyup.ctrl.enter.prevent="addSubtask" />
-        </div>
-        <div
-          v-for="(subtask, i) in newTask.subtasks"
-          :key="subtask.id"
-          class="add-subtask">
-          <input
-            id="search-tasks"
-            v-model="newTask.subtasks[i].text"
-            class="add-subtask__text"
-            type="text"
-            name="search-tasks"
-            placeholder="Текст подзадачи"
-            @keypress.enter="addTask"
-            @keyup.ctrl.enter.prevent="addSubtask" />
-          <div
-            class="add-subtask__delete"
-            tabindex="0"
-            @click="deleteSubtask(subtask)"
-            @keypress.enter="deleteSubtask(subtask)">
-            <IconCross />
-          </div>
-        </div>
-        <button class="add-subtask__button" @click="addSubtask">
-          Добавить подзадачу
-        </button>
+        <TaskAddSelectFolder
+          :value="newTask.folder"
+          @add-task="addTask"
+          @update:folder="newTask.folder = $event" />
+        <TaskAddSelectStyling @set-style-of-task="setStyleOfTask" />
+        <TaskAddTaskTextInput
+          :value="newTask.text"
+          @add-task="addTask"
+          @update:text="newTask.text = $event" />
+        <TaskAddSubtask
+          :subtasks="newTask.subtasks"
+          @add-subtask="addSubtask"
+          @delete-subtask="deleteSubtask" />
         <AppError
           v-if="error"
           :error="error"
@@ -73,17 +23,11 @@
           @close-error="closeError" />
         <button
           class="add-task__add-button"
-          :style="`background:${
-            newTask.taskBackground === 'none'
-              ? 'var(--color-bg-primary)'
-              : newTask.taskBackground
-          };
-              color: ${newTask.color || 'var(--color-text)'};
-             border-color:${
-               newTask.taskBackground === 'none'
-                 ? 'var(--color-primary)'
-                 : newTask.taskBackground
-             }`"
+          :style="{
+            background: getButtonBG,
+            color: getButtonColor,
+            borderColor: getButtonBorderColor,
+          }"
           @click="addTask">
           Добавить
         </button>
@@ -95,74 +39,58 @@
 <script>
 import { useFolderStore } from '@/store/folders.js'
 import ModalWrapper from '@/components/ModalWrapper.vue'
+import TaskAddSelectFolder from '@/components/TaskAddSelectFolder.vue'
+import TaskAddSelectStyling from '@/components/TaskAddSelectStyling.vue'
+import TaskAddTaskTextInput from '@/components/TaskAddTaskTextInput.vue'
+import TaskAddSubtask from '@/components/TaskAddSubtask.vue'
 
 export default {
-  components: { ModalWrapper },
-  props: {
-    isShow: { type: Boolean, default: false },
+  components: {
+    ModalWrapper,
+    TaskAddSelectFolder,
+    TaskAddSelectStyling,
+    TaskAddTaskTextInput,
+    TaskAddSubtask,
   },
   emits: ['closeModal'],
   data() {
     return {
-      taskFolder: useFolderStore().currentFolder || 'Неотсортированное',
-      currentColor: 'none',
-      currentBG: 'none',
       error: null,
       newTask: {
-        text: '',
         isReady: false,
-        folder: 'Неотсортированное',
-        taskBackground: 'none',
-        color: 'var(--color-text)',
         isFavourite: false,
+        text: '',
+        folder: useFolderStore().currentFolder || 'Неотсортированное',
+        style: { bg: 'none', color: 'var(--color-text)' },
         subtasks: [],
-      },
-      colors: {
-        tomato: { bg: 'tomato', color: 'black' },
-        lightblue: { bg: 'lightblue', color: 'black' },
-        aquamarine: { bg: 'aquamarine', color: 'black' },
-        chartreuse: { bg: 'chartreuse', color: 'black' },
-        coral: { bg: 'coral', color: 'black' },
-        cornflowerblue: { bg: 'cornflowerblue', color: 'black' },
-        violet: { bg: 'violet', color: 'black' },
-        thistle: { bg: 'thistle', color: 'black' },
-        springgreen: { bg: 'springgreen', color: 'black' },
-        plum: { bg: 'plum', color: 'black' },
-        pink: { bg: 'pink', color: 'black' },
       },
     }
   },
   computed: {
-    allColors() {
-      return Object.keys(this.colors)
+    getButtonBorderColor() {
+      return this.newTask.style.bg === 'none'
+        ? 'var(--color-primary)'
+        : this.newTask.style.bg
     },
-    allFolders() {
-      return useFolderStore().allIndexedFolders
+    getButtonBG() {
+      return this.newTask.style.bg
     },
-  },
-  watch: {
-    currentBG() {
-      const c = this.colors[this.currentBG]
-      this.newTask.color = c.color
-      this.newTask.taskBackground = c.bg
+    getButtonColor() {
+      return this.newTask.style.color
     },
   },
   activated() {
-    if (this.currentColor === 'random') {
-      this.setRandomColor()
-    }
+    this.newTask.folder = useFolderStore().currentFolder || 'Неотсортированное'
   },
   methods: {
-    randomColor() {
-      this.currentColor = 'random'
-      this.setRandomColor()
+    addSubtask(subtask) {
+      this.newTask.subtasks.push(subtask)
     },
-    setRandomColor() {
-      const r = Math.floor(Math.random() * this.allColors.length)
-      const key = Object.keys(this.colors)[r]
-      this.newTask.taskBackground = this.colors[key].bg
-      this.newTask.color = this.colors[key].color
-      this.currentBG = this.colors[key].bg
+    deleteSubtask(subtask) {
+      this.newTask.subtasks = this.newTask.subtasks.filter(s => subtask !== s)
+    },
+    setStyleOfTask(style) {
+      this.newTask.style = style
     },
     closeError() {
       this.error = null
@@ -174,17 +102,9 @@ export default {
       }
       this.newTask.id = Date.now().toString(36) + Math.random().toString(36)
       this.newTask.subtasks = this.newTask.subtasks.filter(s => s.text !== '')
-      this.newTask.folder = this.taskFolder
       useFolderStore().addTask({ ...this.newTask })
       this.newTask.text = ''
       this.newTask.subtasks = []
-    },
-    addSubtask() {
-      const id = Date.now().toString(36) + Math.random().toString(36)
-      this.newTask.subtasks.push({ text: '', isReady: false, id })
-    },
-    deleteSubtask(subtask) {
-      this.newTask.subtasks = this.newTask.subtasks.filter(s => subtask !== s)
     },
   },
 }
@@ -207,48 +127,6 @@ export default {
   margin-bottom: var(--unit);
 }
 
-.add-task__select-folder {
-  width: 100%;
-  margin-bottom: var(--unit);
-}
-
-.add-task__color {
-  display: flex;
-  width: 100%;
-}
-
-.add-task__color-select {
-  width: 100%;
-}
-.add-task__color-random {
-  width: var(--height-icon-main);
-  height: var(--height-icon-main);
-  margin-left: var(--unit);
-}
-.add-task__color-icon {
-}
-.add-task__item {
-  display: flex;
-  align-items: center;
-}
-
-.add-task__text {
-  flex: 1 1 auto;
-  padding: var(--unit);
-  margin: var(--unit) 0;
-}
-
-.add-subtask__text {
-  width: 100%;
-  padding: calc(var(--unit) / 2);
-  margin-bottom: var(--unit);
-  margin-left: calc(var(--unit) * 5);
-}
-
-.add-task__date {
-  margin-right: var(--unit);
-}
-
 .add-task__add-button,
 .add-subtask__button {
   padding: var(--unit) calc(var(--unit) * 2);
@@ -259,31 +137,10 @@ export default {
   border-width: var(--border-width-main);
 }
 
-.add-subtask {
-  display: flex;
-  align-items: center;
-}
-
-.add-subtask__delete {
-  width: var(--height-icon-main);
-  height: var(--height-icon-main);
-  cursor: pointer;
-}
-
-.add-subtask__delete svg {
-  height: 100%;
-}
-
-.add-subtask__button {
-  padding: var(--unit) calc(var(--unit) * 2);
-  margin-bottom: var(--unit);
-  margin-left: calc(var(--unit) * 6);
-  font-size: var(--font-small);
-}
-
 .add-task__add-button:disabled,
 .add-subtask__button:disabled {
   cursor: auto;
   opacity: 0.5;
 }
 </style>
+<!-- 300 -->

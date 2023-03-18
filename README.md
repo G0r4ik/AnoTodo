@@ -16,6 +16,7 @@
 - CSS REFACTORING...
 - продвиутое a11y
 - bundler analize
+- fix dragndrop
 - смена языков
 - темная тема
 - task-list
