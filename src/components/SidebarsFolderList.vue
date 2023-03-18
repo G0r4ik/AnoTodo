@@ -11,6 +11,7 @@
     <div
       v-for="folder of allStaticFolder"
       :key="folder"
+      :data-folder="folder"
       tabindex="0"
       class="sidebar__folder"
       :class="{ sidebar__folder_active: currentFolder === folder }"
@@ -23,6 +24,7 @@
         v-for="folder of allUserFolders"
         :id="folder"
         :key="folder"
+        :data-folder="folder"
         tabindex="0"
         class="sidebar__folder sidebar__folder_user"
         :class="{
@@ -75,7 +77,6 @@ export default {
         const folderName = itemEl.textContent
         const folders = useFolderStore().allUserFolders
         const oldIndex = folders.indexOf(folderName)
-        // console.log('old:', oldIndex, 'new:', newIndex, 'folder:', folderName)
         folders.splice(oldIndex, 1)
         folders.splice(newIndex, 0, folderName)
         const obj = new Map()

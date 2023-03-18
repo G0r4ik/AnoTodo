@@ -18,7 +18,6 @@
 - bundler analize
 - смена языков
 - темная тема
-- dragndrop
 - task-list
 - убрать ?.
 - new set
@@ -52,6 +51,7 @@
 - :key пофиксить
 - random color
 - избранное
+- dragndrop
 - stylelint
 - избранное
 - eslint

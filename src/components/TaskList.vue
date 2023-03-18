@@ -1,10 +1,7 @@
 <template>
   <div class="main__tasks">
-    <template v-for="folder of Object.keys(filteredTasks)" :key="folder.id">
-      <div
-        v-if="filteredTasks[folder]?.length"
-        ref="tasks"
-        class="main__tasks-item task">
+    <template v-for="folder of Object.keys(filteredTasks)" :key="folder">
+      <div v-if="filteredTasks[folder]?.length" class="main__tasks-item task">
         <strong
           v-if="!currentFolder && filteredTasks[folder].length"
           class="task__folder"
@@ -12,32 +9,36 @@
           {{ folder }}
         </strong>
 
-        <div
-          v-for="task of filteredTasks[folder]"
-          :key="task.id"
-          draggable="true"
-          class="task__wrapper"
-          :style="{ background: task.taskBackground, color: task.color }">
-          <div class="tasks__item" :class="{ task_active: task.isReady }">
-            <TaskListItem
-              :task="task"
-              :list="task"
-              :type="'task'"
-              @toggle-subtasks-list="toggleSubtasksList" />
-          </div>
-
+        <div ref="tasks" :data-folder="folder" class="task__wrapper">
           <div
-            v-for="subtask of task.subtasks"
-            :key="subtask.id"
-            class="tasks__item subtask__item"
-            :class="{ task_active: subtask.isReady }">
-            <TaskListItem
-              v-if="task.isShowSubtasks"
-              :type="'subtask'"
-              :task="task"
-              :subtask="subtask"
-              :list="subtask"
-              @toggle-subtasks-list="toggleSubtasksList" />
+            v-for="task of filteredTasks[folder]"
+            :key="task.id"
+            draggable="true"
+            :data-task-id="task.id"
+            :data-task-folder="folder"
+            class="task__wrapper-item"
+            :style="{ background: task.taskBackground, color: task.color }">
+            <div class="tasks__item" :class="{ task_active: task.isReady }">
+              <TaskListItem
+                :task="task"
+                :list="task"
+                :type="'task'"
+                @toggle-subtasks-list="toggleSubtasksList" />
+            </div>
+
+            <div
+              v-for="subtask of task.subtasks"
+              :key="subtask.id"
+              class="tasks__item subtask__item"
+              :class="{ task_active: subtask.isReady }">
+              <TaskListItem
+                v-if="task.isShowSubtasks"
+                :type="'subtask'"
+                :task="task"
+                :subtask="subtask"
+                :list="subtask"
+                @toggle-subtasks-list="toggleSubtasksList" />
+            </div>
           </div>
         </div>
       </div>
@@ -57,6 +58,11 @@ export default {
   components: { TaskListItem },
   props: {
     statusList: { type: String, default: 'all' },
+  },
+  data() {
+    return {
+      currentTask: { taskId: null, folder: null },
+    }
   },
   computed: {
     searchQuery() {
@@ -100,53 +106,80 @@ export default {
       return result
     },
   },
+
   updated() {
     const elements = this.$refs.tasks
-    const folders = this.folders
     if (!elements) return
+    const folders = this.folders
     for (const element of elements) {
       Sortable.create(element, {
-        draggable: '.task__wrapper',
-        group: {
-          name: 'folders',
-          pull: true,
-          put: true,
-        },
+        draggable: '.task__wrapper-item',
+        group: { name: 'folders', pull: true, put: true },
         onEnd: event => {
-          let currentFolder = null
-          let targetFolder = null
-          let oldIndex = null
-          let newIndex = null
-          if (!this.currentFolder) {
-            currentFolder = event.target.firstChild.textContent
-            targetFolder = event.to.firstChild.textContent
-            oldIndex = event.oldIndex - 1
-            newIndex = event.newIndex - 1
-          } else {
-            currentFolder = this.currentFolder
-            targetFolder = this.currentFolder
-            oldIndex = event.oldIndex
-            newIndex = event.newIndex
-          }
-          console.log(oldIndex, newIndex, this.folders.get(currentFolder))
-          const currentTask = this.folders.get(currentFolder)[oldIndex]
-          const currentTasks = this.folders.get(currentFolder)
-          const targetTasks = this.folders.get(targetFolder)
+          const currentFolder =
+            useFolderStore().currentFolder ||
+            event.target.getAttribute('data-folder')
+          const targetFolder =
+            useFolderStore().currentFolder ||
+            event.to.getAttribute('data-folder')
+          const oldIndex = event.oldIndex
+          const newIndex = event.newIndex
+          if (currentFolder === targetFolder && oldIndex === newIndex) return
+          const currentTask = folders.get(currentFolder)[oldIndex]
+          const currentTasks = folders.get(currentFolder)
+
+          const targetTasks = folders.get(targetFolder)
+          currentTask.folder = targetFolder
+          if (currentTasks.length === 1) event.item.style.display = 'none'
           currentTasks.splice(oldIndex, 1)
-          if (currentFolder === targetFolder) {
-            currentTasks.splice(newIndex, 0, currentTask)
-          } else {
-            targetTasks.splice(newIndex, 0, currentTask)
-          }
+          targetTasks.splice(newIndex, 0, currentTask)
         },
       })
     }
 
-    const dropzone = [...document.querySelectorAll('.sidebar__folder-text')]
-    dropzone.forEach(el => el.addEventListener('dragenter', e => {}))
+    for (const task of elements) {
+      for (const task2 of task.children) {
+        task2.addEventListener('dragstart', e => {
+          const taskId = e.target.getAttribute('data-task-id')
+          const taskFolder = e.target.getAttribute('data-task-folder')
+          c.taskId = taskId
+          c.folder = taskFolder
+        })
+      }
+    }
+    const c = this.currentTask
+
+    const dropzone = [...document.querySelectorAll('.sidebar__folder')]
+    console.log(dropzone)
+    const func = this.func2
+    console.log(func === this.func2)
+    dropzone.forEach(el => {
+      el.removeEventListener('drop', func)
+      el.addEventListener('drop', func)
+    })
   },
 
   methods: {
+    func2(e) {
+      console.log('drop')
+      const folders = this.folders
+      const c = this.currentTask
+      e.preventDefault()
+      const target = e.target.closest('.sidebar__folder')
+      const folder = target.getAttribute('data-folder')
+      console.log(folder)
+      const currentFolder = folders.get(c.folder)
+      // console.log(currentFolder)
+      // console.log(c.folder)
+      const idx = currentFolder.findIndex(item => item.id === c.taskId)
+      const currentTask = currentFolder.splice(idx, 1)[0]
+      console.log(currentTask)
+      currentTask.folder = c.folder
+      folders.get(folder).push(currentTask)
+      c.folder = null
+      c.taskId = null
+    },
+
     func(task) {
       if (!task.text.includes(this.searchQuery)) return false
       if (this.statusList === 'ready' && !task.isReady) return false
@@ -208,7 +241,7 @@ export default {
   opacity: 0.5;
 }
 
-.task__wrapper {
+.task__wrapper-item {
   padding: calc(var(--unit) * 2);
   margin-bottom: calc(var(--unit) * 2);
   border-radius: var(--border-radius-normal);
