@@ -26,19 +26,20 @@
                 @toggle-subtasks-list="toggleSubtasksList" />
             </div>
 
-            <div
-              v-for="subtask of task.subtasks"
-              :key="subtask.id"
-              class="tasks__item subtask__item"
-              :class="{ task_active: subtask.isReady }">
-              <TaskListItem
-                v-if="task.isShowSubtasks"
-                :type="'subtask'"
-                :task="task"
-                :subtask="subtask"
-                :list="subtask"
-                @toggle-subtasks-list="toggleSubtasksList" />
-            </div>
+            <template v-if="task.isShowSubtasks">
+              <div
+                v-for="subtask of task.subtasks"
+                :key="subtask.id"
+                class="tasks__item subtask__item"
+                :class="{ task_active: subtask.isReady }">
+                <TaskListItem
+                  :type="'subtask'"
+                  :task="task"
+                  :subtask="subtask"
+                  :list="subtask"
+                  @toggle-subtasks-list="toggleSubtasksList" />
+              </div>
+            </template>
           </div>
         </div>
       </div>

@@ -23,21 +23,19 @@
           type="text"
           name="search-tasks"
           placeholder="Текст подзадачи"
+          @input="editSubtask(task, task.subtasks[i], $event.target.value)"
           @keypress.enter="addTask"
           @keyup.ctrl.enter.prevent="addSubtask" />
         <div
           class="add-subtask__delete"
           tabindex="0"
-          @click="deleteSubtask(subtask)"
-          @keypress.enter="deleteSubtask(subtask)">
+          @click="deleteSubtask(task, task.subtasks[i])"
+          @keypress.enter="deleteSubtask(task, task.subtasks[i])">
           <IconCross />
         </div>
       </div>
+      <button @click="addNewSubtask(task)">Добавить подзадачу</button>
     </template>
-
-    <button @click="addNewSubtask(task, $event.target.value)">
-      Добавить подзадачу
-    </button>
   </ModalWrapper>
 </template>
 
@@ -59,10 +57,14 @@ export default {
       useFolderStore().editTask(task, text)
     },
     editSubtask(task, subtask, text) {
+      console.log(text)
       useFolderStore().editSubtask(task, subtask, text)
     },
-    addNewSubtask() {
-      useFolderStore().addSubtask()
+    addNewSubtask(task) {
+      useFolderStore().addSubtask(task, { isReady: false, text: '' })
+    },
+    deleteSubtask(task, subtask) {
+      useFolderStore().deleteSubtask(task, subtask)
     },
   },
 }

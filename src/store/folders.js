@@ -102,9 +102,13 @@ export const useFolderStore = defineStore('folder', {
 
     //  Subtask
     addSubtask(task, subtask) {
+      console.log(task)
+      console.log(subtask)
       task.subtasks.push(subtask)
     },
     editSubtask(task, subtask, text) {
+      console.log(task, subtask)
+      console.log(task.subtasks.find(_subtask => subtask.id === _subtask.id))
       task.subtasks.find(_subtask => subtask === _subtask).text = text
     },
     deleteSubtask(task, subtask) {

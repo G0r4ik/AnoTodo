@@ -20,7 +20,8 @@
     class="task__show-subtasks"
     @click="$emit('toggleSubtasksList', task)">
     <IconArrow
-      :style="`transform:rotate(${task.isShowSubtasks ? '180deg' : 0})`" />
+      :style="`transform:rotate(${task.isShowSubtasks ? '180deg' : 0})`"
+      :color="task.style.color" />
   </button>
 
   <div
