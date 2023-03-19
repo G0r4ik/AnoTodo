@@ -167,8 +167,6 @@ export default {
       const target = e.target.closest('.sidebar__folder')
       const folder = target.getAttribute('data-folder')
       const currentFolder = folders.get(c.folder)
-      console.log(c.folder)
-      // debugger
       const idx = currentFolder.findIndex(item => item.id === c.taskId)
       const currentTask = currentFolder.splice(idx, 1)[0]
       currentTask.folder = c.folder
@@ -252,10 +250,10 @@ export default {
 }
 
 .task_active {
-  color: var(--color-danger);
+  /* color: var(--color-danger); */
   text-decoration: line-through;
   text-decoration-color: var(--color-danger);
-  opacity: 0.5;
+  opacity: 0.75;
 }
 
 .task__edit,

@@ -19,9 +19,7 @@
 
   <teleport to="body">
     <transition name="fade">
-      <KeepAlive>
-        <TaskAdd v-if="isShowCreatePost" @close-modal="toggleCreatePostModal" />
-      </KeepAlive>
+      <TaskAdd v-if="isShowCreatePost" @close-modal="toggleCreatePostModal" />
     </transition>
   </teleport>
 </template>

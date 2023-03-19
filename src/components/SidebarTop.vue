@@ -8,7 +8,6 @@
       <IconEdit />
     </button>
   </div>
-  <!-- <KeepAlive> -->
   <teleport to="body">
     <transition name="fade">
       <FoldersRenameModal
@@ -16,12 +15,12 @@
         @close-modal="toggleEditFolderModal" />
     </transition>
   </teleport>
-  <!-- </KeepAlive> -->
 </template>
 
 <script>
 import FoldersRenameModal from '@/components/FoldersRenameModal.vue'
-import { useFolderStore } from '../store/folders'
+import { hotkeys } from '@/hotkeys.js'
+import { useFolderStore } from '@/store/folders.js'
 
 export default {
   components: { FoldersRenameModal },
@@ -34,6 +33,9 @@ export default {
     hasUserFolder() {
       return useFolderStore().allUserFolders.length
     },
+  },
+  mounted() {
+    hotkeys.showFolderRename.handler = this.toggleEditFolderModal
   },
   methods: {
     toggleEditFolderModal() {

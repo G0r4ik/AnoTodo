@@ -160,6 +160,4 @@ export default {
     transform: rotate(0);
   }
 }
-
-/* Добавляем класс .shake к элементу при клике на кнопку */
 </style>

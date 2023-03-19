@@ -26,6 +26,10 @@
         <IconShortcuts class="sidebar__shortcuts-icon" />
         <span class="sidebar__shortcuts-text">показать сочетания клавиш</span>
       </a>
+      <span class="sidebar__date-manipulation" @click="toggleDateManipulation">
+        <IconDownload class="sidebar__date-manipulation-icon" />
+        <span class="sidebar__date-manipulation-text"> Экспорт\Импорт </span>
+      </span>
     </div>
   </div>
 
@@ -42,6 +46,7 @@
 import HotkeysModal from '@/components/HotkeysModal.vue'
 import { hotkeys } from '@/hotkeys.js'
 import { useFolderStore } from '@/store/folders.js'
+import { downloadMarkdownAsFile, jsonToMarkdown } from '@/jsonToMarkdown.js'
 
 export default {
   components: { HotkeysModal },
@@ -64,7 +69,6 @@ export default {
   },
   mounted() {
     hotkeys.showHotkeys.handler = this.toggleHotkeysModal
-    hotkeys.closeModal.handler = this.toggleHotkeysModal
   },
   methods: {
     closeError() {
@@ -90,6 +94,11 @@ export default {
     },
     toggleHotkeysModal() {
       this.isShowHotkeysModal = !this.isShowHotkeysModal
+      console.log('toggle', this.isShowHotkeysModal)
+    },
+    toggleDateManipulation() {
+      downloadMarkdownAsFile(jsonToMarkdown(), 'task1.md')
+      // downloadMarkdownAsFile(markdownContent, 'task1.md')
     },
   },
 }
@@ -150,18 +159,26 @@ export default {
 }
 
 .sidebar__shortcuts {
+  margin-bottom: var(--unit);
+}
+
+.sidebar__shortcuts,
+.sidebar__date-manipulation {
   display: flex;
   align-items: center;
+  font-size: var(--font-small);
   cursor: pointer;
 }
 
-.sidebar__shortcuts-icon {
+.sidebar__shortcuts-icon,
+.sidebar__date-manipulation-icon {
   width: var(--height-icon-small);
   height: var(--height-icon-small);
   margin-right: var(--unit);
 }
 
-.sidebar__shortcuts-text {
+.sidebar__shortcuts-text,
+.sidebar__date-manipulation-text {
   font-size: var(--font-small);
   color: var(--color-text);
 }

@@ -17,7 +17,7 @@
           tabindex="0"
           class="hotkeys__item"
           @click="doAction(hotkey)"
-          @keydown.enter="doAction(hotkey)">
+          @keyup.enter="doAction(hotkey)">
           <div class="hotkeys__action">
             <IconEdit class="hotkeys__icon-edit" />
             <span class="hotkeys__action-text">
@@ -69,10 +69,10 @@ export default {
   },
   methods: {
     doAction(hotkey) {
-      const arr = ['Закрыть модальное окно', 'Открыть сочетания клавиш']
-      if (!arr.includes(hotkey.description)) {
+      if (!hotkey.isOpenModal) {
         this.$emit('closeModal')
       }
+      console.log(hotkey.handler)
       hotkey.handler()
     },
   },

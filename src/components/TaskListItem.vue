@@ -29,11 +29,11 @@
     tabindex="0"
     @click="showEditTaskModal(task)"
     @keypress.enter="showEditTaskModal(task)">
-    <IconEdit :color="task.color" />
+    <IconEdit :color="task.style.color" />
   </div>
 
   <div class="task__delete" tabindex="0" @click="deleteTask(task, subtask)">
-    <IconCross />
+    <IconCross :color="task.style.color" />
   </div>
 
   <teleport to="body">
