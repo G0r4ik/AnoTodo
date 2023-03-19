@@ -1,4 +1,4 @@
-export const hotkeys = {
+export const hotkeys = JSON.parse(localStorage.getItem('hotkeys')) || {
   showPopup: {
     isOpenModal: true,
     description: 'Создать новую задачу',

@@ -94,7 +94,6 @@ export default {
     },
     toggleHotkeysModal() {
       this.isShowHotkeysModal = !this.isShowHotkeysModal
-      console.log('toggle', this.isShowHotkeysModal)
     },
     toggleDateManipulation() {
       downloadMarkdownAsFile(jsonToMarkdown(), 'task1.md')

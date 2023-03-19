@@ -19,7 +19,11 @@
           @click="doAction(hotkey)"
           @keyup.enter="doAction(hotkey)">
           <div class="hotkeys__action">
-            <IconEdit class="hotkeys__icon-edit" />
+            <IconEdit
+              class="hotkeys__icon-edit"
+              tabindex="0"
+              @click.stop="changeHotkeys(hotkey)"
+              @keyup.enter.stop="changeHotkeys(hotkey)" />
             <span class="hotkeys__action-text">
               {{ hotkey.description }}
             </span>
@@ -68,11 +72,27 @@ export default {
     },
   },
   methods: {
+    changeHotkeys(hotkey) {
+      hotkey.keyCode = ''
+      hotkey.key = 'push buttons'
+      hotkey.modifiers = []
+      document.body.addEventListener('keyup', e => this.changeFunc(hotkey, e), {
+        once: true,
+      })
+    },
+    changeFunc(hotkey, e) {
+      hotkey.key = e.key
+      hotkey.keyCode = e.keyCode
+      hotkey.modifiers = []
+      if (e.shiftKey) hotkey.modifiers.push('shift')
+      if (e.ctrlKey) hotkey.modifiers.push('ctrl')
+      if (e.altKey) hotkey.modifiers.push('alt')
+      localStorage.setItem('hotkeys', JSON.stringify(hotkeys))
+    },
     doAction(hotkey) {
       if (!hotkey.isOpenModal) {
         this.$emit('closeModal')
       }
-      console.log(hotkey.handler)
       hotkey.handler()
     },
   },

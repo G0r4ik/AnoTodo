@@ -57,7 +57,6 @@ export default {
       useFolderStore().editTask(task, text)
     },
     editSubtask(task, subtask, text) {
-      console.log(text)
       useFolderStore().editSubtask(task, subtask, text)
     },
     addNewSubtask(task) {

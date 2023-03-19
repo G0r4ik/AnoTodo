@@ -30,7 +30,6 @@ function generateDate() {
 
 export function jsonToMarkdown() {
   const folders = JSON.parse(localStorage.getItem('folders'))
-  console.log(folders)
   let result = `Дата создания: ${generateDate()}\n`
   for (const [folder, tasks] of folders) {
     result += generateTitleOfFolder(folder)
