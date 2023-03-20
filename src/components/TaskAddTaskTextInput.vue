@@ -12,7 +12,9 @@
 
 <script>
 export default {
-  props: { value: { type: String, default: '' } },
+  props: {
+    value: { type: String, default: '' },
+  },
   emits: ['add-task', 'update:text'],
   methods: {
     addTask() {
@@ -25,9 +27,9 @@ export default {
 <style>
 .add-task__text {
   flex: 1 1 auto;
+  width: 100%;
   padding: var(--unit);
   margin: var(--unit) 0;
-  width: 100%;
 }
 
 .add-subtask__text {

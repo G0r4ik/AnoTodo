@@ -24,11 +24,21 @@
         class="sidebar__shortcuts"
         @click="toggleHotkeysModal">
         <IconShortcuts class="sidebar__shortcuts-icon" />
-        <span class="sidebar__shortcuts-text">показать сочетания клавиш</span>
+        <span class="sidebar__shortcuts-text">Сочетания клавиш</span>
       </a>
-      <span class="sidebar__date-manipulation" @click="toggleDateManipulation">
+      <span
+        tabindex="0"
+        class="sidebar__date-manipulation"
+        @click="toggleDateManipulation">
         <IconDownload class="sidebar__date-manipulation-icon" />
-        <span class="sidebar__date-manipulation-text"> Экспорт\Импорт </span>
+        <span class="sidebar__date-manipulation-text">Экспорт\Импорт</span>
+      </span>
+      <span
+        tabindex="0"
+        class="sidebar__change-theme"
+        @click="toggleChangeTheme">
+        <IconSettings class="sidebar__change-theme-icon" />
+        <span class="sidebar__change-theme-text">Сменить тему</span>
       </span>
     </div>
   </div>
@@ -40,20 +50,32 @@
         @close-modal="toggleHotkeysModal" />
     </transition>
   </teleport>
+  <teleport to="body">
+    <transition name="fade">
+      <ChangeTheme
+        v-if="isShowChangeThemeModal"
+        @close-modal="toggleChangeTheme" />
+    </transition>
+  </teleport>
 </template>
 
 <script>
-import HotkeysModal from '@/components/HotkeysModal.vue'
-import { hotkeys } from '@/hotkeys.js'
+import HotkeysModal from '@/components/hotkeysModal.vue'
+import ChangeTheme from '@/components/ChangeTheme.vue'
+import { hotkeys } from '@/helpers/hotkeys.js'
 import { useFolderStore } from '@/store/folders.js'
-import { downloadMarkdownAsFile, jsonToMarkdown } from '@/jsonToMarkdown.js'
+import {
+  downloadMarkdownAsFile,
+  jsonToMarkdown,
+} from '@/helpers/jsonToMarkdown.js'
 
 export default {
-  components: { HotkeysModal },
+  components: { HotkeysModal, ChangeTheme },
   data() {
     return {
       newFolder: '',
       isShowHotkeysModal: false,
+      isShowChangeThemeModal: false,
       timerOne: null,
       timerTwo: null,
       error: null,
@@ -92,12 +114,14 @@ export default {
         this.newFolder = ''
       }
     },
+    toggleChangeTheme() {
+      this.isShowChangeThemeModal = !this.isShowChangeThemeModal
+    },
     toggleHotkeysModal() {
       this.isShowHotkeysModal = !this.isShowHotkeysModal
     },
     toggleDateManipulation() {
       downloadMarkdownAsFile(jsonToMarkdown(), 'task1.md')
-      // downloadMarkdownAsFile(markdownContent, 'task1.md')
     },
   },
 }
@@ -157,12 +181,14 @@ export default {
   border-radius: var(--border-radius-circle);
 }
 
-.sidebar__shortcuts {
+.sidebar__shortcuts,
+.sidebar__date-manipulation {
   margin-bottom: var(--unit);
 }
 
 .sidebar__shortcuts,
-.sidebar__date-manipulation {
+.sidebar__date-manipulation,
+.sidebar__change-theme {
   display: flex;
   align-items: center;
   font-size: var(--font-small);
@@ -170,15 +196,17 @@ export default {
 }
 
 .sidebar__shortcuts-icon,
+.sidebar__change-theme-icon,
 .sidebar__date-manipulation-icon {
-  width: var(--height-icon-small);
-  height: var(--height-icon-small);
-  margin-right: var(--unit);
+  width: 20px;
+  height: 20px;
+  margin-right: calc(var(--unit) * 2);
 }
 
 .sidebar__shortcuts-text,
+.sidebar__change-theme-text,
 .sidebar__date-manipulation-text {
-  font-size: var(--font-small);
+  font-size: 18px;
   color: var(--color-text);
 }
 </style>

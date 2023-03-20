@@ -1,11 +1,11 @@
 function generateTitleOfFolder(folder) {
   return `\n## ${folder}\n`
 }
-function isReadyFunction(task) {
+function generateStatusOfTask(task) {
   return task.isReady ? '[+]' : '[ ]'
 }
 function generateTaskItem(task) {
-  const isReady = isReadyFunction(task)
+  const isReady = generateStatusOfTask(task)
   const isFavourite = task.isFavourite ? '(!)' : ''
   if (isFavourite) {
     return `- ${isReady} ${isFavourite} ${task.text}\n`
@@ -13,7 +13,7 @@ function generateTaskItem(task) {
   return `- ${isReady} ${task.text}\n`
 }
 function generateSubtaskItem(subtask) {
-  const isReady = isReadyFunction(subtask)
+  const isReady = generateStatusOfTask(subtask)
   return `  - ${isReady} ${subtask.text}\n`
 }
 function generateDate() {

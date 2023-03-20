@@ -251,7 +251,6 @@ export default {
 }
 
 .task_active {
-  /* color: var(--color-danger); */
   text-decoration: line-through;
   text-decoration-color: var(--color-danger);
   opacity: 0.75;
@@ -265,4 +264,3 @@ export default {
   cursor: pointer;
 }
 </style>
-<!-- 180 -->

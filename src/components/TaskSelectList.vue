@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { hotkeys } from '@/hotkeys'
+import { hotkeys } from '@/helpers/hotkeys'
 
 export default {
   props: {

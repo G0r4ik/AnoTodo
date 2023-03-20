@@ -22,14 +22,13 @@
 </template>
 
 <script>
-import { hotkeys } from '@/hotkeys.js'
+import { hotkeys } from '@/helpers/hotkeys.js'
 
 export default {
   props: {
     isShow: { type: Boolean, default: false },
   },
   emits: ['closeModal'],
-
   data() {
     return {
       bodyWidth: null,

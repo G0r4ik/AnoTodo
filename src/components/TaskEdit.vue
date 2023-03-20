@@ -5,32 +5,26 @@
       <input
         class="task-edit__task"
         :value="task.text"
-        @change="editTask(task, $event.target.value)" />
-      <!-- <input
-      v-for="subtask of task.subtasks"
-      :key="subtask.text"
-      :value="subtask.text"
-      class="task-edit__subtask"
-      @change="editSubtask(folder, task, subtask, $event.target.value)" /> -->
+        @input="editTask(task, $event.target.value)" />
       <div
-        v-for="(subtask, i) of task.subtasks"
+        v-for="subtask of task.subtasks"
         :key="subtask.id"
         class="add-subtask">
         <input
           id="search-tasks"
-          :value="task.subtasks[i].text"
+          :value="subtask.text"
           class="add-subtask__text"
           type="text"
           name="search-tasks"
           placeholder="Текст подзадачи"
-          @input="editSubtask(task, task.subtasks[i], $event.target.value)"
+          @input="editSubtask(task, subtask, $event.target.value)"
           @keypress.enter="addTask"
           @keyup.ctrl.enter.prevent="addSubtask" />
         <div
           class="add-subtask__delete"
           tabindex="0"
-          @click="deleteSubtask(task, task.subtasks[i])"
-          @keypress.enter="deleteSubtask(task, task.subtasks[i])">
+          @click="deleteSubtask(task, subtask)"
+          @keypress.enter="deleteSubtask(task, subtask)">
           <IconCross />
         </div>
       </div>
@@ -51,7 +45,6 @@ export default {
     task: { type: Object, default: () => ({}) },
   },
   emits: ['closeModal'],
-
   methods: {
     editTask(task, text) {
       useFolderStore().editTask(task, text)

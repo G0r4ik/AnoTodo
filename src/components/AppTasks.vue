@@ -1,9 +1,9 @@
 <template>
   <main class="main">
     <strong class="main__current-folder">
-      {{ currentFolder ? currentFolder : 'Все папки' }}
+      {{ title }}
     </strong>
-    <TaskListSelect
+    <TaskSelectList
       :status-list="statusList"
       @change-task-status-list="changeTaskStatusList" />
     <TaskList :status-list="statusList" />
@@ -12,12 +12,12 @@
 
 <script>
 import TaskList from '@/components/TaskList.vue'
-import TaskListSelect from '@/components/TaskListSelect.vue'
+import TaskSelectList from '@/components/TaskSelectList.vue'
 import { useFolderStore } from '@/store/folders.js'
 
 export default {
   components: {
-    TaskListSelect,
+    TaskSelectList,
     TaskList,
   },
   data() {
@@ -27,8 +27,8 @@ export default {
     }
   },
   computed: {
-    currentFolder() {
-      return useFolderStore().currentFolder
+    title() {
+      return useFolderStore().currentFolder || 'Все папки'
     },
     folders() {
       return useFolderStore().folders

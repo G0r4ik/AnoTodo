@@ -7,7 +7,6 @@
 
 ::-webkit-scrollbar {
   width: 10px;
-  max-width: calc(1px * 10);
 }
 
 ::-webkit-scrollbar-track {
@@ -42,7 +41,6 @@ p {
 
 button {
   border: none;
-  outline: none;
   background: none;
   cursor: pointer;
 }

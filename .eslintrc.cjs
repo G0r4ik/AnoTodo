@@ -1,8 +1,5 @@
 module.exports = {
-  env: {
-    browser: true,
-    es2021: true,
-  },
+  env: { browser: true, es2021: true },
   extends: [
     'plugin:vue/vue3-essential',
     'standard',
@@ -12,11 +9,7 @@ module.exports = {
     'plugin:vue/vue3-strongly-recommended',
     'plugin:vue/vue3-recommended',
   ],
-  overrides: [],
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-  },
+  parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
   plugins: ['vue'],
   rules: {
     'comma-dangle': 'off',

@@ -45,7 +45,7 @@
 
 <script>
 import ModalWrapper from '@/components/ModalWrapper.vue'
-import { hotkeys } from '@/hotkeys.js'
+import { hotkeys } from '@/helpers/hotkeys.js'
 
 export default {
   components: { ModalWrapper },

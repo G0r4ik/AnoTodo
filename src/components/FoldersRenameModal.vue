@@ -62,7 +62,7 @@ export default {
 <style>
 .edit-folder {
   position: relative;
-  max-width: 300px;
+  max-width: var(--width-folder-rename);
 }
 
 .edit-folder__error {

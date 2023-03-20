@@ -8,6 +8,7 @@
       <IconEdit />
     </button>
   </div>
+
   <teleport to="body">
     <transition name="fade">
       <FoldersRenameModal
@@ -19,7 +20,7 @@
 
 <script>
 import FoldersRenameModal from '@/components/FoldersRenameModal.vue'
-import { hotkeys } from '@/hotkeys.js'
+import { hotkeys } from '@/helpers/hotkeys.js'
 import { useFolderStore } from '@/store/folders.js'
 
 export default {

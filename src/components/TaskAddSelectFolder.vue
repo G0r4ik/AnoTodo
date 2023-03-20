@@ -1,12 +1,12 @@
 <template>
   <select
     id="add-task-folder"
-    class="add-task__select-folder"
     name="add-task-folder"
+    class="add-task__select-folder"
     :value="folder"
     @input="$emit('update:folder', $event.target.value)">
     <option
-      v-for="folderItem of allFolders"
+      v-for="folderItem of allIndexedFolders"
       :key="folderItem"
       :value="folderItem">
       {{ folderItem }}
@@ -18,10 +18,12 @@
 import { useFolderStore } from '@/store/folders'
 
 export default {
-  props: { folder: { type: String, default: 'Неотсортированное' } },
+  props: {
+    folder: { type: String, default: 'Неотсортированное' },
+  },
   emits: ['add-task', 'update:folder'],
   computed: {
-    allFolders() {
+    allIndexedFolders() {
       return useFolderStore().allIndexedFolders
     },
   },

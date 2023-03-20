@@ -1,8 +1,8 @@
 <template>
-  <div v-for="(subtask, i) of subtasks" :key="subtask.id" class="add-subtask">
+  <div v-for="subtask of subtasks" :key="subtask.id" class="add-subtask">
     <input
       id="search-tasks"
-      v-model="subtasks[i].text"
+      :value="subtask.text"
       class="add-subtask__text"
       type="text"
       name="search-tasks"

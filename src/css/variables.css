@@ -38,14 +38,13 @@
   --width-sidebar: 270px;
   --width-header: 200px;
   --height-folder-rename: 270px;
-  --height-sidebar-bottom: 100px;
+  --height-sidebar-bottom: 140px;
   --height-header: 50px;
   --height-icon-main: 24px;
   --height-icon-small: 15px;
+  --width-folder-rename: 300px;
+  --width-task-add: 300px;
 
   /* transition-duration; */
   --transition-fast: 0.25s;
-
-  /* opacity: 0.5 */
-  /* 10px */
 }

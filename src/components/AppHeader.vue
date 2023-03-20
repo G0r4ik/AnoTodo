@@ -26,7 +26,7 @@
 
 <script>
 import TaskAdd from '@/components/TaskAdd.vue'
-import { hotkeys } from '@/hotkeys.js'
+import { hotkeys } from '@/helpers/hotkeys.js'
 import { useFolderStore } from '@/store/folders.js'
 
 export default {

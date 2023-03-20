@@ -1,19 +1,19 @@
-import cssnano from 'cssnano'
-import autoprefixer from 'autoprefixer'
 import flexbugs from 'postcss-flexbugs-fixes'
-import postcssCalc from 'postcss-calc'
-import postcssPresetEnv from 'postcss-preset-env'
-import merge from 'postcss-merge-rules'
 import convert from 'postcss-convert-values'
+import presentEnv from 'postcss-preset-env'
+import autoprefixer from 'autoprefixer'
+import merge from 'postcss-merge-rules'
+import calc from 'postcss-calc'
+import cssnano from 'cssnano'
 
 export default {
   plugins: [
     convert,
-    postcssCalc,
+    calc,
     flexbugs,
     autoprefixer,
-    postcssPresetEnv,
+    presentEnv,
     merge,
-    cssnano({ preset: 'advanced' }),
+    cssnano({ preset: 'default' }),
   ],
 }

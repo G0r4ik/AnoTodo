@@ -11,10 +11,7 @@
 <script>
 export default {
   props: {
-    color: {
-      type: String,
-      default: 'var(--color-danger)',
-    },
+    color: { type: String, default: 'var(--color-danger)' },
   },
 }
 </script>

@@ -2,7 +2,7 @@
   <div class="error">
     <div class="error__inner">
       <IconCross class="error__close" @click="closeError" />
-      <small class="error-text">{{ error }}</small>
+      <small class="error__text">{{ error }}</small>
     </div>
   </div>
 </template>
@@ -16,7 +16,7 @@ export default {
   emits: ['closeError'],
   mounted() {
     setTimeout(() => {
-      this.$emit('closeError')
+      this.closeError()
     }, this.timeToClose)
   },
   methods: {

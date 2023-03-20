@@ -98,13 +98,13 @@ export default {
     addTask() {
       if (this.newTask.text.length < 2) {
         this.error = 'Текст задачи не может быть меньше двух символов'
-        return
+      } else {
+        this.newTask.id = Date.now().toString(36) + Math.random().toString(36)
+        this.newTask.subtasks = this.newTask.subtasks.filter(s => s.text !== '')
+        useFolderStore().addTask({ ...this.newTask })
+        this.newTask.text = ''
+        this.newTask.subtasks = []
       }
-      this.newTask.id = Date.now().toString(36) + Math.random().toString(36)
-      this.newTask.subtasks = this.newTask.subtasks.filter(s => s.text !== '')
-      useFolderStore().addTask({ ...this.newTask })
-      this.newTask.text = ''
-      this.newTask.subtasks = []
     },
   },
 }
@@ -118,7 +118,7 @@ export default {
 .add-task {
   display: flex;
   flex-direction: column;
-  width: 300px;
+  width: var(--width-task-add);
   margin-top: calc(var(--unit) * 2);
   margin-bottom: calc(var(--unit) * 3);
 }

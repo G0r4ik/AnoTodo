@@ -8,6 +8,8 @@
 
 <script>
 export default {
-  props: { color: { type: String, default: 'var(--color-text)' } },
+  props: {
+    color: { type: String, default: 'var(--color-text)' },
+  },
 }
 </script>

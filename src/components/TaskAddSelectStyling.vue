@@ -49,10 +49,8 @@ export default {
   watch: {
     currentStyle(newValue) {
       if (newValue === 'none') {
-        this.$emit('setStyleOfTask', {
-          color: 'var(--color-text)',
-          bg: 'none',
-        })
+        const style = { color: 'var(--color-text)', bg: 'none' }
+        this.$emit('setStyleOfTask', style)
       } else {
         this.$emit('setStyleOfTask', this.colors[newValue])
       }
@@ -77,6 +75,7 @@ export default {
 .add-task__color-select {
   width: 100%;
 }
+
 .add-task__color-random {
   width: var(--height-icon-main);
   height: var(--height-icon-main);

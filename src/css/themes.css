@@ -1,0 +1,18 @@
+:root[theme='light'] {
+  --color-text: #1c1c27;
+  --color-bg: #fcfcfc;
+}
+
+:root[theme='dragula'] {
+  --color-text: #f8f8f2;
+  --color-bg: #282a36;
+  --color-secondary: #44475a;
+  --color-danger: #ff5555;
+}
+
+:root[theme='cobalt'] {
+  --color-text: #fff;
+  --color-bg: #193549;
+  --color-primary: #ffb86c;
+  --color-secondary: #234e6d;
+}
