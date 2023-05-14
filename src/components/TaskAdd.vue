@@ -1,6 +1,6 @@
 <template>
   <ModalWrapper @close-modal="$emit('closeModal')">
-    <template #header>Создать задачу</template>
+    <template #header>{{ $t('createTask') }}</template>
     <template #content>
       <div class="add-task">
         <TaskAddSelectFolder
@@ -29,7 +29,7 @@
             borderColor: getButtonBorderColor,
           }"
           @click="addTask">
-          Добавить
+          {{ $t('add') }}
         </button>
       </div>
     </template>
@@ -60,13 +60,19 @@ export default {
         isReady: false,
         isFavourite: false,
         text: '',
-        folder: useFolderStore().currentFolder || 'Неотсортированное',
+        folder: null,
         style: { bg: 'none', color: 'var(--color-text)' },
         subtasks: [],
       },
     }
   },
   computed: {
+    folder() {
+      const notIndexedFolders = useFolderStore().notIndexedFolders
+      const currentFolder = useFolderStore().currentFolder
+      if (notIndexedFolders.includes(currentFolder)) return 'Неотсортированное'
+      return currentFolder || 'Неотсортированное'
+    },
     getButtonBorderColor() {
       return this.newTask.style.bg === 'none'
         ? 'var(--color-primary)'
@@ -79,9 +85,12 @@ export default {
       return this.newTask.style.color
     },
   },
-  activated() {
-    this.newTask.folder = useFolderStore().currentFolder || 'Неотсортированное'
+  mounted() {
+    this.newTask.folder = this.folder
   },
+  // activated() {
+  //   this.newTask.folder = useFolderStore().currentFolder || this.$t('notSorted')
+  // },
   methods: {
     addSubtask(subtask) {
       this.newTask.subtasks.push(subtask)

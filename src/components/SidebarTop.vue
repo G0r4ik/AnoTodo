@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar__top">
-    <span class="sidebar__title">Папки</span>
+    <span class="sidebar__title">{{ $t('folders') }}</span>
     <button
       v-if="hasUserFolder"
       class="sidebar__edit"

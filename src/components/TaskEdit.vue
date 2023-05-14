@@ -1,6 +1,6 @@
 <template>
   <ModalWrapper @close-modal="$emit('closeModal')">
-    <template #header>Изменить задачу</template>
+    <template #header>{{ $t('changeTask') }}</template>
     <template #content>
       <input
         class="task-edit__task"
@@ -16,7 +16,7 @@
           class="add-subtask__text"
           type="text"
           name="search-tasks"
-          placeholder="Текст подзадачи"
+          :placeholder="$t('textOfSubtask')"
           @input="editSubtask(task, subtask, $event.target.value)"
           @keypress.enter="addTask"
           @keyup.ctrl.enter.prevent="addSubtask" />
@@ -28,7 +28,7 @@
           <IconCross />
         </div>
       </div>
-      <button @click="addNewSubtask(task)">Добавить подзадачу</button>
+      <button @click="addNewSubtask(task)">{{ $t('addSubtask') }}</button>
     </template>
   </ModalWrapper>
 </template>

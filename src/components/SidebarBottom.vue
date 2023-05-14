@@ -14,7 +14,7 @@
           class="sidebar__new-folder-input"
           type="text"
           name="new-folder"
-          placeholder="Новая папка"
+          :placeholder="$t('newFolder')"
           @keypress.enter="addFolder" />
         <button class="sidebar__new-folder-button" @click="addFolder">+</button>
       </div>
@@ -24,25 +24,39 @@
         class="sidebar__shortcuts"
         @click="toggleHotkeysModal">
         <IconShortcuts class="sidebar__shortcuts-icon" />
-        <span class="sidebar__shortcuts-text">Сочетания клавиш</span>
+        <span class="sidebar__shortcuts-text">
+          {{ $t('keyboardShortcuts') }}
+        </span>
       </a>
       <span
         tabindex="0"
         class="sidebar__date-manipulation"
         @click="toggleDateManipulation">
         <IconDownload class="sidebar__date-manipulation-icon" />
-        <span class="sidebar__date-manipulation-text">Экспорт\Импорт</span>
+        <span class="sidebar__date-manipulation-text">
+          {{ $t('export') }}\{{ $t('import') }}
+        </span>
       </span>
       <span
         tabindex="0"
         class="sidebar__change-theme"
         @click="toggleChangeTheme">
         <IconSettings class="sidebar__change-theme-icon" />
-        <span class="sidebar__change-theme-text">Сменить тему</span>
+        <span class="sidebar__change-theme-text">
+          {{ $t('changeTheme') }}
+        </span>
+      </span>
+      <span
+        tabindex="0"
+        class="sidebar__change-language"
+        @click="toggleChangeLanguage">
+        <IconLanguage class="sidebar__change-language-icon" />
+        <span class="sidebar__change-language-text">
+          {{ $t('changeLanguage') }}
+        </span>
       </span>
     </div>
   </div>
-
   <teleport to="body">
     <transition name="fade">
       <HotkeysModal
@@ -57,11 +71,19 @@
         @close-modal="toggleChangeTheme" />
     </transition>
   </teleport>
+  <teleport to="body">
+    <transition name="fade">
+      <ChangeLanguage
+        v-if="isShowChangeLanguageModal"
+        @close-modal="toggleChangeLanguage" />
+    </transition>
+  </teleport>
 </template>
 
 <script>
 import HotkeysModal from '@/components/hotkeysModal.vue'
 import ChangeTheme from '@/components/ChangeTheme.vue'
+import ChangeLanguage from './ChangeLanguage.vue'
 import { hotkeys } from '@/helpers/hotkeys.js'
 import { useFolderStore } from '@/store/folders.js'
 import {
@@ -70,12 +92,13 @@ import {
 } from '@/helpers/jsonToMarkdown.js'
 
 export default {
-  components: { HotkeysModal, ChangeTheme },
+  components: { HotkeysModal, ChangeTheme, ChangeLanguage },
   data() {
     return {
       newFolder: '',
       isShowHotkeysModal: false,
       isShowChangeThemeModal: false,
+      isShowChangeLanguageModal: false,
       timerOne: null,
       timerTwo: null,
       error: null,
@@ -101,10 +124,10 @@ export default {
       clearTimeout(this.timerOne)
       clearTimeout(this.timerTwo)
       if (this.newFolder.length < 2) {
-        this.error = 'Длина папки не может быть меньше 2'
+        this.error = this.$t('folderLengthError')
       } else if (store.folders[this.newFolder]) {
         store.duplicateFolder = this.newFolder
-        this.error = 'Уже существует такая папка'
+        this.error = this.$t('folderLengthErrorS')
         this.timerTwo = setTimeout(() => (this.error = null), 3000)
         this.timerOne = setTimeout(() => (store.duplicateFolder = null), 750)
       } else {
@@ -117,11 +140,15 @@ export default {
     toggleChangeTheme() {
       this.isShowChangeThemeModal = !this.isShowChangeThemeModal
     },
+    toggleChangeLanguage() {
+      this.isShowChangeLanguageModal = !this.isShowChangeLanguageModal
+    },
     toggleHotkeysModal() {
       this.isShowHotkeysModal = !this.isShowHotkeysModal
     },
     toggleDateManipulation() {
       downloadMarkdownAsFile(jsonToMarkdown(), 'task1.md')
+      // exportToPdf()
     },
   },
 }
@@ -132,7 +159,7 @@ export default {
   position: absolute;
   bottom: 0;
   height: var(--height-sidebar-bottom);
-  padding: calc(var(--unit) * 2) 0;
+  /* padding: calc(var(--unit) * 2) 0; */
 }
 
 .sidebar__bottom-inner {
@@ -182,13 +209,16 @@ export default {
 }
 
 .sidebar__shortcuts,
-.sidebar__date-manipulation {
+.sidebar__date-manipulation,
+.sidebar__change-theme,
+.sidebar__change-language {
   margin-bottom: var(--unit);
 }
 
 .sidebar__shortcuts,
 .sidebar__date-manipulation,
-.sidebar__change-theme {
+.sidebar__change-theme,
+.sidebar__change-language {
   display: flex;
   align-items: center;
   font-size: var(--font-small);
@@ -197,6 +227,7 @@ export default {
 
 .sidebar__shortcuts-icon,
 .sidebar__change-theme-icon,
+.sidebar__change-language-icon,
 .sidebar__date-manipulation-icon {
   width: 20px;
   height: 20px;
@@ -205,6 +236,7 @@ export default {
 
 .sidebar__shortcuts-text,
 .sidebar__change-theme-text,
+.sidebar__change-language-text,
 .sidebar__date-manipulation-text {
   font-size: 18px;
   color: var(--color-text);

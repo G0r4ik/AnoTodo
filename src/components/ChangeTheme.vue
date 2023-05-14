@@ -1,6 +1,6 @@
 <template>
   <ModalWrapper>
-    <template #header>Сменить цветовую тему</template>
+    <template #header>{{ $t('changeTheme') }}</template>
     <template #content>
       <div class="change-theme">
         <div
@@ -22,8 +22,8 @@ export default {
   data() {
     return {
       themes: [
-        { title: 'Светлая', class: 'light' },
-        { title: 'Темная', class: 'dark' },
+        { title: this.$t('lightTheme'), class: 'light' },
+        { title: this.$t('darkTheme'), class: 'dark' },
         { title: 'Dragula', class: 'dragula' },
         { title: 'Cobalt', class: 'cobalt' },
       ],

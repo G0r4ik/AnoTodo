@@ -6,7 +6,7 @@
       class="add-subtask__text"
       type="text"
       name="search-tasks"
-      placeholder="Текст подзадачи"
+      :placeholder="$t('textOfSubtask')"
       @keypress.enter="addTask"
       @keyup.ctrl.enter.prevent="addSubtask" />
     <div
@@ -18,7 +18,7 @@
     </div>
   </div>
   <button class="add-subtask__button" @click="addSubtask">
-    Добавить подзадачу
+    {{ $t('addSubtask') }}
   </button>
 </template>
 

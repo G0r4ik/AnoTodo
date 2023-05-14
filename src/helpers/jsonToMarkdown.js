@@ -2,7 +2,7 @@ function generateTitleOfFolder(folder) {
   return `\n## ${folder}\n`
 }
 function generateStatusOfTask(task) {
-  return task.isReady ? '[+]' : '[ ]'
+  return task.isReady ? '[x]' : '[ ]'
 }
 function generateTaskItem(task) {
   const isReady = generateStatusOfTask(task)

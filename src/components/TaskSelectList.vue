@@ -6,7 +6,7 @@
       :class="{ 'task-status__link_active': statusList === 'all' }"
       @click="$emit('changeTaskStatusList', 'all')"
       @keypress.enter="$emit('changeTaskStatusList', 'all')">
-      Все
+      {{ $t('all') }}
     </span>
     <span
       class="task-status__link"
@@ -14,7 +14,7 @@
       :class="{ 'task-status__link_active': statusList === 'active' }"
       @click="$emit('changeTaskStatusList', 'active')"
       @keypress.enter="$emit('changeTaskStatusList', 'active')">
-      Активные
+      {{ $t('active') }}
     </span>
     <span
       class="task-status__link"
@@ -22,7 +22,7 @@
       :class="{ 'task-status__link_active': statusList === 'ready' }"
       @click="$emit('changeTaskStatusList', 'ready')"
       @keypress.enter="$emit('changeTaskStatusList', 'ready')">
-      Выполненные
+      {{ $t('ready') }}
     </span>
   </div>
 </template>

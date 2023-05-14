@@ -1,6 +1,6 @@
 <template>
   <ModalWrapper @close-modal="$emit('closeModal')">
-    <template #header>Переименовать</template>
+    <template #header>{{ $t('rename') }}</template>
     <template #content>
       <div class="edit-folder">
         <AppError
@@ -48,9 +48,9 @@ export default {
     },
     renameFolder(oldFolderName, newFolderName) {
       if (newFolderName.length < 2) {
-        this.error = 'Название папки не может быть меньше двух символов'
+        this.error = this.$t('errorFolderName')
       } else if (useFolderStore().folders[newFolderName]) {
-        this.error = 'Папка с таким именем уже существует'
+        this.error = this.$t('errorFolderNameS')
       } else {
         useFolderStore().renameFolder(oldFolderName, newFolderName)
       }

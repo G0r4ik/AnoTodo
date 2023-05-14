@@ -5,7 +5,7 @@
     class="add-task__text"
     type="text"
     name="search-tasks"
-    placeholder="Текст задачи"
+    :placeholder="$t('textOfTask')"
     @keypress.enter="addTask"
     @input="$emit('update:text', $event.target.value)" />
 </template>

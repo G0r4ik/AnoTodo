@@ -3,6 +3,7 @@ import { createPinia } from 'pinia'
 import '@/style.css'
 import App from '@/App.vue'
 import AppError from '@/components/AppError.vue'
+import { $t } from './localize'
 const pinia = createPinia()
 const app = createApp(App)
 
@@ -13,5 +14,6 @@ for (const path in modules) {
 }
 app.component('AppError', AppError)
 
+app.config.globalProperties.$t = $t
 app.use(pinia)
 app.mount('#app')

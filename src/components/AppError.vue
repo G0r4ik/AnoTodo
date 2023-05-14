@@ -10,11 +10,12 @@
 <script>
 export default {
   props: {
-    error: { type: String, default: 'Ошибка' },
+    error: { type: String, default: () => this.$t('error') },
     timeToClose: { type: Number, default: 3000 },
   },
   emits: ['closeError'],
   mounted() {
+    console.log(this.$t('error'))
     setTimeout(() => {
       this.closeError()
     }, this.timeToClose)

@@ -33,6 +33,7 @@ export default {
   width: var(--width-sidebar);
   height: calc(100% - var(--height-header));
   padding: calc(var(--unit) * 2);
+  padding-bottom: var(--unit);
   background: url('@/assets/grain.png') var(--color-bg);
   border-right: var(--border-width-main) solid var(--color-secondary);
 }
