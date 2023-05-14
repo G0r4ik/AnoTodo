@@ -5,10 +5,16 @@ export const useFolderStore = defineStore('folder', {
     isFoldersVisible: false,
     searchQuery: '',
     folders: new Map(),
+    copyOfFolders: new Map(),
     staticFolders: ['Неотсортированное'],
     notIndexedFolders: ['Избранное'],
     currentFolder: null,
     duplicateFolder: null,
+
+    includedFolders: [],
+    excludedFolders: [],
+    RegExpIncludedFolders: null,
+    RegExpExcludedFolders: null,
   }),
 
   getters: {
@@ -77,6 +83,16 @@ export const useFolderStore = defineStore('folder', {
     // Search
     setSearchQuery(query) {
       this.searchQuery = query
+    },
+    includeFolders(folders) {
+      this.includedFolders = folders
+    },
+    excludeFolders(folders) {
+      this.excludedFolders = folders
+    },
+    changeRegExp(fixme2) {
+      if (fixme2 === 'include') this.RegExpIncludedFolders = null
+      if (fixme2 === 'exclude') this.RegExpExcludedFolders = null
     },
 
     //  Tasks

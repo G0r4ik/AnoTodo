@@ -3,17 +3,8 @@
     <button class="header__burger" @click="changeShowFolders">
       <IconBurger />
     </button>
-    <input
-      id="header-search"
-      ref="headerSearch"
-      name="header-search"
-      type="search"
-      placeholder="Поиск"
-      autocomplete="off"
-      class="header__search-input"
-      @input="updateSearchFilter($event.target.value)" />
     <button class="header__create-post" @click="toggleCreatePostModal">
-      Создать пост
+      {{ $t('createTask') }}
     </button>
   </header>
 
@@ -51,10 +42,6 @@ export default {
     toggleCreatePostModal() {
       this.isShowCreatePost = !this.isShowCreatePost
     },
-    updateSearchFilter(value) {
-      useFolderStore().setSearchQuery(value)
-      useFolderStore().setCurrentFolder(null)
-    },
     changeShowFolders() {
       useFolderStore().toggleIsShowFolders()
     },
@@ -89,19 +76,6 @@ export default {
   height: 100%;
 }
 
-.header__search-input {
-  width: var(--width-header);
-  min-width: var(--width-header);
-  padding: var(--unit);
-  margin: 0 calc(var(--unit) * 2);
-  transition: var(--transition-fast);
-}
-
-.header__search-input:focus,
-.header__search-input:not(:placeholder-shown) {
-  transition: var(--transition-fast);
-}
-
 .header__create-post {
   padding: var(--unit) calc(var(--unit) * 2);
   color: var(--color-primary);
@@ -125,12 +99,6 @@ export default {
 
   .visible-header {
     display: none;
-  }
-
-  .header__search-input:focus,
-  .header__search-input:not(:placeholder-shown) {
-    width: 100%;
-    transition: var(--transition-fast);
   }
 
   .header__create-post {

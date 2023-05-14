@@ -104,7 +104,38 @@ export default {
           .get(this.allIndexedFolders[i])
           ?.filter(this.func)
       }
-      return result
+
+      const excludedFolders = useFolderStore().excludedFolders
+      const includedFolders = useFolderStore().includedFolders
+      const RegExpExcludedFolders = useFolderStore().RegExpExcludedFolders
+      const RegExpIncludedFolders = useFolderStore().RegExpIncludedFolders
+
+      const oldFolders = Object.entries(result)
+      const newObj = {}
+
+      const filteredIncluded = includedFolders.filter(f => f !== '')
+      const filteredExcluded = excludedFolders.filter(f => f !== '')
+
+      oldFolders.forEach(([folder, tasks]) => {
+        if (
+          excludedFolders.includes(folder) &&
+          filteredExcluded.length &&
+          !RegExpExcludedFolders
+        )
+          return
+        if (
+          !includedFolders.includes(folder) &&
+          filteredIncluded.length &&
+          !RegExpIncludedFolders
+        )
+          return
+        if (RegExpExcludedFolders && RegExpExcludedFolders.test(folder)) return
+        if (RegExpIncludedFolders && !RegExpIncludedFolders.test(folder)) return
+
+        newObj[folder] = tasks
+      })
+
+      return newObj
     },
   },
 
@@ -193,6 +224,12 @@ export default {
 </script>
 
 <style>
+.main__tasks {
+  padding: 0 var(--unit);
+  color: var(--color-text);
+  background: var(--color-bg) url('/src/assets/grain.png');
+}
+
 .task__folder {
   display: inline-block;
   margin-bottom: calc(var(--unit) * 2);

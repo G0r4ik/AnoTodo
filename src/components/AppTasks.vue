@@ -3,6 +3,8 @@
     <strong class="main__current-folder">
       {{ title }}
     </strong>
+
+    <TaskSearch />
     <TaskSelectList
       :status-list="statusList"
       @change-task-status-list="changeTaskStatusList" />
@@ -14,11 +16,13 @@
 import TaskList from '@/components/TaskList.vue'
 import TaskSelectList from '@/components/TaskSelectList.vue'
 import { useFolderStore } from '@/store/folders.js'
+import TaskSearch from './TaskSearch.vue'
 
 export default {
   components: {
     TaskSelectList,
     TaskList,
+    TaskSearch,
   },
   data() {
     return {
@@ -28,7 +32,7 @@ export default {
   },
   computed: {
     title() {
-      return useFolderStore().currentFolder || 'Все папки'
+      return useFolderStore().currentFolder || this.$t('allFolders')
     },
     folders() {
       return useFolderStore().folders
