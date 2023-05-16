@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import HotkeysModal from '@/components/hotkeysModal.vue'
+import HotkeysModal from '@/components/HotkeysModal.vue'
 import ChangeTheme from '@/components/ChangeTheme.vue'
 import ChangeLanguage from './ChangeLanguage.vue'
 import { hotkeys } from '@/helpers/hotkeys.js'
