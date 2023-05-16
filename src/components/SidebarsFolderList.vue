@@ -30,10 +30,20 @@
         :class="{
           sidebar__folder_active: folder === currentFolder,
           sidebar__folder_dublicate: isFolderDuplicate(folder),
+          locked: isLockCheck(folder),
         }"
         @click="changeCurrentFolder(folder)"
         @keypress.enter="changeCurrentFolder(folder)">
-        <span class="sidebar__folder-text">{{ folder }}</span>
+        <div class="sidebar__folder-inner" @click.prevent>
+          <IconLock
+            stroke="var(--color-primary)"
+            v-if="isLockCheck(folder)"
+            @click.stop="deleteLockedFolder(folder)" />
+          <IconUnlock v-else @click.stop="pushLockedFolders(folder)" />
+          <IconMove class="icon-move" @click.stop />
+          <span class="sidebar__folder-text">{{ folder }} </span>
+        </div>
+
         <button
           class="sidebar__new-folder-delete"
           @click.stop="deleteFolder(folder)">
@@ -67,11 +77,20 @@ export default {
     folders() {
       return useFolderStore().folders
     },
+    isLockCheck() {
+      return folder => useFolderStore().lockedFolders.includes(folder)
+    },
   },
   mounted() {
     const el = document.querySelector('.sidebar__folders-users')
     Sortable.create(el, {
+      handle: '.icon-move',
+      filter: '.locked',
+      onStart: event => {
+        console.log(event.item.classList.contains('locked'))
+      },
       onEnd: event => {
+        console.dir(event.item.firstChild)
         const itemEl = event.item
         const newIndex = event.newIndex
         const folderName = itemEl.textContent
@@ -92,7 +111,14 @@ export default {
       },
     })
   },
+
   methods: {
+    pushLockedFolders(folder) {
+      useFolderStore().pushLockedFolders(folder)
+    },
+    deleteLockedFolder(folder) {
+      useFolderStore().deleteLockedFolder(folder)
+    },
     isFolderDuplicate(folderName) {
       return useFolderStore().isFolderDuplicate(folderName)
     },
@@ -120,6 +146,12 @@ export default {
   padding: var(--unit) 0;
   margin-bottom: var(--unit);
   cursor: pointer;
+}
+
+.sidebar__folder-inner {
+  display: flex;
+  gap: var(--unit);
+  align-items: center;
 }
 
 .sidebar__folder-text {

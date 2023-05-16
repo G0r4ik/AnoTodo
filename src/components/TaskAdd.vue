@@ -18,7 +18,7 @@
           class-input="add-task__use-input" /> -->
 
         <TaskAddTime
-          @changeTimeStart="changeTimeStart"
+          @change-time-start="changeTimeStart"
           @change-time-end="changeTimeEnd" />
         <TaskAddTaskTextInput
           :value="newTask.text"
@@ -45,7 +45,6 @@
           {{ $t('add') }}
         </button>
       </div>
-      {{ (newTask.timeStart, newTask.timeEnd) }}
     </template>
   </ModalWrapper>
 </template>

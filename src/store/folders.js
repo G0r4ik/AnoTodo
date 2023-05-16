@@ -15,6 +15,7 @@ export const useFolderStore = defineStore('folder', {
     excludedFolders: [],
     RegExpIncludedFolders: null,
     RegExpExcludedFolders: null,
+    lockedFolders: JSON.parse(localStorage.getItem('lockedFolders')) || [],
   }),
 
   getters: {
@@ -128,6 +129,22 @@ export const useFolderStore = defineStore('folder', {
     },
     changeTaskStatusSubtask(subtask) {
       subtask.isReady = !subtask.isReady
+    },
+    //
+    //
+    //
+    pushLockedFolders(folder) {
+      const folders = JSON.parse(localStorage.getItem('lockedFolders')) || []
+      folders.push(folder)
+      localStorage.setItem('lockedFolders', JSON.stringify(folders))
+      this.lockedFolders = folders
+    },
+    deleteLockedFolder(folder) {
+      const folders = JSON.parse(localStorage.getItem('lockedFolders')) || []
+      const idx = folders.findIndex(item => item === folder)
+      folders.splice(idx, 1)
+      localStorage.setItem('lockedFolders', JSON.stringify(folders))
+      this.lockedFolders = folders
     },
   },
 })

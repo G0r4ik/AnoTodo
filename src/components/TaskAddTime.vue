@@ -68,6 +68,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 1px;
   margin-bottom: var(--unit);
 }
 
@@ -76,7 +77,7 @@ export default {
 }
 
 .add-task__time-label {
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .add-task__time-input {
