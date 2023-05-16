@@ -8,6 +8,18 @@
           @add-task="addTask"
           @update:folder="newTask.folder = $event" />
         <TaskAddSelectStyling @set-style-of-task="setStyleOfTask" />
+
+        <!-- <CustomCheckbox
+          id="is-using-time"
+          v-model="isUsingTimeOfTask"
+          class="add-task__use-time"
+          text="Указать время"
+          class-text="add-task__use-time-text"
+          class-input="add-task__use-input" /> -->
+
+        <TaskAddTime
+          @changeTimeStart="changeTimeStart"
+          @change-time-end="changeTimeEnd" />
         <TaskAddTaskTextInput
           :value="newTask.text"
           @add-task="addTask"
@@ -16,6 +28,7 @@
           :subtasks="newTask.subtasks"
           @add-subtask="addSubtask"
           @delete-subtask="deleteSubtask" />
+
         <AppError
           v-if="error"
           :error="error"
@@ -32,6 +45,7 @@
           {{ $t('add') }}
         </button>
       </div>
+      {{ (newTask.timeStart, newTask.timeEnd) }}
     </template>
   </ModalWrapper>
 </template>
@@ -43,6 +57,7 @@ import TaskAddSelectFolder from '@/components/TaskAddSelectFolder.vue'
 import TaskAddSelectStyling from '@/components/TaskAddSelectStyling.vue'
 import TaskAddTaskTextInput from '@/components/TaskAddTaskTextInput.vue'
 import TaskAddSubtask from '@/components/TaskAddSubtask.vue'
+import TaskAddTime from './TaskAddTime.vue'
 
 export default {
   components: {
@@ -51,6 +66,7 @@ export default {
     TaskAddSelectStyling,
     TaskAddTaskTextInput,
     TaskAddSubtask,
+    TaskAddTime,
   },
   emits: ['closeModal'],
   data() {
@@ -63,6 +79,8 @@ export default {
         folder: null,
         style: { bg: 'none', color: 'var(--color-text)' },
         subtasks: [],
+        timeStart: null,
+        timeEnd: null,
       },
     }
   },
@@ -92,6 +110,12 @@ export default {
   //   this.newTask.folder = useFolderStore().currentFolder || this.$t('notSorted')
   // },
   methods: {
+    changeTimeStart(date) {
+      this.newTask.timeStart = date
+    },
+    changeTimeEnd(date) {
+      this.newTask.timeEnd = date
+    },
     addSubtask(subtask) {
       this.newTask.subtasks.push(subtask)
     },
@@ -150,5 +174,16 @@ export default {
 .add-subtask__button:disabled {
   cursor: auto;
   opacity: 0.5;
+}
+
+.add-task__use-time {
+  display: flex;
+}
+
+.add-task__use-time-text {
+  margin-right: var(--unit);
+}
+
+.add-task__use-input {
 }
 </style>

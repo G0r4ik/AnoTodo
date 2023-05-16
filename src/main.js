@@ -7,7 +7,10 @@ import { $t } from './localize'
 const pinia = createPinia()
 const app = createApp(App)
 
-const modules = import.meta.glob('./components/icons/*.vue', { eager: true })
+const modules = import.meta.glob('./components/{icons,ui}/*.vue', {
+  eager: true,
+})
+
 for (const path in modules) {
   const componentName = path.split('/').at(-1).split('.')[0]
   app.component(`${componentName}`, modules[path].default)

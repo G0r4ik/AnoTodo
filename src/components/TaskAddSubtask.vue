@@ -2,7 +2,7 @@
   <div v-for="subtask of subtasks" :key="subtask.id" class="add-subtask">
     <input
       id="search-tasks"
-      :value="subtask.text"
+      v-model="subtask.text"
       class="add-subtask__text"
       type="text"
       name="search-tasks"

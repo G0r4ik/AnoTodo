@@ -70,6 +70,7 @@ export default {
 .add-task__color {
   display: flex;
   width: 100%;
+  margin-bottom: var(--unit);
 }
 
 .add-task__color-select {
