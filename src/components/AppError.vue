@@ -15,7 +15,6 @@ export default {
   },
   emits: ['closeError'],
   mounted() {
-    console.log(this.$t('error'))
     setTimeout(() => {
       this.closeError()
     }, this.timeToClose)

@@ -39,7 +39,6 @@ export default {
   },
   watch: {
     timeStart(value) {
-      console.log(value)
       this.$emit('changeTimeStart', value)
     },
     timeEnd(value) {
@@ -61,9 +60,6 @@ export default {
 </script>
 
 <style>
-.add-task__time {
-}
-
 .add-task__time-item {
   display: flex;
   align-items: center;

@@ -36,8 +36,8 @@
         @keypress.enter="changeCurrentFolder(folder)">
         <div class="sidebar__folder-inner" @click.prevent>
           <IconLock
-            stroke="var(--color-primary)"
             v-if="isLockCheck(folder)"
+            stroke="var(--color-primary)"
             @click.stop="deleteLockedFolder(folder)" />
           <IconUnlock v-else @click.stop="pushLockedFolders(folder)" />
           <IconMove class="icon-move" @click.stop />
@@ -86,9 +86,6 @@ export default {
     Sortable.create(el, {
       handle: '.icon-move',
       filter: '.locked',
-      onStart: event => {
-        console.log(event.item.classList.contains('locked'))
-      },
       onEnd: event => {
         console.dir(event.item.firstChild)
         const itemEl = event.item

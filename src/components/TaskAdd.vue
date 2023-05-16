@@ -34,16 +34,13 @@
           :error="error"
           class="add-task-error"
           @close-error="closeError" />
-        <button
-          class="add-task__add-button"
-          :style="{
-            background: getButtonBG,
-            color: getButtonColor,
-            borderColor: getButtonBorderColor,
-          }"
-          @click="addTask">
-          {{ $t('add') }}
-        </button>
+
+        <TaskAddTaskButton
+          button-text="add"
+          :button-border-color="buttonBorderColor"
+          :button-b-g="buttonBG"
+          :button-color="buttonColor"
+          @add-task="addTask" />
       </div>
     </template>
   </ModalWrapper>
@@ -57,6 +54,7 @@ import TaskAddSelectStyling from '@/components/TaskAddSelectStyling.vue'
 import TaskAddTaskTextInput from '@/components/TaskAddTaskTextInput.vue'
 import TaskAddSubtask from '@/components/TaskAddSubtask.vue'
 import TaskAddTime from './TaskAddTime.vue'
+import TaskAddTaskButton from './TaskAddTaskButton.vue'
 
 export default {
   components: {
@@ -66,6 +64,7 @@ export default {
     TaskAddTaskTextInput,
     TaskAddSubtask,
     TaskAddTime,
+    TaskAddTaskButton,
   },
   emits: ['closeModal'],
   data() {
@@ -90,15 +89,15 @@ export default {
       if (notIndexedFolders.includes(currentFolder)) return 'Неотсортированное'
       return currentFolder || 'Неотсортированное'
     },
-    getButtonBorderColor() {
+    buttonBorderColor() {
       return this.newTask.style.bg === 'none'
         ? 'var(--color-primary)'
         : this.newTask.style.bg
     },
-    getButtonBG() {
+    buttonBG() {
       return this.newTask.style.bg
     },
-    getButtonColor() {
+    buttonColor() {
       return this.newTask.style.color
     },
   },
@@ -181,8 +180,5 @@ export default {
 
 .add-task__use-time-text {
   margin-right: var(--unit);
-}
-
-.add-task__use-input {
 }
 </style>

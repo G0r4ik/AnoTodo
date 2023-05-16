@@ -100,8 +100,20 @@ export const useFolderStore = defineStore('folder', {
     addTask(task) {
       this.folders.get(task.folder).push(task)
     },
-    editTask(task, text) {
-      task.text = text
+    editTask(task, newTask) {
+      const currentFolder = this.folders.get(task.folder)
+      const newFolder = this.folders.get(newTask.folder)
+      if (currentFolder === newFolder) {
+        const idx = currentFolder.findIndex(item => task.id === item.id)
+        currentFolder[idx] = { ...newTask }
+      } else {
+        const length_ = newFolder.length
+        newFolder[length_] = { ...newTask }
+
+        console.log(currentFolder)
+        const idx = currentFolder.findIndex(item => task.id === item.id)
+        currentFolder.splice(idx, 1)
+      }
     },
     deleteTask(task) {
       const folder = task.folder
