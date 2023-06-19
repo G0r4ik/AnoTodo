@@ -8,13 +8,13 @@
     @keypress.enter="changeTaskStatus(task, subtask)" />
   <IconStar
     v-if="type === 'task'"
+    class="task__to-favor"
     tabindex="0"
     :is-active="task.isFavourite"
     @click="toggleTaskFavourite(task)"
     @keydown.enter="toggleTaskFavourite(task)" />
 
   <div class="task__text">{{ list.text }}</div>
-
   <button
     v-if="type === 'task' && task.subtasks.length"
     class="task__show-subtasks"
@@ -36,7 +36,6 @@
   <div class="task__delete" tabindex="0" @click="deleteTask(task, subtask)">
     <IconCross :color="task.style.color" />
   </div>
-
   <teleport to="body">
     <transition name="fade">
       <TaskEdit

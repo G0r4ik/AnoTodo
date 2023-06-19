@@ -1,37 +1,40 @@
 <template>
-  <div v-for="subtask of subtasks" :key="subtask.id" class="add-subtask">
-    <input
-      id="search-tasks"
-      v-model="subtask.text"
-      class="add-subtask__text"
-      type="text"
-      name="search-tasks"
-      :placeholder="$t('textOfSubtask')"
-      @keypress.enter="addTask"
-      @keyup.ctrl.enter.prevent="addSubtask" />
-    <div
-      class="add-subtask__delete"
-      tabindex="0"
-      @click="deleteSubtask(subtask)"
-      @keypress.enter="deleteSubtask(subtask)">
-      <IconCross />
-    </div>
+  <textarea
+    id="search-tasks"
+    :value="subtask.text"
+    class="add-subtask__text"
+    type="text"
+    name="search-tasks"
+    :placeholder="$t('textOfSubtask')"
+    @input="changeInput"
+    @keypress.enter="addTask"
+    @keyup.ctrl.enter.prevent="addSubtask" />
+  <div
+    class="add-subtask__delete"
+    tabindex="0"
+    @click="deleteSubtask(subtask)"
+    @keypress.enter="deleteSubtask(subtask)">
+    <IconCross />
   </div>
-  <button class="add-subtask__button" @click="addSubtask">
-    {{ $t('addSubtask') }}
-  </button>
 </template>
 
 <script>
 export default {
   props: {
-    subtasks: { type: Array, default: () => [] },
+    subtask: { type: Object, default: () => ({}) },
   },
-  emits: ['addSubtask', 'deleteSubtask'],
+  emits: ['addSubtask', 'deleteSubtask', 'update:text'],
   methods: {
-    addSubtask() {
-      const id = Date.now().toString(36) + Math.random().toString(36)
-      this.$emit('addSubtask', { text: '', isReady: false, id })
+    changeInput(event) {
+      const el = event.target
+      const offset = el.clientHeight - el.offsetHeight
+      if (el.clientHeight < el.scrollHeight) {
+        el.style.height = el.scrollHeight - offset + 'px'
+      } else {
+        el.style.height = '1px'
+        el.style.height = el.scrollHeight - offset + 'px'
+      }
+      this.$emit('update:text', event.target.value)
     },
     deleteSubtask(subtask) {
       this.$emit('deleteSubtask', subtask)
@@ -56,6 +59,9 @@ export default {
   height: 100%;
 }
 
+.add-subtask__text {
+  resize: none;
+}
 .add-subtask__button {
   padding: var(--unit) calc(var(--unit) * 2);
   margin-bottom: var(--unit);

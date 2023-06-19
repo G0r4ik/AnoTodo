@@ -16,10 +16,19 @@
         <TaskAddTaskTextInput
           :value="editTask.text"
           @update:text="editTaskText($event)" />
-        <TaskAddSubtask
-          :subtasks="editTask.subtasks"
-          @add-subtask="addSubtask"
-          @delete-subtask="deleteSubtask" />
+        <div
+          v-for="subtask of editTask.subtasks"
+          :key="subtask.id"
+          class="add-subtask">
+          <TaskAddSubtask
+            :subtask="subtask"
+            @add-subtask="addSubtask"
+            @delete-subtask="deleteSubtask"
+            @update:text="editSubtaskText(subtask, $event)" />
+        </div>
+        <button class="add-subtask__button" @click="addSubtask">
+          {{ $t('addSubtask') }}
+        </button>
 
         <AppError
           v-if="error"
@@ -28,7 +37,7 @@
           @close-error="closeError" />
 
         <TaskAddTaskButton
-          button-text="Изменить"
+          button-text="Edit"
           :button-border-color="buttonBorderColor"
           :button-b-g="buttonBG"
           :button-color="buttonColor"
@@ -48,6 +57,7 @@ import TaskAddTime from './TaskAddTime.vue'
 import TaskAddSelectFolder from './TaskAddSelectFolder.vue'
 import TaskAddSelectStyling from './TaskAddSelectStyling.vue'
 import TaskAddTaskButton from './TaskAddTaskButton.vue'
+import { toRaw } from 'vue'
 
 export default {
   components: {
@@ -86,7 +96,7 @@ export default {
     },
   },
   mounted() {
-    this.editTask = { ...this.task }
+    this.editTask = JSON.parse(JSON.stringify(this.task))
   },
   methods: {
     editTaskFunc() {
@@ -99,7 +109,8 @@ export default {
       this.editTask.timeEnd = date
     },
     addSubtask(subtask) {
-      this.editTask.subtasks.push(subtask)
+      const id = Date.now().toString(36) + Math.random().toString(36)
+      this.editTask.subtasks.push({ text: '', isReady: false, id })
     },
     deleteSubtask(subtask) {
       this.editTask.subtasks = this.editTask.subtasks.filter(s => subtask !== s)
@@ -128,6 +139,11 @@ export default {
     //
     editTaskText(text) {
       this.editTask.text = text
+    },
+    editSubtaskText(subtask, text) {
+      console.log(subtask)
+      console.log(text)
+      this.editTask.subtasks.find(sTask => sTask.id === subtask.id).text = text
     },
   },
 }

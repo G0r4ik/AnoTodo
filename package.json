@@ -11,6 +11,7 @@
     "lint-js": "eslint src/**/*.{vue,js}"
   },
   "dependencies": {
+    "firebase": "^9.22.0",
     "pinia": "^2.0.33",
     "sortablejs": "1.9.0",
     "vue": "^3.2.45"

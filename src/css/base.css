@@ -51,7 +51,8 @@ a {
 
 button,
 select,
-input {
+input,
+textarea {
   font-size: var(--font-normal);
   color: var(--color-text);
   background: none;

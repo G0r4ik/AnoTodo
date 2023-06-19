@@ -37,10 +37,14 @@
         <div class="sidebar__folder-inner" @click.prevent>
           <IconLock
             v-if="isLockCheck(folder)"
+            class="sidebar__lock"
             stroke="var(--color-primary)"
             @click.stop="deleteLockedFolder(folder)" />
-          <IconUnlock v-else @click.stop="pushLockedFolders(folder)" />
-          <IconMove class="icon-move" @click.stop />
+          <IconUnlock
+            v-else
+            class="sidebar__lock"
+            @click.stop="pushLockedFolders(folder)" />
+          <IconMove class="sidebar__move" @click.stop />
           <span class="sidebar__folder-text">{{ folder }} </span>
         </div>
 
@@ -154,11 +158,13 @@ export default {
 .sidebar__folder-text {
   display: block;
   max-width: calc(100% - var(--height-icon-main));
+  word-break: break-all;
   overflow-wrap: break-word;
 }
 
 .sidebar__new-folder-delete {
   width: var(--height-icon-main);
+  min-width: var(--height-icon-main);
   height: var(--height-icon-main);
 }
 
@@ -170,6 +176,12 @@ export default {
   color: var(--color-danger);
   transform: rotate(0);
   animation: shake 0.75s ease-in-out infinite;
+}
+
+.sidebar__lock,
+.sidebar__move {
+  width: var(--height-icon-main);
+  min-width: var(--height-icon-main);
 }
 
 @keyframes shake {

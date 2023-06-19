@@ -24,10 +24,19 @@
           :value="newTask.text"
           @add-task="addTask"
           @update:text="newTask.text = $event" />
-        <TaskAddSubtask
-          :subtasks="newTask.subtasks"
-          @add-subtask="addSubtask"
-          @delete-subtask="deleteSubtask" />
+        <div
+          v-for="subtask of newTask.subtasks"
+          :key="subtask.id"
+          class="add-subtask">
+          <TaskAddSubtask
+            :subtask="subtask"
+            @add-subtask="addSubtask"
+            @delete-subtask="deleteSubtask"
+            @update:text="subtask.text = $event" />
+        </div>
+        <button class="add-subtask__button" @click="addSubtask">
+          {{ $t('addSubtask') }}
+        </button>
 
         <AppError
           v-if="error"
@@ -114,8 +123,9 @@ export default {
     changeTimeEnd(date) {
       this.newTask.timeEnd = date
     },
-    addSubtask(subtask) {
-      this.newTask.subtasks.push(subtask)
+    addSubtask() {
+      const id = Date.now().toString(36) + Math.random().toString(36)
+      this.newTask.subtasks.push({ text: '', isReady: false, id })
     },
     deleteSubtask(subtask) {
       this.newTask.subtasks = this.newTask.subtasks.filter(s => subtask !== s)

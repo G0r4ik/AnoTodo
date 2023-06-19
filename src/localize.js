@@ -17,6 +17,14 @@ export function changeLanguage(lang) {
 }
 
 export const messages = {
+  changeLanguage: {
+    ru: 'Сменить язык',
+    en: 'Change language',
+  },
+  Edit: {
+    ru: 'Изменить',
+    en: 'Edit',
+  },
   changeTask: {
     ru: 'Изменить задачу',
     en: 'Change task',

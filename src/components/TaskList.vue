@@ -1,6 +1,8 @@
 <template>
   <div class="main__tasks">
-    <template v-for="folder of Object.keys(filteredTasks)" :key="folder">
+    <template
+      v-for="folder of Object.keys(myTasks || filteredTasks)"
+      :key="folder">
       <div v-if="filteredTasks[folder]?.length" class="main__tasks-item task">
         <strong
           v-if="!currentFolder && filteredTasks[folder].length"
@@ -59,6 +61,7 @@ export default {
   components: { TaskListItem },
   props: {
     statusList: { type: String, default: 'all' },
+    myTasks: { type: Array, default: () => null },
   },
   data() {
     return {
@@ -121,14 +124,16 @@ export default {
           excludedFolders.includes(folder) &&
           filteredExcluded.length &&
           !RegExpExcludedFolders
-        )
+        ) {
           return
+        }
         if (
           !includedFolders.includes(folder) &&
           filteredIncluded.length &&
           !RegExpIncludedFolders
-        )
+        ) {
           return
+        }
         if (RegExpExcludedFolders && RegExpExcludedFolders.test(folder)) return
         if (RegExpIncludedFolders && !RegExpIncludedFolders.test(folder)) return
 
@@ -206,7 +211,6 @@ export default {
       c.folder = null
       c.taskId = null
     },
-
     func(task) {
       if (!task.text.includes(this.searchQuery)) return false
       if (this.statusList === 'ready' && !task.isReady) return false
@@ -224,6 +228,11 @@ export default {
 </script>
 
 <style>
+.differences__item .task__edit,
+.differences__item .task__delete {
+  display: none;
+}
+
 .main__tasks {
   padding: 0 var(--unit);
   color: var(--color-text);
@@ -293,10 +302,16 @@ export default {
   opacity: 0.75;
 }
 
+.task__edit {
+  margin-right: calc(var(--unit) * 2);
+}
+
 .task__edit,
 .task__delete,
+.task__to-favor,
 .task__show-subtasks {
   width: var(--height-icon-main);
+  min-width: var(--height-icon-main);
   height: var(--height-icon-main);
   cursor: pointer;
 }

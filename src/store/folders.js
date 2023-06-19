@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 export const useFolderStore = defineStore('folder', {
   state: () => ({
     isFoldersVisible: false,
-    searchQuery: '',
+    _searchQuery: '',
     folders: new Map(),
     copyOfFolders: new Map(),
     staticFolders: ['Неотсортированное'],
@@ -19,6 +19,7 @@ export const useFolderStore = defineStore('folder', {
   }),
 
   getters: {
+    searchQuery: ({ _searchQuery }) => _searchQuery.trim().toLowerCase(),
     allFolders: ({ folders }) => [...folders.keys()],
     allIndexedFolders: ({ staticFolders, allUserFolders }) => [
       ...staticFolders,
@@ -40,12 +41,17 @@ export const useFolderStore = defineStore('folder', {
 
   actions: {
     // Folder management
-    setFolders() {
+    setFolders(value = null) {
       try {
         const folders = localStorage.getItem('folders')
-        if (folders) {
+        if (!value && folders) {
           const dataInLocalStorage = new Map(JSON.parse(folders))
           this.folders = new Map(dataInLocalStorage)
+        } else if (value) {
+          this.folders = new Map(JSON.parse(value))
+          for (const folder of this.allStaticFolders) {
+            this.addFolder(folder)
+          }
         } else {
           for (const folder of this.allStaticFolders) {
             this.addFolder(folder)
@@ -83,7 +89,7 @@ export const useFolderStore = defineStore('folder', {
 
     // Search
     setSearchQuery(query) {
-      this.searchQuery = query
+      this._searchQuery = query
     },
     includeFolders(folders) {
       this.includedFolders = folders
@@ -109,8 +115,6 @@ export const useFolderStore = defineStore('folder', {
       } else {
         const length_ = newFolder.length
         newFolder[length_] = { ...newTask }
-
-        console.log(currentFolder)
         const idx = currentFolder.findIndex(item => task.id === item.id)
         currentFolder.splice(idx, 1)
       }

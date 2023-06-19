@@ -78,6 +78,7 @@ export default {
 
 .header__create-post {
   padding: var(--unit) calc(var(--unit) * 2);
+  margin-left: auto;
   color: var(--color-primary);
   background: var(--color-bg-primary);
   border: var(--border-width-main) var(--color-primary) solid;

@@ -46,6 +46,15 @@
           {{ $t('changeTheme') }}
         </span>
       </span>
+      <span v-if="isHasUser" class="sidebar__auth" @click="google">
+        <IconLogIn class="sidebar__auth-icon" />
+        Войти
+      </span>
+      <span v-else class="sidebar__auth" @click="google">
+        <IconLogOut class="sidebar__auth-icon" />
+        Выйти
+      </span>
+
       <span
         tabindex="0"
         class="sidebar__change-language"
@@ -78,6 +87,7 @@
         @close-modal="toggleChangeLanguage" />
     </transition>
   </teleport>
+  <!-- {{ Object.fromEntries(folders) }} -->
 </template>
 
 <script>
@@ -90,7 +100,7 @@ import {
   downloadMarkdownAsFile,
   jsonToMarkdown,
 } from '@/helpers/jsonToMarkdown.js'
-
+import { getTasks } from '../helpers/firebaseApp'
 export default {
   components: { HotkeysModal, ChangeTheme, ChangeLanguage },
   data() {
@@ -105,6 +115,9 @@ export default {
     }
   },
   computed: {
+    isHasUser() {
+      return localStorage.getItem('user')
+    },
     folders() {
       return useFolderStore().folders
     },
@@ -159,7 +172,6 @@ export default {
   position: absolute;
   bottom: 0;
   height: var(--height-sidebar-bottom);
-  /* padding: calc(var(--unit) * 2) 0; */
 }
 
 .sidebar__bottom-inner {
@@ -211,14 +223,16 @@ export default {
 .sidebar__shortcuts,
 .sidebar__date-manipulation,
 .sidebar__change-theme,
-.sidebar__change-language {
+.sidebar__change-language,
+.sidebar__auth {
   margin-bottom: var(--unit);
 }
 
 .sidebar__shortcuts,
 .sidebar__date-manipulation,
 .sidebar__change-theme,
-.sidebar__change-language {
+.sidebar__change-language,
+.sidebar__auth {
   display: flex;
   align-items: center;
   font-size: var(--font-small);
@@ -228,6 +242,7 @@ export default {
 .sidebar__shortcuts-icon,
 .sidebar__change-theme-icon,
 .sidebar__change-language-icon,
+.sidebar__auth-icon,
 .sidebar__date-manipulation-icon {
   width: 20px;
   height: 20px;
@@ -237,7 +252,8 @@ export default {
 .sidebar__shortcuts-text,
 .sidebar__change-theme-text,
 .sidebar__change-language-text,
-.sidebar__date-manipulation-text {
+.sidebar__date-manipulation-text,
+.sidebar__auth {
   font-size: 18px;
   color: var(--color-text);
 }
